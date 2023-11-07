@@ -1,0 +1,54 @@
+module.exports.Status = {
+	NEW: 'NEW',
+	ONLINE: 'ONLINE',
+	DEACTIVATE: 'DEACTIVATE',
+	OFFLINE: 'OFFLINE',
+};
+
+
+module.exports.RequestWorkflow = {
+	NEW: 'NEW',
+	APPROVE: 'APPROVE',
+	COMPLETED: 'COMPLETED',
+	PENDING: 'PENDING',
+	DRAFT: 'DRAFT',
+	REVIEW: 'REVIEW',
+	REJECT: 'REJECT',
+};
+
+
+module.exports.MessageType = {
+	TEXT: 'TEXT',
+	IMAGE: 'IMAGE',
+	FILE: 'FILE',
+};
+
+module.exports.UserRole = {
+	USER: 'USER',
+	LAWYER: 'LAWYER',
+	LAWFIRM_ADMIN: 'LAWFIRM_ADMIN',
+	OTHERS: 'OTHERS',
+};
+
+module.exports.WorkflowAppointment = {
+	PENDING: 'PENDING',
+	CREAT_LEAD: 'CREAT_LEAD',
+	SCHEDULE_LEAD: 'SCHEDULE_LEAD',
+	FREE_CONSULTATION: 'FREE_CONSULTATION',
+	PAYMENT: 'PAYMENT',
+	APPROVE_LEAD: 'APPROVE_LEAD',
+	CONSULTATION: 'CONSULTATION',
+	COMPLETED: 'COMPLETED',
+	CANCELED: 'CANCELED',
+	FURTHER_STATUS: 'FURTHER_STATUS',
+};
+
+module.exports.DisputeStatus = {
+	PENDING: 'PENDING',
+	RESOLVED: 'RESOLVED',
+};
+
+module.exports.TestimonialStatus = {
+	PENDING: 'PENDING',
+	APPROVED: 'APPROVED',
+};
