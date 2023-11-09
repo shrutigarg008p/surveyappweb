@@ -31,6 +31,11 @@ module.exports= function(app) {
 	);
 
 	app.get(
+		'/api/v1/auth/user/verify-email',
+		usersController.verifyEmail,
+	);
+
+	app.get(
 		'/api/v1/auth/user/users/:limit',
 		usersController.users,
 	);

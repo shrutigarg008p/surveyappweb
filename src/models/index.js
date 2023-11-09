@@ -20,6 +20,10 @@ db.sequelize = sequelize;
 
 db.user = require('./users.model')(sequelize, Sequelize);
 db.basicProfile = require('./basicProfile.model')(sequelize, Sequelize);
+db.redemptionMode = require('./redemptionMode.model')(sequelize, Sequelize);
+db.countries = require('./countries.model')(sequelize, Sequelize);
+db.states = require('./states.model')(sequelize, Sequelize);
+db.city = require('./city.model')(sequelize, Sequelize);
 
 
 // db.subscriptionPayment.hasOne(db.subscription, {sourceKey: 'subscriptionId', foreignKey: 'id'});

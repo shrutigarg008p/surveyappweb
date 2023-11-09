@@ -1,0 +1,83 @@
+const db = require('../models');
+const Countries = db.countries;
+const apiResponses = require('../Components/apiresponse');
+
+module.exports.create = async (req, res) => {
+    try {
+        const isExist = await Countries.findOne({ name: req.body.name, deletedAt: null })
+        if(isExist) {
+            const Country = await Countries.create({
+                name: req.body.name,
+                createdAt: new Date().valueOf(),
+                updatedAt: new Date().valueOf(),
+            })
+            return apiResponses.successResponseWithData(
+                res,
+                'Success!',
+                Country
+            );
+        } else {
+            return apiResponses.validationErrorWithData(
+                res,
+                'Name is already exist!',
+            );
+        }
+    } catch (err) {
+        return apiResponses.errorResponse(res, err);
+    }
+};
+
+
+module.exports.update = async (req, res) => {
+    try {
+        let obj = {
+            name: req.body.name,
+            updatedAt: new Date().valueOf(),
+        }
+
+        const isExist = await Countries.findOne({ where: { id: req.params.id, deletedAt: null } })
+        if(!isExist) {
+            return apiResponses.validationErrorWithData(res, 'Redemption mode not exist');
+        } else {
+            const user = await Countries.update(
+                obj, { where: { userId: req.params.userId } }
+            )
+            return apiResponses.successResponseWithData(res, 'Success Update', user);
+
+        }
+    } catch (err) {
+        return apiResponses.errorResponse(res, err);
+    }
+};
+
+module.exports.getAll = async (req, res) => {
+    try {
+        const limit = req.params.limit;
+        const data = await Countries.findAll({ deletedAt: null, limit: limit, order: [['createdAt', 'DESC']]})
+        return apiResponses.successResponseWithData(res, 'success!', data);
+    } catch (err) {
+        return apiResponses.errorResponse(res, err);
+    }
+};
+
+module.exports.getOne = async (req, res) => {
+    try {
+        const data = await Countries.findOne({where: {id: req.params.id, deletedAt: null}})
+        return apiResponses.successResponseWithData(res, 'success!', data);
+    } catch (err) {
+        return apiResponses.errorResponse(res, err);
+    }
+};
+
+module.exports.delete = async (req, res) => {
+    try {
+        await Countries.update({
+                deletedAt: new Date().valueOf(),
+            },
+            { where: { id : req.params.id },
+            })
+        return apiResponses.successResponseWithData(res, 'Success');
+    } catch (err) {
+        return apiResponses.errorResponse(res, err);
+    }
+};

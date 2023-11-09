@@ -76,34 +76,42 @@ module.exports.resendEmailVerifyMail = async (req, res) => {
 
 module.exports.verifyEmail = async (req, res) => {
 	try {
+		console.log('re--->', req.query)
 		if(req.query.email && req.query.token) {
 			const user = await User.findOne({
 				where: {
 					email: req.query.email,
-					securityStamp: req.query.token,
+					// securityStamp: req.query.token,
 				},
 			})
-			await User.updateOne({
-				securityStamp: '',
-			}, {where: {email: req.body.email}})
-			/* #swagger.responses[200] = {
-                            description: "Mail Resend successfully!",
-                            schema: { $statusCode : 200 ,$status: true, $message: "Mail Resend successfully!", $data : {}}
-                        } */
-			const token = createToken(user.id, user.email, user.role);
-			const obj = {
-				id: user.id,
-				email: user.email,
-				phoneNumber: user.phoneNumber,
-				registerType: user.registerType,
-				role: user.role,
-				token: token,
-			};
-			// return res.status(200).send({ status:'200', message: "Mail Resend successfully!" , data: userData });
-			return apiResponses.successResponseWithData(
-				res,
-				'Success!',
-			);
+			if (user) {
+				await User.update({
+					securityStamp: '',
+				}, {where: {id: user.id}})
+				/* #swagger.responses[200] = {
+                                description: "Mail Resend successfully!",
+                                schema: { $statusCode : 200 ,$status: true, $message: "Mail Resend successfully!", $data : {}}
+                            } */
+				const token = createToken(user.id, user.email, user.role);
+				const obj = {
+					id: user.id,
+					email: user.email,
+					phoneNumber: user.phoneNumber,
+					registerType: user.registerType,
+					role: user.role,
+					token: token,
+				};
+				// return res.status(200).send({ status:'200', message: "Mail Resend successfully!" , data: userData });
+				return apiResponses.successResponseWithData(
+					res,
+					'Success!',
+				);
+			} else {
+				return apiResponses.validationErrorWithData(
+					res,
+					'email and token must be valid!',
+				);
+			}
 		} else {
 			return apiResponses.validationErrorWithData(
 				res,

@@ -4,7 +4,7 @@ module.exports = (sequelize, Sequelize) => {
     return sequelize.define('basic_profile',
         {
             userId: {
-                type: DataTypes.STRING,
+                type: Sequelize.UUID,
                 allowNull: false,
                 primaryKey: true
             },
