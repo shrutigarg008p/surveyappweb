@@ -87,6 +87,7 @@ module.exports.verifyEmail = async (req, res) => {
 			if (user) {
 				await User.update({
 					securityStamp: '',
+					emailConfirmed: true
 				}, {where: {id: user.id}})
 				/* #swagger.responses[200] = {
                                 description: "Mail Resend successfully!",
@@ -193,13 +194,16 @@ module.exports.userLogin = async (req, res) => {
 		//   email: user.email,
 		//   accessToken: token
 		// });
+		const isExist = await BasicProfile.findOne({ where: { userId: user.id } })
 		const obj = {
 			id: user.id,
 			email: user.email,
 			phoneNumber: user.phoneNumber,
 			registerType: user.registerType,
 			role: user.role,
+			emailConfirmed: user.emailConfirmed,
 			token: token,
+			basicProfile: isExist
 		};
 		return apiResponses.successResponseWithData(
 			res,
@@ -244,6 +248,7 @@ module.exports.userLogin = async (req, res) => {
 					);
 				});
 			} else {
+				const isExist = await BasicProfile.findOne({ where: { userId: user.id } })
 				const token = createToken(user.id, user.email, user.role);
 				const obj = {
 					id: user.id,
@@ -252,6 +257,7 @@ module.exports.userLogin = async (req, res) => {
 					registerType: user.registerType,
 					role: user.role,
 					token: token,
+					basicProfile: isExist
 				};
 				return apiResponses.successResponseWithData(
 					res,
@@ -274,9 +280,9 @@ module.exports.userUpdate = async (req, res) => {
 			referralSource: req.body.referralSource,
 			addressLine1: req.body.addressLine1,
 			addressLine2: req.body.addressLine2,
-			country: parseInt(req.body.country, 10),
-			state: parseInt(req.body.state, 10),
-			city: parseInt(req.body.city, 10),
+			country: req.body.country,
+			state: req.body.state,
+			city: req.body.city,
 			pinCode: req.body.pinCode,
 			acceptTerms: Boolean(req.body.acceptTerms),
 			createdAt: new Date().valueOf(),

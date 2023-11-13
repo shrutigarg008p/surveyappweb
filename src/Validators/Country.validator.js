@@ -9,6 +9,7 @@ const create = [
         .trim().withMessage('name must be specified.').custom,
     sanitizeBody('name').escape(),
     (req, res, next) => {
+        console.log('calling--,mm--')
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return apiResponses.validationErrorWithData(

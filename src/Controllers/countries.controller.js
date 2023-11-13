@@ -1,11 +1,13 @@
 const db = require('../models');
 const Countries = db.countries;
+const States = db.states;
+const Cities = db.city;
 const apiResponses = require('../Components/apiresponse');
 
 module.exports.create = async (req, res) => {
     try {
         const isExist = await Countries.findOne({ name: req.body.name, deletedAt: null })
-        if(isExist) {
+        if(!isExist) {
             const Country = await Countries.create({
                 name: req.body.name,
                 createdAt: new Date().valueOf(),
@@ -77,6 +79,91 @@ module.exports.delete = async (req, res) => {
             { where: { id : req.params.id },
             })
         return apiResponses.successResponseWithData(res, 'Success');
+    } catch (err) {
+        return apiResponses.errorResponse(res, err);
+    }
+};
+
+
+module.exports.createState = async (req, res) => {
+    try {
+        const isExist = await Countries.findOne({ name: req.body.name, deletedAt: null })
+        if(isExist) {
+            const State = await States.create({
+                name: req.body.name,
+                countryId: req.body.countryId,
+                createdAt: new Date().valueOf(),
+                updatedAt: new Date().valueOf(),
+            })
+            return apiResponses.successResponseWithData(
+                res,
+                'Success!',
+                State
+            );
+        } else {
+            return apiResponses.validationErrorWithData(
+                res,
+                'Name is already exist!',
+            );
+        }
+    } catch (err) {
+        return apiResponses.errorResponse(res, err);
+    }
+};
+
+
+module.exports.getAllStatesByCountryId = async (req, res) => {
+    try {
+        const limit = req.params.limit;
+        const data = await States.findAll({ where: {
+                countryId: req.params.countryId,
+                deletedAt: null
+            }, limit: limit, order: [['createdAt', 'DESC']]})
+        return apiResponses.successResponseWithData(res, 'success!', data);
+    } catch (err) {
+        return apiResponses.errorResponse(res, err);
+    }
+};
+
+
+
+module.exports.createCity = async (req, res) => {
+    try {
+        const isExist = await Countries.findOne({ name: req.body.name, deletedAt: null })
+        if(isExist) {
+            const State = await Cities.create({
+                name: req.body.name,
+                stateId: req.body.stateId,
+                tier: req.body.tier,
+                createdAt: new Date().valueOf(),
+                updatedAt: new Date().valueOf(),
+            })
+            return apiResponses.successResponseWithData(
+                res,
+                'Success!',
+                State
+            );
+        } else {
+            return apiResponses.validationErrorWithData(
+                res,
+                'Name is already exist!',
+            );
+        }
+    } catch (err) {
+        return apiResponses.errorResponse(res, err);
+    }
+};
+
+
+module.exports.getAllCitiesByStateId = async (req, res) => {
+    try {
+        const limit = req.params.limit;
+        console.log('req.params.stateId--->', req.params.stateId)
+        const data = await Cities.findAll( { where: {
+            stateId: req.params.stateId,
+           deletedAt: null
+        }, limit: limit, order: [['createdAt', 'DESC']]})
+        return apiResponses.successResponseWithData(res, 'success!', data);
     } catch (err) {
         return apiResponses.errorResponse(res, err);
     }

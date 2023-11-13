@@ -13,13 +13,13 @@ module.exports= function(app) {
 
     app.post(
         '/api/v1/country/create',
-        [CountriesValidator.create],
+        // [CountriesValidator.create],
         countriesController.create,
     );
 
     app.put(
         '/api/v1/country/update',
-        CountriesValidator.create,
+        // CountriesValidator.create,
         countriesController.update,
     );
 
@@ -36,5 +36,28 @@ module.exports= function(app) {
     app.delete(
         '/api/v1/country/delete/:id',
         countriesController.delete,
+    );
+
+
+    app.post(
+        '/api/v1/country/createState',
+        // [CountriesValidator.create],
+        countriesController.createState,
+    );
+
+    app.post(
+        '/api/v1/country/createCity',
+        // [CountriesValidator.create],
+        countriesController.createCity,
+    );
+
+    app.get(
+        '/api/v1/country/getAllStatesByCountryId/:countryId/:limit',
+        countriesController.getAllStatesByCountryId,
+    );
+
+    app.get(
+        '/api/v1/country/getAllCitiesByStateId/:stateId/:limit',
+        countriesController.getAllCitiesByStateId,
     );
 };
