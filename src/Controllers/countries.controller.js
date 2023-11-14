@@ -6,7 +6,8 @@ const apiResponses = require('../Components/apiresponse');
 
 module.exports.create = async (req, res) => {
     try {
-        const isExist = await Countries.findOne({ name: req.body.name, deletedAt: null })
+        const isExist = await Countries.findOne({ where: { name: req.body.name, deletedAt: null }})
+        console.log(isExist)
         if(!isExist) {
             const Country = await Countries.create({
                 name: req.body.name,
@@ -42,7 +43,7 @@ module.exports.update = async (req, res) => {
             return apiResponses.validationErrorWithData(res, 'Redemption mode not exist');
         } else {
             const user = await Countries.update(
-                obj, { where: { userId: req.params.userId } }
+                obj, { where: { id: req.params.id } }
             )
             return apiResponses.successResponseWithData(res, 'Success Update', user);
 
@@ -125,6 +126,18 @@ module.exports.getAllStatesByCountryId = async (req, res) => {
     }
 };
 
+module.exports.getAllStates = async (req, res) => {
+    try {
+        const limit = req.params.limit;
+        const data = await States.findAll({ where: {
+                deletedAt: null
+            }, limit: limit, order: [['createdAt', 'DESC']]})
+        return apiResponses.successResponseWithData(res, 'success!', data);
+    } catch (err) {
+        return apiResponses.errorResponse(res, err);
+    }
+};
+
 
 
 module.exports.createCity = async (req, res) => {
@@ -163,6 +176,18 @@ module.exports.getAllCitiesByStateId = async (req, res) => {
             stateId: req.params.stateId,
            deletedAt: null
         }, limit: limit, order: [['createdAt', 'DESC']]})
+        return apiResponses.successResponseWithData(res, 'success!', data);
+    } catch (err) {
+        return apiResponses.errorResponse(res, err);
+    }
+};
+
+module.exports.getAllCities = async (req, res) => {
+    try {
+        const limit = req.params.limit;
+        const data = await Cities.findAll( { where: {
+                deletedAt: null
+            }, limit: limit, order: [['createdAt', 'DESC']]})
         return apiResponses.successResponseWithData(res, 'success!', data);
     } catch (err) {
         return apiResponses.errorResponse(res, err);

@@ -18,7 +18,7 @@ module.exports= function(app) {
     );
 
     app.put(
-        '/api/v1/country/update',
+        '/api/v1/country/update/:id',
         // CountriesValidator.create,
         countriesController.update,
     );
@@ -52,6 +52,11 @@ module.exports= function(app) {
     );
 
     app.get(
+        '/api/v1/country/getAllStates/:limit',
+        countriesController.getAllStates,
+    );
+
+    app.get(
         '/api/v1/country/getAllStatesByCountryId/:countryId/:limit',
         countriesController.getAllStatesByCountryId,
     );
@@ -59,5 +64,10 @@ module.exports= function(app) {
     app.get(
         '/api/v1/country/getAllCitiesByStateId/:stateId/:limit',
         countriesController.getAllCitiesByStateId,
+    );
+
+    app.get(
+        '/api/v1/country/getAllCities/:limit',
+        countriesController.getAllCities,
     );
 };
