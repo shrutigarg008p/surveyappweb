@@ -27,6 +27,12 @@ db.states = require('./states.model')(sequelize, Sequelize);
 db.city = require('./city.model')(sequelize, Sequelize);
 db.rewards = require('./Rewards.model')(sequelize, Sequelize);
 db.referrals = require('./Referral.model')(sequelize, Sequelize);
+db.partners = require('./Partners.model')(sequelize, Sequelize);
+db.labels = require('./Labels.model')(sequelize, Sequelize);
+db.marketingLinks = require('./MarketingLinks.model')(sequelize, Sequelize);
+db.sec = require('./Sec.model')(sequelize, Sequelize);
+
+
 
 
 // db.subscriptionPayment.hasOne(db.subscription, {sourceKey: 'subscriptionId', foreignKey: 'id'});

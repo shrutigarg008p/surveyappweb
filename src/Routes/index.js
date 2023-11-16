@@ -5,4 +5,8 @@ module.exports=(app)=> {
 	require('./RedemptionRequest.route')(app);
 	require('./Rewards.route')(app);
 	require('./Referrals.route')(app);
+	require('./Partners.route')(app);
+	require('./Lables.route')(app);
+	require('./MarketingLinks.route')(app);
+	require('./Sec.route')(app);
 };
