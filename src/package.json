@@ -11,7 +11,7 @@
   "author": "Jitendra Singh",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.24.0",
+    "axios": "^1.6.2",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
@@ -34,7 +34,7 @@
     "sib-api-v3-sdk": "^8.5.0",
     "swagger-autogen": "^2.11.2",
     "swagger-ui-express": "^4.1.6",
-    "twilio": "^3.71.1",
+    "twilio": "^3.40.0",
     "underscore": "^1.10.2"
   },
   "devDependencies": {
@@ -49,8 +49,8 @@
     "eslint-plugin-import": "^2.23.4",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.1.0",
-    "firebase-admin": "^10.0.0",
-    "jsonwebtoken": "^8.5.1",
+    "firebase-admin": "^11.11.0",
+    "jsonwebtoken": "^9.0.2",
     "nodemailer": "^6.7.0",
     "sequelize": "^6.6.5"
   }

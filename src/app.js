@@ -15,16 +15,16 @@ app.use(
 	}),
 );
 app.use(bodyParser.json({limit: '200mb'}));
-const http = require('http');
+//const http = require('http');
 
 const fs = require('fs');
-// const https = require('https');
-// const privateKey = fs.readFileSync('privkey.pem', 'utf8');
-// const certificate = fs.readFileSync('cert.pem', 'utf8');
-// const credentials = {key: privateKey, cert: certificate};
+const https = require('https');
+const privateKey = fs.readFileSync('/etc/letsencrypt/live/indiapolls.com/privkey.pem', 'utf8');
+const certificate = fs.readFileSync('/etc/letsencrypt/live/indiapolls.com/fullchain.pem', 'utf8');
+const credentials = {key: privateKey, cert: certificate};
 
-const httpsServer = http.createServer(app);
-// const httpsServer = https.createServer(credentials, app);
+//const httpsServer = http.createServer(app);
+ const httpsServer = https.createServer(credentials, app);
 
 // log all incoming request
 app.use((req, res, next) => {
