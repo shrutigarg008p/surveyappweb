@@ -31,6 +31,10 @@ db.partners = require('./Partners.model')(sequelize, Sequelize);
 db.labels = require('./Labels.model')(sequelize, Sequelize);
 db.marketingLinks = require('./MarketingLinks.model')(sequelize, Sequelize);
 db.sec = require('./Sec.model')(sequelize, Sequelize);
+db.profiles = require('./ProfileManagement.model')(sequelize, Sequelize);
+db.questions = require('./Questions.model')(sequelize, Sequelize);
+db.options = require('./Options.model')(sequelize, Sequelize);
+
 
 
 

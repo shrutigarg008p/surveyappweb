@@ -1,0 +1,88 @@
+const db = require('../models');
+const Profiles = db.profiles;
+const apiResponses = require('../Components/apiresponse');
+
+module.exports.create = async (req, res) => {
+    try {
+        const isExist = await Profiles.findOne({ where: { name: req.body.name, deletedAt: null }})
+        console.log(isExist)
+        if(!isExist) {
+            const Profile = await Profiles.create({
+                name: req.body.name,
+                description: req.body.description,
+                displayOrder: req.body.displayOrder,
+                createdAt: new Date().valueOf(),
+                updatedAt: new Date().valueOf(),
+            })
+            return apiResponses.successResponseWithData(
+                res,
+                'Success!',
+                Profile
+            );
+        } else {
+            return apiResponses.validationErrorWithData(
+                res,
+                'Name is already exist!',
+            );
+        }
+    } catch (err) {
+        return apiResponses.errorResponse(res, err);
+    }
+};
+
+
+module.exports.update = async (req, res) => {
+    try {
+        let obj = {
+            name: req.body.name,
+            description: req.body.description,
+            displayOrder: req.body.displayOrder,
+            updatedAt: new Date().valueOf(),
+        }
+
+        const isExist = await Profiles.findOne({ where: { id: req.params.id, deletedAt: null } })
+        if(!isExist) {
+            return apiResponses.validationErrorWithData(res, 'Redemption mode not exist');
+        } else {
+            const user = await Profiles.update(
+                obj, { where: { id: req.params.id } }
+            )
+            return apiResponses.successResponseWithData(res, 'Success Update', user);
+
+        }
+    } catch (err) {
+        return apiResponses.errorResponse(res, err);
+    }
+};
+
+module.exports.getAll = async (req, res) => {
+    try {
+        const limit = req.params.limit;
+        const data = await Profiles.findAll({ deletedAt: null, limit: limit, order: [['createdAt', 'DESC']]})
+        return apiResponses.successResponseWithData(res, 'success!', data);
+    } catch (err) {
+        return apiResponses.errorResponse(res, err);
+    }
+};
+
+module.exports.getOne = async (req, res) => {
+    try {
+        const data = await Profiles.findOne({where: {id: req.params.id, deletedAt: null}})
+        return apiResponses.successResponseWithData(res, 'success!', data);
+    } catch (err) {
+        return apiResponses.errorResponse(res, err);
+    }
+};
+
+module.exports.delete = async (req, res) => {
+    try {
+        await Profiles.update({
+                deletedAt: new Date().valueOf(),
+            },
+            { where: { id : req.params.id },
+            })
+        return apiResponses.successResponseWithData(res, 'Success');
+    } catch (err) {
+        return apiResponses.errorResponse(res, err);
+    }
+};

@@ -9,4 +9,7 @@ module.exports=(app)=> {
 	require('./Lables.route')(app);
 	require('./MarketingLinks.route')(app);
 	require('./Sec.route')(app);
+	require('./ProfileManagement.route')(app);
+	require('./Questions.route')(app);
+	require('./Options.route')(app);
 };
