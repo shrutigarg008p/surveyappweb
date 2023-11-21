@@ -21,7 +21,7 @@ module.exports= function(app) {
     );
 
     app.get(
-        '/api/v1/questions/getAll/:limit',
+        '/api/v1/questions/getAll/:profileId/:limit',
         questionControllers.getAll,
     );
 

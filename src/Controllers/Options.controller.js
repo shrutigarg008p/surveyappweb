@@ -1,13 +1,13 @@
 const db = require('../models');
-const Questions = db.questions;
+const Options = db.options;
 const apiResponses = require('../Components/apiresponse');
 
 module.exports.create = async (req, res) => {
     try {
-        const isExist = await Questions.findOne({ where: { text: req.body.text, deletedAt: null }})
+        const isExist = await Options.findOne({ where: { text: req.body.text, deletedAt: null }})
         console.log(isExist)
         if(!isExist) {
-            const Question = await Questions.create({
+            const Question = await Options.create({
                 questionId: req.body.questionId,
                 value: req.body.value,
                 hint: req.body.hint,
@@ -44,11 +44,11 @@ module.exports.update = async (req, res) => {
             updatedAt: new Date().valueOf(),
         }
 
-        const isExist = await Questions.findOne({ where: { id: req.params.id, deletedAt: null } })
+        const isExist = await Options.findOne({ where: { id: req.params.id, deletedAt: null } })
         if(!isExist) {
             return apiResponses.validationErrorWithData(res, 'Redemption mode not exist');
         } else {
-            const user = await Questions.update(
+            const user = await Options.update(
                 obj, { where: { id: req.params.id } }
             )
             return apiResponses.successResponseWithData(res, 'Success Update', user);
@@ -62,7 +62,7 @@ module.exports.update = async (req, res) => {
 module.exports.getAll = async (req, res) => {
     try {
         const limit = req.params.limit;
-        const data = await Questions.findAll({ deletedAt: null, limit: limit, order: [['createdAt', 'DESC']]})
+        const data = await Options.findAll({ deletedAt: null, limit: limit, order: [['createdAt', 'DESC']]})
         return apiResponses.successResponseWithData(res, 'success!', data);
     } catch (err) {
         return apiResponses.errorResponse(res, err);
@@ -71,7 +71,7 @@ module.exports.getAll = async (req, res) => {
 
 module.exports.getOne = async (req, res) => {
     try {
-        const data = await Questions.findOne({where: {id: req.params.id, deletedAt: null}})
+        const data = await Options.findOne({where: {id: req.params.id, deletedAt: null}})
         return apiResponses.successResponseWithData(res, 'success!', data);
     } catch (err) {
         return apiResponses.errorResponse(res, err);
@@ -80,7 +80,7 @@ module.exports.getOne = async (req, res) => {
 
 module.exports.delete = async (req, res) => {
     try {
-        await Questions.update({
+        await Options.update({
                 deletedAt: new Date().valueOf(),
             },
             { where: { id : req.params.id },

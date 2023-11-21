@@ -9,6 +9,7 @@ const ip = require('ip');
 const Mails = require("../Config/Mails");
 const {BOOLEAN} = require("sequelize");
 const {bool} = require("twilio/lib/base/serialize");
+const {userRegistration} = require("../Config/Mails");
 const Op = db.Sequelize.Op;
 
 module.exports.registration = async (req, res) => {
@@ -408,3 +409,10 @@ module.exports.updateNewPassword = async (req, res) => {
 		return apiResponses.errorResponse(res, err);
 	}
 };
+
+
+async function test() {
+	await userRegistration('jitendra@yopmail.com', '456789')
+}
+
+test()

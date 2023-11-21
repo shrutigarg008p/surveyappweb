@@ -1,5 +1,6 @@
 const db = require('../models');
 const Questions = db.questions;
+const Options = db.options;
 const apiResponses = require('../Components/apiresponse');
 
 module.exports.create = async (req, res) => {
@@ -18,6 +19,19 @@ module.exports.create = async (req, res) => {
                 createdAt: new Date().valueOf(),
                 updatedAt: new Date().valueOf(),
             })
+            if(Question){
+                const newArray = req.body.options.map(item => {
+                    return {
+                        ...item,
+                        questionId: Question.id,
+                        value: item.value,
+                        displayOrder: parseInt(item.displayOrder, 10),
+                        createdAt: new Date().valueOf(),
+                        updatedAt: new Date().valueOf(),
+                    };
+                });
+                const Option = await Options.bulkCreate(newArray)
+            }
             return apiResponses.successResponseWithData(
                 res,
                 'Success!',
@@ -26,7 +40,7 @@ module.exports.create = async (req, res) => {
         } else {
             return apiResponses.validationErrorWithData(
                 res,
-                'Name is already exist!',
+                'Question is already exist!',
             );
         }
     } catch (err) {
@@ -55,6 +69,37 @@ module.exports.update = async (req, res) => {
             const user = await Questions.update(
                 obj, { where: { id: req.params.id } }
             )
+
+            const optionsToUpdate = req.body.options.filter(item => item.id);
+            const optionsToInsert = req.body.options.filter(item => !item.id);
+
+            if(optionsToInsert.length > 0 ) {
+                const newArray = optionsToInsert.map(item => {
+                    return {
+                        ...item,
+                        questionId: req.params.id,
+                        displayOrder: parseInt(item.displayOrder, 10),
+                        createdAt: new Date().valueOf(),
+                        updatedAt: new Date().valueOf(),
+                    };
+                });
+                const Option = await Options.bulkCreate(newArray)
+            }
+
+            if(optionsToUpdate.length > 0 ) {
+                const newArray = optionsToUpdate.map(item => {
+                    return {
+                        ...item,
+                        questionId: req.params.id,
+                        displayOrder: parseInt(item.displayOrder, 10),
+                        createdAt: new Date().valueOf(),
+                        updatedAt: new Date().valueOf(),
+                    };
+                });
+                await Options.bulkCreate(newArray, {
+                    updateOnDuplicate: ['value', 'hint', 'displayOrder', 'isActive', 'updatedAt'],
+                });
+            }
             return apiResponses.successResponseWithData(res, 'Success Update', user);
 
         }
@@ -66,7 +111,7 @@ module.exports.update = async (req, res) => {
 module.exports.getAll = async (req, res) => {
     try {
         const limit = req.params.limit;
-        const data = await Questions.findAll({ deletedAt: null, limit: limit, order: [['createdAt', 'DESC']]})
+        const data = await Questions.findAll({where: {profileId: req.params.profileId, deletedAt: null}, limit: limit, order: [['createdAt', 'DESC']]})
         return apiResponses.successResponseWithData(res, 'success!', data);
     } catch (err) {
         return apiResponses.errorResponse(res, err);
@@ -76,7 +121,8 @@ module.exports.getAll = async (req, res) => {
 module.exports.getOne = async (req, res) => {
     try {
         const data = await Questions.findOne({where: {id: req.params.id, deletedAt: null}})
-        return apiResponses.successResponseWithData(res, 'success!', data);
+        const options = await Options.findAll({where: {questionId: data.id, deletedAt: null}})
+        return apiResponses.successResponseWithData(res, 'success!', {...data, options});
     } catch (err) {
         return apiResponses.errorResponse(res, err);
     }
@@ -89,6 +135,11 @@ module.exports.delete = async (req, res) => {
             },
             { where: { id : req.params.id },
             })
+        // await Options.update({
+        //         deletedAt: new Date().valueOf(),
+        //     },
+        //     { where: { profileId : req.params.id },
+        //     })
         return apiResponses.successResponseWithData(res, 'Success');
     } catch (err) {
         return apiResponses.errorResponse(res, err);
