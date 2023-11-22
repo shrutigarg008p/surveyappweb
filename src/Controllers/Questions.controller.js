@@ -128,6 +128,16 @@ module.exports.getOne = async (req, res) => {
     }
 };
 
+
+module.exports.getQuestionOptions = async (req, res) => {
+    try {
+        const options = await Options.findAll({where: {questionId: req.params.id, deletedAt: null}})
+        return apiResponses.successResponseWithData(res, 'success!', options);
+    } catch (err) {
+        return apiResponses.errorResponse(res, err);
+    }
+};
+
 module.exports.delete = async (req, res) => {
     try {
         await Questions.update({

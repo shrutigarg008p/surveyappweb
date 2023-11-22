@@ -35,4 +35,24 @@ module.exports= function(app) {
         secControllers.delete,
     );
 
+    app.post(
+        '/api/v1/sec/create-questions',
+        secControllers.createQuestion,
+    );
+
+    app.get(
+        '/api/v1/sec/get-SecQuestion/:id',
+        secControllers.getSecQuestion,
+    );
+
+    app.get(
+        '/api/v1/sec/get-SecQuestions/:secId',
+        secControllers.getSecQuestions,
+    );
+
+    app.delete(
+        '/api/v1/sec/remove-question/:id',
+        secControllers.removeQuestion,
+    );
+
 };

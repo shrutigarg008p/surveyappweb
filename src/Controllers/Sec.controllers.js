@@ -1,5 +1,8 @@
 const db = require('../models');
 const SecDb = db.sec;
+const SecQuestions = db.secQuestions;
+const Questions = db.questions;
+const Options = db.options;
 const apiResponses = require('../Components/apiresponse');
 
 module.exports.create = async (req, res) => {
@@ -86,3 +89,104 @@ module.exports.delete = async (req, res) => {
         return apiResponses.errorResponse(res, err);
     }
 };
+
+
+module.exports.createQuestion = async (req, res) => {
+    try {
+        const isExist = await SecQuestions.findOne({ where: { questionId: req.body.questionId, socioeconomicclassificationid: req.body.socioeconomicclassificationid, deletedAt: null }})
+        if(!isExist) {
+            const Country = await SecQuestions.create({
+                questionId: req.body.questionId,
+                socioeconomicclassificationid: req.body.socioeconomicclassificationid,
+                operand: req.body.operand,
+                optionIds: req.body.optionIds,
+                createdAt: new Date().valueOf(),
+                updatedAt: new Date().valueOf(),
+            })
+            return apiResponses.successResponseWithData(
+                res,
+                'Success!',
+                Country
+            );
+        } else {
+            return apiResponses.validationErrorWithData(
+                res,
+                'Question is already exist!',
+            );
+        }
+    } catch (err) {
+        return apiResponses.errorResponse(res, err);
+    }
+};
+
+
+
+module.exports.getSecQuestion = async (req, res) => {
+    try {
+        SecQuestions.belongsTo(Questions, { foreignKey: 'questionId' });
+        SecQuestions.belongsTo(Options, { foreignKey: 'optionIds' });
+        SecQuestions.belongsTo(SecDb, { foreignKey: 'socioeconomicclassificationid' });
+        const data = await SecQuestions.findOne({
+            where: { id: req.params.id },
+            include: [
+                {
+                    model: Questions,
+                },
+                {
+                    model: Options,
+                },
+                {
+                    model: SecDb,
+                },
+            ],
+        })
+        return apiResponses.successResponseWithData(
+            res,
+            'Success!',
+            data
+        );
+    } catch (err) {
+        return apiResponses.errorResponse(res, err);
+    }
+};
+
+
+module.exports.getSecQuestions = async (req, res) => {
+    try {
+        SecQuestions.belongsTo(Questions, { foreignKey: 'questionId' });
+        SecQuestions.belongsTo(Options, { foreignKey: 'optionIds' });
+        const data = await SecQuestions.findAll({
+            where: { socioeconomicclassificationid: req.params.secId },
+            include: [
+                {
+                    model: Questions,
+                },
+                {
+                    model: Options,
+                },
+            ],
+        })
+        return apiResponses.successResponseWithData(
+            res,
+            'Success!',
+            data
+        );
+    } catch (err) {
+        return apiResponses.errorResponse(res, err);
+    }
+};
+
+module.exports.removeQuestion = async (req, res) => {
+    try {
+        const isExist = await SecQuestions.destroy({ where: { id: req.params.id }})
+            return apiResponses.successResponseWithData(
+                res,
+                'Success!',
+                isExist
+            );
+    } catch (err) {
+        return apiResponses.errorResponse(res, err);
+    }
+};
+
+

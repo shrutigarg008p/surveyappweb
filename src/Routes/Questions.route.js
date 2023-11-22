@@ -30,6 +30,11 @@ module.exports= function(app) {
         questionControllers.getOne,
     );
 
+    app.get(
+        '/api/v1/questions/getQuestionOptions/:id',
+        questionControllers.getQuestionOptions,
+    );
+
     app.delete(
         '/api/v1/questions/delete/:id',
         questionControllers.delete,

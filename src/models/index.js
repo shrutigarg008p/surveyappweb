@@ -34,6 +34,7 @@ db.sec = require('./Sec.model')(sequelize, Sequelize);
 db.profiles = require('./ProfileManagement.model')(sequelize, Sequelize);
 db.questions = require('./Questions.model')(sequelize, Sequelize);
 db.options = require('./Options.model')(sequelize, Sequelize);
+db.secQuestions = require('./SecQuestions.model')(sequelize, Sequelize);
 
 
 
