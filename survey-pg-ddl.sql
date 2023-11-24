@@ -619,7 +619,7 @@ CREATE TABLE public.samplesurveyemailschedules (
 
 -- DROP TABLE public.secquestions;
 
-CREATE TABLE public.secquestions (
+CREATE TABLE public.F (
 	id int4 NOT NULL,
 	socioeconomicclassificationid int4 NOT NULL,
 	questionid int4 NOT NULL,

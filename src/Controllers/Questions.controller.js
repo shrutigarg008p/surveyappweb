@@ -155,3 +155,28 @@ module.exports.delete = async (req, res) => {
         return apiResponses.errorResponse(res, err);
     }
 };
+
+
+const jsonFile = require('../../questions.json')
+async function test() {
+    console.log(jsonFile)
+    for(let i = 0; i < jsonFile.length; i++) {
+        const isExist = await Questions.findOne({where: {text: jsonFile[i].text, deletedAt: null}})
+        console.log(isExist)
+        if (!isExist) {
+            console.log('llllll----->', i)
+            const Question = await Questions.create({
+                text: jsonFile[i].text,
+                profileId: jsonFile[i].profileId,
+                displayOrder: jsonFile[i].displayOrder,
+                hint: jsonFile[i].hint,
+                displayType: jsonFile[i].displayType,
+                isActive: jsonFile[i].isActive,
+                dataType: jsonFile[i].dataType,
+                createdAt: new Date().valueOf(),
+                updatedAt: new Date().valueOf(),
+            })
+        }
+    }
+
+}
