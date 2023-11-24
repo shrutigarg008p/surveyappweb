@@ -12,4 +12,5 @@ module.exports=(app)=> {
 	require('./ProfileManagement.route')(app);
 	require('./Questions.route')(app);
 	require('./Options.route')(app);
+	require('./Surveys.route')(app);
 };

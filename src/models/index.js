@@ -35,6 +35,10 @@ db.profiles = require('./ProfileManagement.model')(sequelize, Sequelize);
 db.questions = require('./Questions.model')(sequelize, Sequelize);
 db.options = require('./Options.model')(sequelize, Sequelize);
 db.secQuestions = require('./SecQuestions.model')(sequelize, Sequelize);
+db.surveys = require('./surveys.models')(sequelize, Sequelize);
+db.blacklistedSurveys = require('./blackListedSurveys.model')(sequelize, Sequelize);
+
+
 
 
 

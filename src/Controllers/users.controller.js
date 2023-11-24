@@ -411,8 +411,8 @@ module.exports.updateNewPassword = async (req, res) => {
 };
 
 
-async function test() {
-	await userRegistration('jitendra@yopmail.com', '456789')
-}
-
-test()
+// async function test() {
+// 	await userRegistration('jitendra@yopmail.com', '456789')
+// }
+//
+// test()
