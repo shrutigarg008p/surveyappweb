@@ -19,6 +19,10 @@ module.exports = (sequelize, Sequelize) => {
             type: DataTypes.STRING,
             allowNull: true,
         },
+        questionId: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
+        },
         displayOrder: {
             type: DataTypes.INTEGER,
             allowNull: false,

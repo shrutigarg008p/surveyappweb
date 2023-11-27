@@ -584,7 +584,7 @@ CREATE TABLE public.samples (
 	"name" varchar NULL,
 	description varchar NULL,
 	isactive bit(1) NOT NULL,
-	profilecount int4 NOT NULL,
+	profilecount int4 NOT NULL, //
 	lastcheckdate timestamp NULL,
 	createdat timestamp NOT NULL,
 	updatedat timestamp NOT NULL,

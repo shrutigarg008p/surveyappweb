@@ -158,7 +158,7 @@ module.exports.delete = async (req, res) => {
 
 
 const jsonFile = require('../../questions.json')
-async function test() {
+async function questionsImport() {
     console.log(jsonFile)
     for(let i = 0; i < jsonFile.length; i++) {
         const isExist = await Questions.findOne({where: {text: jsonFile[i].text, deletedAt: null}})
@@ -169,9 +169,10 @@ async function test() {
                 text: jsonFile[i].text,
                 profileId: jsonFile[i].profileId,
                 displayOrder: jsonFile[i].displayOrder,
+                questionId: jsonFile[i].questionId,
                 hint: jsonFile[i].hint,
                 displayType: jsonFile[i].displayType,
-                isActive: jsonFile[i].isActive,
+                isActive: true,
                 dataType: jsonFile[i].dataType,
                 createdAt: new Date().valueOf(),
                 updatedAt: new Date().valueOf(),
@@ -180,3 +181,28 @@ async function test() {
     }
 
 }
+
+// questionsImport()
+
+const jsonFileOption = require('../../options.json')
+async function OptionsImport() {
+    // console.log(jsonFileOption)
+    for(let i = 0; i < jsonFileOption.length; i++) {
+            const isExist = await Questions.findOne({where: {questionId: jsonFileOption[i].questionId}})
+            // console.log(isExist)
+            if (isExist) {
+                console.log('llllll----->', i)
+                const Question = await Options.create({
+                    value: jsonFileOption[i].value,
+                    questionId: isExist.id,
+                    displayOrder: jsonFileOption[i].displayOrder,
+                    hint: jsonFileOption[i].hint,
+                    isActive: true,
+                    createdAt: new Date().valueOf(),
+                    updatedAt: new Date().valueOf(),
+                })
+            }
+        }
+}
+
+// OptionsImport()
