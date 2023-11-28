@@ -60,15 +60,15 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: true,
         },
         stateIds: {
-            type: DataTypes.STRING,
+            type: DataTypes.JSON,
             allowNull: true,
         },
         cityIds: {
-            type: DataTypes.STRING,
+            type: DataTypes.JSON,
             allowNull: true,
         },
         tierIds: {
-            type: DataTypes.STRING,
+            type: DataTypes.JSON,
             allowNull: true,
         },
         secIds: {

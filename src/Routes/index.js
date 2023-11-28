@@ -13,4 +13,6 @@ module.exports=(app)=> {
 	require('./Questions.route')(app);
 	require('./Options.route')(app);
 	require('./Surveys.route')(app);
+	require('./Sample.route')(app);
+
 };
