@@ -34,4 +34,24 @@ module.exports= function(app) {
         '/api/v1/samples/delete/:id',
         samplesControllers.delete,
     );
+
+    app.post(
+        '/api/v1/samples/create-questions',
+        samplesControllers.createQuestion,
+    );
+
+    app.get(
+        '/api/v1/samples/get-SampleQuestion/:id',
+        samplesControllers.getQuestion,
+    );
+
+    app.get(
+        '/api/v1/samples/get-SampleQuestions/:sampleId',
+        samplesControllers.getSamplesQuestions,
+    );
+
+    app.delete(
+        '/api/v1/samples/remove-question/:id',
+        samplesControllers.removeQuestion,
+    );
 };

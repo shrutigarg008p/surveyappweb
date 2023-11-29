@@ -160,9 +160,11 @@ module.exports.getSecQuestions = async (req, res) => {
             include: [
                 {
                     model: Questions,
+                    required: false,
                 },
                 {
                     model: Options,
+                    required: false,
                 },
             ],
         })

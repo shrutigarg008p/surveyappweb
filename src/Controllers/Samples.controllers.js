@@ -1,5 +1,8 @@
 const db = require('../models');
 const Samples = db.sample;
+const SamplesQuestions = db.sampleQuestions;
+const Questions = db.questions;
+const Options = db.options;
 const apiResponses = require('../Components/apiresponse');
 const {DataTypes} = require("sequelize");
 
@@ -95,6 +98,106 @@ module.exports.delete = async (req, res) => {
             { where: { id : req.params.id },
             })
         return apiResponses.successResponseWithData(res, 'Success');
+    } catch (err) {
+        return apiResponses.errorResponse(res, err);
+    }
+};
+
+
+
+module.exports.createQuestion = async (req, res) => {
+    try {
+        const isExist = await SamplesQuestions.findOne({ where: { questionId: req.body.questionId, sampleId: req.body.sampleId, deletedAt: null }})
+        if(!isExist) {
+            const question = await SamplesQuestions.create({
+                questionId: req.body.questionId,
+                sampleId: req.body.sampleId,
+                operand: req.body.operand,
+                optionIds: req.body.optionIds,
+                createdAt: new Date().valueOf(),
+                updatedAt: new Date().valueOf(),
+            })
+            return apiResponses.successResponseWithData(
+                res,
+                'Success!',
+                question
+            );
+        } else {
+            return apiResponses.validationErrorWithData(
+                res,
+                'Question is already exist!',
+            );
+        }
+    } catch (err) {
+        return apiResponses.errorResponse(res, err);
+    }
+};
+
+module.exports.getQuestion = async (req, res) => {
+    try {
+        SamplesQuestions.belongsTo(Questions, { foreignKey: 'questionId' });
+        SamplesQuestions.belongsTo(Options, { foreignKey: 'optionIds' });
+        SamplesQuestions.belongsTo(Samples, { foreignKey: 'sampleId' });
+        const data = await SamplesQuestions.findOne({
+            where: { id: req.params.id },
+            include: [
+                {
+                    model: Questions,
+                },
+                {
+                    model: Options,
+                },
+                {
+                    model: Samples,
+                },
+            ],
+        })
+        return apiResponses.successResponseWithData(
+            res,
+            'Success!',
+            data
+        );
+    } catch (err) {
+        return apiResponses.errorResponse(res, err);
+    }
+};
+
+
+module.exports.getSamplesQuestions = async (req, res) => {
+    try {
+        SamplesQuestions.belongsTo(Questions, { foreignKey: 'questionId' });
+        SamplesQuestions.belongsTo(Options, { foreignKey: 'optionIds' });
+        const data = await SamplesQuestions.findAll({
+            where: { sampleId: req.params.sampleId },
+            include: [
+                {
+                    model: Questions,
+                    required: false,
+                },
+                {
+                    model: Options,
+                    required: false,
+                },
+            ],
+        })
+        return apiResponses.successResponseWithData(
+            res,
+            'Success!',
+            data
+        );
+    } catch (err) {
+        return apiResponses.errorResponse(res, err);
+    }
+};
+
+module.exports.removeQuestion = async (req, res) => {
+    try {
+        const isExist = await SamplesQuestions.destroy({ where: { id: req.params.id }})
+        return apiResponses.successResponseWithData(
+            res,
+            'Success!',
+            isExist
+        );
     } catch (err) {
         return apiResponses.errorResponse(res, err);
     }

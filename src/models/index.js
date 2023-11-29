@@ -38,6 +38,7 @@ db.secQuestions = require('./SecQuestions.model')(sequelize, Sequelize);
 db.surveys = require('./surveys.models')(sequelize, Sequelize);
 db.blacklistedSurveys = require('./blackListedSurveys.model')(sequelize, Sequelize);
 db.sample = require('./Samples.model')(sequelize, Sequelize);
+db.sampleQuestions = require('./SampleQuestions.model')(sequelize, Sequelize);
 
 
 
