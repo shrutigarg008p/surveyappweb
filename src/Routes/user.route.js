@@ -54,4 +54,9 @@ module.exports= function(app) {
 		'/api/v1/auth/user/Updatenew-password/:token',
 		usersController.updateNewPassword,
 	);
+
+	app.get(
+		'/api/v1/auth/user/list/:limit/:type',
+		usersController.basicProfileOnly,
+	);
 };

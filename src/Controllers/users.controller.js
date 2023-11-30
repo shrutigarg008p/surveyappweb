@@ -411,8 +411,58 @@ module.exports.updateNewPassword = async (req, res) => {
 };
 
 
-// async function test() {
-// 	await userRegistration('jitendra@yopmail.com', '456789')
-// }
-//
-// test()
+module.exports.basicProfileOnly = async (req, res) => {
+	try {
+		User.hasOne(BasicProfile, {
+			foreignKey: 'userId',
+		});
+		const limit = req.params.limit;
+		User.findAll({
+			attributes: ['phoneNumber', 'id', 'email', 'createdAt'],
+			include: [{
+				model: BasicProfile,
+				attributes: ['firstName', 'lastName', 'dateOfBirth', 'city', 'firstName', 'lastName'],
+				required: false,
+			}],
+		limit: limit,
+		order: [['createdAt', 'DESC']]
+		}).then(
+			async (result) => {
+				let data = []
+				if(req.params.type === 'registeredOnly') {
+					data = result.filter(item => item.basic_profile === null);
+				} else if(req.params.type === 'basicProfileOnly') {
+					data = result.filter(item => item.basic_profile !== null);
+				} else if(req.params.type === 'unsubscribedRequestOnly') {
+					data = await User.findAll({
+						where: { unsubscribeRequestDate: { $ne: null }},
+						attributes: ['phoneNumber', 'id', 'email', 'createdAt', 'unsubscribeRequestDate'],
+						include: [{
+							model: BasicProfile,
+							attributes: ['firstName', 'lastName', 'id', 'dateOfBirth', 'city', 'firstName', 'lastName'],
+							required: false,
+						}],
+						limit: limit,
+						order: [['createdAt', 'DESC']]
+					})
+				} else if(req.params.type === 'deleteRequestOnly') {
+					data = await User.findAll({
+						where: { deleteRequestDate: { $ne: null }},
+						attributes: ['phoneNumber', 'id', 'email', 'createdAt', 'deleteRequestDate'],
+						include: [{
+							model: BasicProfile,
+							attributes: ['firstName', 'lastName', 'id', 'dateOfBirth', 'city', 'firstName', 'lastName'],
+							required: false,
+						}],
+						limit: limit,
+						order: [['createdAt', 'DESC']]
+					})
+				}
+				return apiResponses.successResponseWithData(res, 'success!', data);
+			},
+		);
+	} catch (err) {
+		console.log(err)
+		return apiResponses.errorResponse(res, err);
+	}
+};
