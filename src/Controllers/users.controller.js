@@ -7,7 +7,7 @@ const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const ip = require('ip');
 const Mails = require("../Config/Mails");
-const {BOOLEAN} = require("sequelize");
+const {BOOLEAN, literal} = require("sequelize");
 const {bool} = require("twilio/lib/base/serialize");
 const {userRegistration} = require("../Config/Mails");
 const Op = db.Sequelize.Op;
@@ -439,7 +439,7 @@ module.exports.basicProfileOnly = async (req, res) => {
 						attributes: ['phoneNumber', 'id', 'email', 'createdAt', 'unsubscribeRequestDate'],
 						include: [{
 							model: BasicProfile,
-							attributes: ['firstName', 'lastName', 'id', 'dateOfBirth', 'city', 'firstName', 'lastName'],
+							attributes: ['firstName', 'lastName', 'dateOfBirth', 'city', 'firstName', 'lastName'],
 							required: false,
 						}],
 						limit: limit,
@@ -451,7 +451,30 @@ module.exports.basicProfileOnly = async (req, res) => {
 						attributes: ['phoneNumber', 'id', 'email', 'createdAt', 'deleteRequestDate'],
 						include: [{
 							model: BasicProfile,
-							attributes: ['firstName', 'lastName', 'id', 'dateOfBirth', 'city', 'firstName', 'lastName'],
+							attributes: ['firstName', 'lastName', 'dateOfBirth', 'city', 'firstName', 'lastName'],
+							required: false,
+						}],
+						limit: limit,
+						order: [['createdAt', 'DESC']]
+					})
+				} else if(req.params.type === 'bouncedOnly') {
+					data = await User.findAll({
+						attributes: ['phoneNumber', 'id', 'email', 'createdAt', 'deleteRequestDate'],
+						include: [{
+							model: BasicProfile,
+							attributes: ['firstName', 'lastName', 'dateOfBirth', 'city', 'firstName', 'lastName'],
+							required: false,
+						}],
+						limit: limit,
+						order: [['createdAt', 'DESC']]
+					})
+				} else {
+					data = await User.findAll({
+						where: { deleteRequestDate: { $ne: null }},
+						attributes: ['phoneNumber', 'id', 'email', 'createdAt', 'deleteRequestDate'],
+						include: [{
+							model: BasicProfile,
+							attributes: ['firstName', 'lastName', 'dateOfBirth', 'city', 'firstName', 'lastName'],
 							required: false,
 						}],
 						limit: limit,
@@ -461,6 +484,143 @@ module.exports.basicProfileOnly = async (req, res) => {
 				return apiResponses.successResponseWithData(res, 'success!', data);
 			},
 		);
+	} catch (err) {
+		console.log(err)
+		return apiResponses.errorResponse(res, err);
+	}
+};
+
+
+
+
+module.exports.allPanelists = async (req, res) => {
+	try {
+		User.hasOne(BasicProfile, {
+			foreignKey: 'userId',
+		});
+		const limit = req.params.limit;
+		let whereClauseProfile = {};
+		let whereClauseUser = {};
+		let filteredProfilePanelists = []
+		let filteredUserPanelists = []
+		const request = req.body
+		if(request.gender || request.startAge && request.endAge || request.states && request.states.length > 0
+		|| request.cities && request.cities.length > 0 ) {
+			if (request.gender) {
+				whereClauseProfile.gender = request.gender;
+			}
+
+			if (request.startAge && request.endAge) {
+				whereClauseProfile.dateOfBirth = literal(
+					`TIMESTAMPDIFF(YEAR, basicProfile.dateOfBirth, CURDATE()) BETWEEN ${request.startAge} AND ${request.endAge}`
+				);
+			}
+
+			if (request.states && request.states.length > 0) {
+				whereClauseProfile.stateId = {
+					[Op.in]: request.states,
+				};
+			}
+
+			if (request.cities && request.cities.length > 0) {
+				whereClauseProfile.cityId= {
+					[Op.in]: request.cities,
+				};
+			}
+
+			if (request.tiers && request.tiers.length > 0) {
+				whereClauseProfile.tier = {
+					[Op.in]: request.tiers,
+				};
+			}
+
+			filteredProfilePanelists = await BasicProfile.findAll({
+				where: whereClauseProfile,
+				limit: limit,
+				order: [['createdAt', 'DESC']]
+			});
+		}
+			if (request.id) {
+				whereClauseUser.id = request.id;
+			}
+			if (request.email) {
+				whereClauseUser.email = request.email;
+			}
+
+			if (request.phoneNumber) {
+				whereClauseUser.phoneNumber = request.phoneNumber;
+			}
+
+			if (request.isActive) {
+				whereClauseUser.activeStatus = request.isActive === 'active' ? 0 : 1;
+			}
+
+			if (request.fromRegistrationDate && request.toRegistrationDate) {
+				whereClauseUser.registrationDate = {
+					[Op.between]: [request.fromRegistrationDate, request.toRegistrationDate],
+				};
+			}
+
+			if (request.surveys && request.surveys.length > 0) {
+				whereClauseUser.surveyId = {
+					[Op.in]: request.surveys,
+				};
+			}
+
+			if (request.sec && request.sec.length > 0) {
+				whereClauseUser.secId = {
+					[Op.in]: request.sec,
+				};
+			}
+
+			console.log('whereClause--->', whereClauseUser, whereClauseProfile)
+		    filteredUserPanelists = await User.findAll({
+				where: whereClauseUser,
+				attributes: ['phoneNumber', 'id', 'email', 'createdAt', 'deleteRequestDate'],
+				include: [
+					{
+						model: BasicProfile,
+						attributes: ['firstName', 'lastName', 'dateOfBirth', 'city', 'firstName', 'lastName', 'gender', 'mobile'],
+						required: false
+					},
+				],
+				limit: limit,
+				order: [['createdAt', 'DESC']]
+			});
+
+			let mergedArray = []
+			if(filteredProfilePanelists.length > filteredUserPanelists.length) {
+				mergedArray = filteredProfilePanelists.map(user => {
+					const matchingPanelist = filteredUserPanelists.find(panelist => panelist.id === user.userId);
+					return {
+						"userId": user.userId || matchingPanelist.id,
+						"isActive": matchingPanelist.activeStatus,
+						"firstName": user.firstName || matchingPanelist.basic_profile ? matchingPanelist.basic_profile.firstName : '',
+						"lastName": user.lastName || matchingPanelist.basic_profile ? matchingPanelist.basic_profile.lastName : '',
+						"gender": user.gender || matchingPanelist.basic_profile ? matchingPanelist.basic_profile.gender : '',
+						"mobile": matchingPanelist ? matchingPanelist.phoneNumber : user ? user.mobile : '',
+						"email": user.email || matchingPanelist ? matchingPanelist.email : '',
+						"dateOfBirth": user.dateOfBirth || matchingPanelist.basic_profile ? matchingPanelist.basic_profile.dateOfBirth : '',
+						"city": user.city || matchingPanelist.basic_profile ? matchingPanelist.basic_profile.city : '',
+					}
+				});
+			} else {
+				mergedArray = filteredUserPanelists.map(user => {
+					const matchingPanelist = filteredProfilePanelists.find(panelist => panelist.userId === user.id);
+					return {
+						"userId": user.id || matchingPanelist.userId,
+						"isActive": user.activeStatus,
+						"firstName": matchingPanelist ? matchingPanelist.firstName : user.basic_profile ? user.basic_profile.firstName : '',
+						"lastName": matchingPanelist ? matchingPanelist.lastName : user.basic_profile ? user.basic_profile.lastName : '',
+						"gender": matchingPanelist ? matchingPanelist.gender : user.basic_profile ? user.basic_profile.gender : '',
+						"mobile": user.phoneNumber || matchingPanelist.mobile || '',
+						"email": user.email || matchingPanelist.email || '',
+						"dateOfBirth": matchingPanelist ? matchingPanelist.dateOfBirth : user.basic_profile ? user.basic_profile.dateOfBirth : '',
+						"city": matchingPanelist ? matchingPanelist.city : user.basic_profile ? user.basic_profile.city : '',
+					}
+				});
+			}
+		return apiResponses.successResponseWithData(res, 'success!',  mergedArray);
 	} catch (err) {
 		console.log(err)
 		return apiResponses.errorResponse(res, err);

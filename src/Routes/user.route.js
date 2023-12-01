@@ -59,4 +59,9 @@ module.exports= function(app) {
 		'/api/v1/auth/user/list/:limit/:type',
 		usersController.basicProfileOnly,
 	);
+
+	app.post(
+		'/api/v1/auth/user/allPanelist/:limit',
+		usersController.allPanelists,
+	);
 };

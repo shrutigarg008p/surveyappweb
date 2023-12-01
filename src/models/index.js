@@ -41,6 +41,13 @@ db.sample = require('./Samples.model')(sequelize, Sequelize);
 db.sampleQuestions = require('./SampleQuestions.model')(sequelize, Sequelize);
 
 
+// db.user.hasMany(db.basicProfile, {
+// 	sourceKey: 'id',
+// 	foreignKey: 'userId',
+// });
+// db.basicProfile.hasMany(db.user, {
+// 	foreignKey: 'userId',
+// });
 
 // db.subscriptionPayment.hasOne(db.subscription, {sourceKey: 'subscriptionId', foreignKey: 'id'});
 // db.faq_heading.hasMany(db.faq_answer, {sourceKey: 'id', foreignKey: 'faq_heading_id'});
