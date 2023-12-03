@@ -39,6 +39,12 @@ db.surveys = require('./surveys.models')(sequelize, Sequelize);
 db.blacklistedSurveys = require('./blackListedSurveys.model')(sequelize, Sequelize);
 db.sample = require('./Samples.model')(sequelize, Sequelize);
 db.sampleQuestions = require('./SampleQuestions.model')(sequelize, Sequelize);
+db.newsletters = require('./NewsLetter.model')(sequelize, Sequelize);
+db.newslettersSamples = require('./NewsletterSamples.model')(sequelize, Sequelize);
+db.messages = require('./Messages.model')(sequelize, Sequelize);
+db.applicationAssignUser = require('./ApplicationsAssignUser.model')(sequelize, Sequelize);
+
+
 
 
 // db.user.hasMany(db.basicProfile, {

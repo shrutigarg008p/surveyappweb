@@ -55,6 +55,16 @@ module.exports= function(app) {
 		usersController.updateNewPassword,
 	);
 
+	app.post(
+		'/api/v1/auth/user/unSubscribeUser/:userId',
+		usersController.unSubscribeUser,
+	);
+
+	app.post(
+		'/api/v1/auth/user/change-password',
+		usersController.updateNewPassword,
+	);
+
 	app.get(
 		'/api/v1/auth/user/list/:limit/:type',
 		usersController.basicProfileOnly,
@@ -63,5 +73,10 @@ module.exports= function(app) {
 	app.post(
 		'/api/v1/auth/user/allPanelist/:limit',
 		usersController.allPanelists,
+	);
+
+	app.get(
+		'/api/v1/auth/user/panelistProfile/:id',
+		usersController.panelistProfile,
 	);
 };

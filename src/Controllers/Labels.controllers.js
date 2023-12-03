@@ -1,5 +1,6 @@
 const db = require('../models');
 const Labels = db.labels;
+const ApplicationAssignUser = db.applicationAssignUser;
 const apiResponses = require('../Components/apiresponse');
 
 module.exports.create = async (req, res) => {
@@ -80,6 +81,29 @@ module.exports.delete = async (req, res) => {
             { where: { id : req.params.id },
             })
         return apiResponses.successResponseWithData(res, 'Success');
+    } catch (err) {
+        return apiResponses.errorResponse(res, err);
+    }
+};
+
+
+module.exports.createApplicationAssignUser = async (req, res) => {
+    try {
+            const newArray = req.body.options.map(item => {
+                return {
+                    ...item,
+                    applicationUser_id: item.applicationUser_id,
+                    label_id: item.label_id,
+                    createdAt: new Date().valueOf(),
+                    updatedAt: new Date().valueOf(),
+                };
+            });
+            const assign = await ApplicationAssignUser.bulkCreate(newArray)
+            return apiResponses.successResponseWithData(
+                res,
+                'Success!',
+                assign
+            );
     } catch (err) {
         return apiResponses.errorResponse(res, err);
     }

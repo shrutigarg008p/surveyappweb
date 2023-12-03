@@ -313,6 +313,28 @@ module.exports.userUpdate = async (req, res) => {
 	}
 };
 
+module.exports.unSubscribeUser = async (req, res) => {
+	try {
+		let obj = {
+			unsubscribeDate: new Date().valueOf(),
+			unsubscribeRequestDate: new Date().valueOf(),
+			updatedAt: new Date().valueOf()
+		}
+
+		const isExist = await User.findOne({ where: { userId: req.params.userId } })
+		if(!isExist) {
+			const user = await BasicProfile.create(
+				obj
+			)
+			return apiResponses.successResponseWithData(res, 'Success Created', user);
+		} else {
+			return apiResponses.validationErrorWithData(res, 'User not found', null);
+		}
+	} catch (err) {
+		return apiResponses.errorResponse(res, err);
+	}
+};
+
 module.exports.users = async (req, res) => {
 	try {
 		const limit = req.params.limit;
@@ -395,6 +417,27 @@ module.exports.updateNewPassword = async (req, res) => {
 				expireToken: null,
 			},
 			{where: {resetToken: sentToken, expireToken: {[Op.gt]: Date.now()}},
+			})
+			.then(async (user) => {
+				if (!user) {
+					return apiResponses.notFoundResponse(res, 'Not found.', {});
+				}
+				return apiResponses.successResponseWithData(res, 'Success', user);
+			})
+			.catch((error) => {
+				return apiResponses.errorResponse(res, error.message, {});
+			});
+	} catch (err) {
+		return apiResponses.errorResponse(res, err);
+	}
+};
+
+module.exports.changePassword = async (req, res) => {
+	try {
+		User.update({
+				password: await bcrypt.hashSync(req.body.password, 8),
+			},
+			{where: {id: req.body.userId},
 			})
 			.then(async (user) => {
 				if (!user) {
@@ -602,6 +645,7 @@ module.exports.allPanelists = async (req, res) => {
 						"email": user.email || matchingPanelist ? matchingPanelist.email : '',
 						"dateOfBirth": user.dateOfBirth || matchingPanelist.basic_profile ? matchingPanelist.basic_profile.dateOfBirth : '',
 						"city": user.city || matchingPanelist.basic_profile ? matchingPanelist.basic_profile.city : '',
+
 					}
 				});
 			} else {
@@ -621,6 +665,92 @@ module.exports.allPanelists = async (req, res) => {
 				});
 			}
 		return apiResponses.successResponseWithData(res, 'success!',  mergedArray);
+	} catch (err) {
+		console.log(err)
+		return apiResponses.errorResponse(res, err);
+	}
+};
+
+
+
+module.exports.panelistProfile = async (req, res) => {
+	try {
+		User.hasOne(BasicProfile, {
+			foreignKey: 'userId',
+		});
+		const limit = req.params.limit;
+		User.findOne({
+			attributes: ['phoneNumber', 'id', 'email', 'createdAt'],
+			include: [{
+				model: BasicProfile,
+				attributes: [
+					'firstName',
+					'lastName',
+					'dateOfBirth',
+					'city',
+					'firstName',
+					'lastName',
+					'gender',
+					'addressLine1',
+					'addressLine2',
+					'country',
+					'pinCode',
+					'imagePath',
+					'referralSource'
+
+				],
+				required: false,
+			}],
+			limit: limit,
+			order: [['createdAt', 'DESC']]
+		}).then(
+			async (result) => {
+				result = {
+					...result,
+					profilesTotalPercentage: 0,
+					profile: {
+						about: 0,
+						personalFinance: 0,
+						shopping: 0,
+						travel: 0,
+						media: 0,
+						houseHold: 0,
+						health: 0,
+						professional: 0,
+						Electronics: 0,
+					},
+					surveys: {
+						totalCount: 0,
+						completedCount: 0,
+						inCompletedCount: 0,
+						notStartedCount: 0,
+						list: []
+					},
+					rewards: {
+						totalCount: 0,
+						completedCount: 0,
+						inCompletedCount: 0,
+						notStartedCount: 0,
+						list: []
+					},
+					referrals: {
+						totalCount: 0,
+						completedCount: 0,
+						inCompletedCount: 0,
+						notStartedCount: 0,
+						list: []
+					},
+					redemption: {
+						totalCount: 0,
+						completedCount: 0,
+						inCompletedCount: 0,
+						notStartedCount: 0,
+						list: []
+					}
+				}
+				return apiResponses.successResponseWithData(res, 'success!', result);
+			},
+		);
 	} catch (err) {
 		console.log(err)
 		return apiResponses.errorResponse(res, err);

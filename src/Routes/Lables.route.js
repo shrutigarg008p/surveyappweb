@@ -35,4 +35,9 @@ module.exports= function(app) {
         labelsControllers.delete,
     );
 
+    app.post(
+        '/api/v1/labels/createApplicationAssignUser',
+        labelsControllers.createApplicationAssignUser,
+    );
+
 };
