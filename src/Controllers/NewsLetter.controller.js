@@ -22,6 +22,7 @@ module.exports.create = async (req, res) => {
                 Survey
             );
     } catch (err) {
+        console.log(err)
         return apiResponses.errorResponse(res, err);
     }
 };

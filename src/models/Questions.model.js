@@ -12,11 +12,11 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false,
         },
         text: {
-            type: DataTypes.STRING,
+            type: Sequelize.STRING(512),
             allowNull: true,
         },
         hint: {
-            type: DataTypes.STRING,
+            type: Sequelize.STRING(512),
             allowNull: true,
         },
         questionId: {

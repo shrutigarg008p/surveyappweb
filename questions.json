@@ -5,6 +5,7 @@
     "text": "Are you chief wage earner of your household ?",
     "hint": "Chief wage earner is the one who contributes the maximum income towards the household expenses",
     "displayOrder": 1,
+    "isactive": 1,
     "displayType": 1,
     "dataType": 5
   },
@@ -13,7 +14,7 @@
     "profileId": "b6e9d661-bd50-492c-a2ab-a4551607d9be",
     "text": "Out of the following options of education, which is the one that applies to the Chief Wage Earner of your household?",
     "displayOrder": 2,
-
+    "isactive": 1,
     "displayType": 1,
     "dataType": 4
   },
@@ -22,7 +23,7 @@
     "profileId": "b6e9d661-bd50-492c-a2ab-a4551607d9be",
     "text": "Out of the following options of occupation, which is the one that applies to the Chief Wage Earner of your household?",
     "displayOrder": 3,
-
+    "isactive": 1,
     "displayType": 1,
     "dataType": 4
   },
@@ -31,7 +32,7 @@
     "profileId": "b6e9d661-bd50-492c-a2ab-a4551607d9be",
     "text": "What is your native country?",
     "displayOrder": 4,
-
+    "isactive": 1,
     "displayType": 1,
     "dataType": 4
   },
@@ -40,7 +41,7 @@
     "profileId": "b6e9d661-bd50-492c-a2ab-a4551607d9be",
     "text": "What is your current location (country)?",
     "displayOrder": 5,
-
+    "isactive": 1,
     "displayType": 1,
     "dataType": 4
   },
@@ -49,7 +50,7 @@
     "profileId": "b6e9d661-bd50-492c-a2ab-a4551607d9be",
     "text": "For the current year, which of the following ranges includes your total annual household income?",
     "displayOrder": 6,
-
+    "isactive": 1,
     "displayType": 2,
     "dataType": 4
   },
@@ -58,7 +59,7 @@
     "profileId": "b6e9d661-bd50-492c-a2ab-a4551607d9be",
     "text": "What is your gender",
     "displayOrder": 7,
-
+    "isactive": 1,
     "displayType": 1,
     "dataType": 5
   },
@@ -67,7 +68,7 @@
     "profileId": "b6e9d661-bd50-492c-a2ab-a4551607d9be",
     "text": "How many people, including yourself, currently live in your household?",
     "displayOrder": 8,
-
+    "isactive": 1,
     "displayType": 1,
     "dataType": 1
   },
@@ -76,7 +77,7 @@
     "profileId": "b6e9d661-bd50-492c-a2ab-a4551607d9be",
     "text": "How did you hear about the INDIA SPEAKS Online Panel?",
     "displayOrder": 9,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -85,7 +86,7 @@
     "profileId": "b6e9d661-bd50-492c-a2ab-a4551607d9be",
     "text": "What is your Marital Status?",
     "displayOrder": 11,
-
+    "isactive": 1,
     "displayType": 2,
     "dataType": 4
   },
@@ -94,7 +95,7 @@
     "profileId": "b6e9d661-bd50-492c-a2ab-a4551607d9be",
     "text": "Which of the following languages do you speak fluently? Select all that apply",
     "displayOrder": 12,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -103,7 +104,7 @@
     "profileId": "b6e9d661-bd50-492c-a2ab-a4551607d9be",
     "text": "What is the highest level of education you have completed?",
     "displayOrder": 13,
-
+    "isactive": 1,
     "displayType": 1,
     "dataType": 4
   },
@@ -112,7 +113,7 @@
     "profileId": "b6e9d661-bd50-492c-a2ab-a4551607d9be",
     "text": "What type of home do you live in?",
     "displayOrder": 14,
-
+    "isactive": 1,
     "displayType": 1,
     "dataType": 4
   },
@@ -121,7 +122,7 @@
     "profileId": "b6e9d661-bd50-492c-a2ab-a4551607d9be",
     "text": "What is your current employment status?",
     "displayOrder": 15,
-
+    "isactive": 1,
     "displayType": 2,
     "dataType": 4
   },
@@ -130,7 +131,7 @@
     "profileId": "b6e9d661-bd50-492c-a2ab-a4551607d9be",
     "text": "Concerning your place of residence, do you:",
     "displayOrder": 16,
-
+    "isactive": 1,
     "displayType": 2,
     "dataType": 4
   },
@@ -139,7 +140,7 @@
     "profileId": "b6e9d661-bd50-492c-a2ab-a4551607d9be",
     "text": "What type of connection do you use to access the Internet most often?",
     "displayOrder": 17,
-
+    "isactive": 1,
     "displayType": 1,
     "dataType": 4
   },
@@ -148,7 +149,7 @@
     "profileId": "b6e9d661-bd50-492c-a2ab-a4551607d9be",
     "text": "For which of the following, if any, would you consider yourself the PRIMARY SHOPPER OR DECISION MAKER for your household (doing at least half of the shopping or decision making)? (Select all that apply)",
     "displayOrder": 18,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -157,7 +158,7 @@
     "profileId": "b6e9d661-bd50-492c-a2ab-a4551607d9be",
     "text": "On average, how many hours do you typically spend on the Internet, excluding email, in a normal week?",
     "displayOrder": 19,
-
+    "isactive": 1,
     "displayType": 1,
     "dataType": 4
   },
@@ -166,7 +167,7 @@
     "profileId": "b6e9d661-bd50-492c-a2ab-a4551607d9be",
     "text": "Please select the following that applies to you.",
     "displayOrder": 20,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -175,7 +176,7 @@
     "profileId": "bafbf42a-38b2-439d-895f-96ae267a6b28",
     "text": "Which of the following financial institutions do you use for banking?",
     "displayOrder": 21,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -184,16 +185,16 @@
     "profileId": "bafbf42a-38b2-439d-895f-96ae267a6b28",
     "text": "Which of the following services do you use through your financial institution(s)?",
     "displayOrder": 22,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 22,
     "profileId": "bafbf42a-38b2-439d-895f-96ae267a6b28",
-    "text": "Which of the following types of accounts\/loans do you have?",
+    "text": "Which of the following types of accounts/loans do you have?",
     "displayOrder": 23,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -202,7 +203,7 @@
     "profileId": "bafbf42a-38b2-439d-895f-96ae267a6b28",
     "text": "Which credit cards do you or anyone in your household own or use?",
     "displayOrder": 24,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -211,16 +212,16 @@
     "profileId": "bafbf42a-38b2-439d-895f-96ae267a6b28",
     "text": "On average, how many online bill pay transactions do you make per month (using money in your checking or savings account)?",
     "displayOrder": 25,
-
+    "isactive": 1,
     "displayType": 1,
     "dataType": 4
   },
   {
     "questionId": 25,
     "profileId": "bafbf42a-38b2-439d-895f-96ae267a6b28",
-    "text": "How often do you use a debit\/Credit card?",
+    "text": "How often do you use a debit/Credit card?",
     "displayOrder": 26,
-
+    "isactive": 1,
     "displayType": 1,
     "dataType": 4
   },
@@ -229,25 +230,25 @@
     "profileId": "bafbf42a-38b2-439d-895f-96ae267a6b28",
     "text": "Do you currently have, or are you planning to get a loan?",
     "displayOrder": 27,
-
+    "isactive": 1,
     "displayType": 1,
     "dataType": 4
   },
   {
     "questionId": 27,
     "profileId": "bafbf42a-38b2-439d-895f-96ae267a6b28",
-    "text": "Who do you depend on for financial\/investment guidance or advice?",
+    "text": "Who do you depend on for financial/investment guidance or advice?",
     "displayOrder": 28,
-
+    "isactive": 1,
     "displayType": 1,
     "dataType": 4
   },
   {
     "questionId": 28,
     "profileId": "bafbf42a-38b2-439d-895f-96ae267a6b28",
-    "text": "Please indicate how often you conduct business banking transactions through the channels listed below? Rarely \/ Never",
+    "text": "Please indicate how often you conduct business banking transactions through the channels listed below? Rarely / Never",
     "displayOrder": 29,
-
+    "isactive": 1,
     "displayType": 2,
     "dataType": 4
   },
@@ -256,7 +257,7 @@
     "profileId": "bafbf42a-38b2-439d-895f-96ae267a6b28",
     "text": "Please indicate how often you conduct business banking transactions through the channels listed below? Once a year",
     "displayOrder": 30,
-
+    "isactive": 1,
     "displayType": 2,
     "dataType": 4
   },
@@ -265,7 +266,7 @@
     "profileId": "bafbf42a-38b2-439d-895f-96ae267a6b28",
     "text": "Please indicate how often you conduct business banking transactions through the channels listed below? Once every few months",
     "displayOrder": 31,
-
+    "isactive": 1,
     "displayType": 2,
     "dataType": 4
   },
@@ -274,7 +275,7 @@
     "profileId": "bafbf42a-38b2-439d-895f-96ae267a6b28",
     "text": "Please indicate how often you conduct business banking transactions through the channels listed below? Once a month",
     "displayOrder": 32,
-
+    "isactive": 1,
     "displayType": 2,
     "dataType": 4
   },
@@ -283,7 +284,7 @@
     "profileId": "bafbf42a-38b2-439d-895f-96ae267a6b28",
     "text": "Please indicate how often you conduct business banking transactions through the channels listed below? Once every few weeks",
     "displayOrder": 33,
-
+    "isactive": 1,
     "displayType": 2,
     "dataType": 4
   },
@@ -292,7 +293,7 @@
     "profileId": "bafbf42a-38b2-439d-895f-96ae267a6b28",
     "text": "Please indicate how often you conduct business banking transactions through the channels listed below? Once a week",
     "displayOrder": 34,
-
+    "isactive": 1,
     "displayType": 2,
     "dataType": 4
   },
@@ -301,7 +302,7 @@
     "profileId": "bafbf42a-38b2-439d-895f-96ae267a6b28",
     "text": "Please indicate how often you conduct business banking transactions through the channels listed below? A few times a week",
     "displayOrder": 35,
-
+    "isactive": 1,
     "displayType": 2,
     "dataType": 4
   },
@@ -310,7 +311,7 @@
     "profileId": "bafbf42a-38b2-439d-895f-96ae267a6b28",
     "text": "Please indicate how often you conduct business banking transactions through the channels listed below? Daily",
     "displayOrder": 36,
-
+    "isactive": 1,
     "displayType": 2,
     "dataType": 4
   },
@@ -319,7 +320,7 @@
     "profileId": "bafbf42a-38b2-439d-895f-96ae267a6b28",
     "text": "Which of the following financial assets do you own?",
     "displayOrder": 37,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -328,7 +329,7 @@
     "profileId": "bafbf42a-38b2-439d-895f-96ae267a6b28",
     "text": "What kind of insurance do you possess?",
     "displayOrder": 38,
-
+    "isactive": 1,
     "displayType": 1,
     "dataType": 4
   },
@@ -337,7 +338,7 @@
     "profileId": "bafbf42a-38b2-439d-895f-96ae267a6b28",
     "text": "Which of the following financial assets do you intend to invest in within the next 12 months?",
     "displayOrder": 39,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -346,7 +347,7 @@
     "profileId": "bafbf42a-38b2-439d-895f-96ae267a6b28",
     "text": "Do you have a Demat account?",
     "displayOrder": 40,
-
+    "isactive": 1,
     "displayType": 2,
     "dataType": 4
   },
@@ -355,7 +356,7 @@
     "profileId": "04789a48-98b0-40cb-ac56-a3bb6674dd71",
     "text": "Which of the following items have you purchased in the past three months? (Select as many as apply.)",
     "displayOrder": 41,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -364,7 +365,7 @@
     "profileId": "04789a48-98b0-40cb-ac56-a3bb6674dd71",
     "text": "Are you the primary grocery shopper for your household?",
     "displayOrder": 42,
-
+    "isactive": 1,
     "displayType": 1,
     "dataType": 4
   },
@@ -373,7 +374,7 @@
     "profileId": "04789a48-98b0-40cb-ac56-a3bb6674dd71",
     "text": "Which of the following processed food items have you purchased in the past three months? (Select as many as apply.)",
     "displayOrder": 43,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -382,7 +383,7 @@
     "profileId": "04789a48-98b0-40cb-ac56-a3bb6674dd71",
     "text": "Which of the following types of stores have you shopped at in the past 6 months for Domestic use?",
     "displayOrder": 44,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -391,7 +392,7 @@
     "profileId": "04789a48-98b0-40cb-ac56-a3bb6674dd71",
     "text": "Which of the following personal care items have you purchased in the past three months? (Select as many as apply.)",
     "displayOrder": 45,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -400,7 +401,7 @@
     "profileId": "04789a48-98b0-40cb-ac56-a3bb6674dd71",
     "text": "Which of the following health care items have you purchased in the past three months? (Select as many as apply.)",
     "displayOrder": 46,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -409,7 +410,7 @@
     "profileId": "04789a48-98b0-40cb-ac56-a3bb6674dd71",
     "text": "For which of the following products are you the primary shopper or decision maker at home?",
     "displayOrder": 47,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -418,25 +419,25 @@
     "profileId": "01af1240-ecb4-4a32-bcf4-fdbba548d2e0",
     "text": "How many International round trips by air did you take in the past 12 months? (For business trips)",
     "displayOrder": 48,
-
+    "isactive": 1,
     "displayType": 1,
     "dataType": 4
   },
   {
     "questionId": 48,
     "profileId": "01af1240-ecb4-4a32-bcf4-fdbba548d2e0",
-    "text": "How many International round trips by air did you take in the past 12 months? (For personal\/leisure trips)",
+    "text": "How many International round trips by air did you take in the past 12 months? (For personal/leisure trips)",
     "displayOrder": 49,
-
+    "isactive": 1,
     "displayType": 1,
     "dataType": 4
   },
   {
     "questionId": 49,
     "profileId": "01af1240-ecb4-4a32-bcf4-fdbba548d2e0",
-    "text": "How many Domestic round trips by air did you take in the past 12 months? (For leisure\/personal trips)",
+    "text": "How many Domestic round trips by air did you take in the past 12 months? (For leisure/personal trips)",
     "displayOrder": 50,
-
+    "isactive": 1,
     "displayType": 1,
     "dataType": 4
   },
@@ -445,16 +446,16 @@
     "profileId": "01af1240-ecb4-4a32-bcf4-fdbba548d2e0",
     "text": "How many Domestic round trips by air did you take in the past 12 months? (For business trips)",
     "displayOrder": 51,
-
+    "isactive": 1,
     "displayType": 1,
     "dataType": 4
   },
   {
     "questionId": 51,
     "profileId": "01af1240-ecb4-4a32-bcf4-fdbba548d2e0",
-    "text": "What is your preferred method of booking air travel (For leisure\/personal trips)?",
+    "text": "What is your preferred method of booking air travel (For leisure/personal trips)?",
     "displayOrder": 52,
-
+    "isactive": 1,
     "displayType": 1,
     "dataType": 4
   },
@@ -463,16 +464,16 @@
     "profileId": "01af1240-ecb4-4a32-bcf4-fdbba548d2e0",
     "text": "What is your preferred method of booking air travel (For business trips)?",
     "displayOrder": 53,
-
+    "isactive": 1,
     "displayType": 1,
     "dataType": 4
   },
   {
     "questionId": 53,
     "profileId": "01af1240-ecb4-4a32-bcf4-fdbba548d2e0",
-    "text": "Do you belong to an airline reward\/mileage program?",
+    "text": "Do you belong to an airline reward/mileage program?",
     "displayOrder": 54,
-
+    "isactive": 1,
     "displayType": 1,
     "dataType": 5
   },
@@ -481,7 +482,7 @@
     "profileId": "01af1240-ecb4-4a32-bcf4-fdbba548d2e0",
     "text": "How many nights in the past 12 months did you stay in a hotel? (For business trip)",
     "displayOrder": 55,
-
+    "isactive": 1,
     "displayType": 1,
     "dataType": 4
   },
@@ -490,7 +491,7 @@
     "profileId": "01af1240-ecb4-4a32-bcf4-fdbba548d2e0",
     "text": "How many nights in the past 12 months did you stay in a hotel? (For leisure trip)",
     "displayOrder": 56,
-
+    "isactive": 1,
     "displayType": 1,
     "dataType": 4
   },
@@ -499,16 +500,16 @@
     "profileId": "01af1240-ecb4-4a32-bcf4-fdbba548d2e0",
     "text": "What type of fare do you most frequently buy?",
     "displayOrder": 57,
-
+    "isactive": 1,
     "displayType": 1,
     "dataType": 4
   },
   {
     "questionId": 57,
     "profileId": "01af1240-ecb4-4a32-bcf4-fdbba548d2e0",
-    "text": "Which of the following destinations have you traveled to in the past 12 months, or plan to visit in the next 12 months? US \/ Canada",
+    "text": "Which of the following destinations have you traveled to in the past 12 months, or plan to visit in the next 12 months? US / Canada",
     "displayOrder": 58,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -517,16 +518,16 @@
     "profileId": "01af1240-ecb4-4a32-bcf4-fdbba548d2e0",
     "text": "Which of the following destinations have you traveled to in the past 12 months, or plan to visit in the next 12 months? Latin America (Brazil, Argentina, Chile, Peru etc)",
     "displayOrder": 59,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 59,
     "profileId": "01af1240-ecb4-4a32-bcf4-fdbba548d2e0",
-    "text": "Which of the following destinations have you traveled to in the past 12 months, or plan to visit in the next 12 months? Western \/ central Europe (UK, Germany, France, Italy, Spain etc)",
+    "text": "Which of the following destinations have you traveled to in the past 12 months, or plan to visit in the next 12 months? Western / central Europe (UK, Germany, France, Italy, Spain etc)",
     "displayOrder": 60,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -535,7 +536,7 @@
     "profileId": "01af1240-ecb4-4a32-bcf4-fdbba548d2e0",
     "text": "Which of the following destinations have you traveled to in the past 12 months, or plan to visit in the next 12 months? Eastern Europe, Russia, former USSR nations, Mongolia",
     "displayOrder": 61,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -544,16 +545,16 @@
     "profileId": "01af1240-ecb4-4a32-bcf4-fdbba548d2e0",
     "text": "Which of the following destinations have you traveled to in the past 12 months, or plan to visit in the next 12 months? China",
     "displayOrder": 62,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 62,
     "profileId": "01af1240-ecb4-4a32-bcf4-fdbba548d2e0",
-    "text": "Which of the following destinations have you traveled to in the past 12 months, or plan to visit in the next 12 months? Middle East \/ Africa",
+    "text": "Which of the following destinations have you traveled to in the past 12 months, or plan to visit in the next 12 months? Middle East / Africa",
     "displayOrder": 63,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -562,7 +563,7 @@
     "profileId": "01af1240-ecb4-4a32-bcf4-fdbba548d2e0",
     "text": "Which of the following destinations have you traveled to in the past 12 months, or plan to visit in the next 12 months? South East Asia, Australia",
     "displayOrder": 64,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -571,7 +572,7 @@
     "profileId": "5c7e2649-aee9-43e5-abeb-bc0fc3aa1dc3",
     "text": "Areas of interests (your hobbies)",
     "displayOrder": 65,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -580,7 +581,7 @@
     "profileId": "5c7e2649-aee9-43e5-abeb-bc0fc3aa1dc3",
     "text": "How often do you eat out on a monthly basis? Never",
     "displayOrder": 66,
-
+    "isactive": 1,
     "displayType": 2,
     "dataType": 4
   },
@@ -589,7 +590,7 @@
     "profileId": "5c7e2649-aee9-43e5-abeb-bc0fc3aa1dc3",
     "text": "How often do you eat out on a monthly basis? 1 time",
     "displayOrder": 67,
-
+    "isactive": 1,
     "displayType": 2,
     "dataType": 4
   },
@@ -598,7 +599,7 @@
     "profileId": "5c7e2649-aee9-43e5-abeb-bc0fc3aa1dc3",
     "text": "How often do you eat out on a monthly basis? 2 - 3 times",
     "displayOrder": 68,
-
+    "isactive": 1,
     "displayType": 2,
     "dataType": 4
   },
@@ -607,7 +608,7 @@
     "profileId": "5c7e2649-aee9-43e5-abeb-bc0fc3aa1dc3",
     "text": "How often do you eat out on a monthly basis? 4 - 7 times",
     "displayOrder": 69,
-
+    "isactive": 1,
     "displayType": 2,
     "dataType": 4
   },
@@ -616,7 +617,7 @@
     "profileId": "5c7e2649-aee9-43e5-abeb-bc0fc3aa1dc3",
     "text": "How often do you eat out on a monthly basis? More than 8 times",
     "displayOrder": 70,
-
+    "isactive": 1,
     "displayType": 2,
     "dataType": 4
   },
@@ -625,7 +626,7 @@
     "profileId": "5c7e2649-aee9-43e5-abeb-bc0fc3aa1dc3",
     "text": "Which of the following products do you currently consume on a regular basis?",
     "displayOrder": 71,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -634,16 +635,16 @@
     "profileId": "5c7e2649-aee9-43e5-abeb-bc0fc3aa1dc3",
     "text": "Please indicate all of the following sporting activities in which you have participated in the last 12 months.",
     "displayOrder": 72,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 72,
     "profileId": "a5187f72-dc4f-4207-a520-57d2714ce6e9",
-    "text": "How often do you generally read a newspaper (including both local and national isnewations)?",
+    "text": "How often do you generally read a newspaper (including both local and national publications)?",
     "displayOrder": 73,
-
+    "isactive": 1,
     "displayType": 1,
     "dataType": 4
   },
@@ -652,7 +653,7 @@
     "profileId": "a5187f72-dc4f-4207-a520-57d2714ce6e9",
     "text": "Which of the following types of magazines do you typically read? (Select all that apply)",
     "displayOrder": 74,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -661,7 +662,7 @@
     "profileId": "a5187f72-dc4f-4207-a520-57d2714ce6e9",
     "text": "You typically read magazine published in which of the following languages?",
     "displayOrder": 75,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -670,16 +671,16 @@
     "profileId": "a5187f72-dc4f-4207-a520-57d2714ce6e9",
     "text": "Which TV channel you view in your day to day life? (Select all that apply). Family Channels",
     "displayOrder": 76,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 76,
     "profileId": "a5187f72-dc4f-4207-a520-57d2714ce6e9",
-    "text": "Which TV channel you view in your day to day life? (Select all that apply). Discovery\/Research Channels",
+    "text": "Which TV channel you view in your day to day life? (Select all that apply). Discovery/Research Channels",
     "displayOrder": 77,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -688,7 +689,7 @@
     "profileId": "a5187f72-dc4f-4207-a520-57d2714ce6e9",
     "text": "Which TV channel you view in your day to day life? (Select all that apply). Sports Channels",
     "displayOrder": 78,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -697,7 +698,7 @@
     "profileId": "a5187f72-dc4f-4207-a520-57d2714ce6e9",
     "text": "Which TV channel you view in your day to day life? (Select all that apply). Movie Channels",
     "displayOrder": 79,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -706,7 +707,7 @@
     "profileId": "a5187f72-dc4f-4207-a520-57d2714ce6e9",
     "text": "Which TV channel you view in your day to day life? (Select all that apply). Regional Channels",
     "displayOrder": 80,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -715,7 +716,7 @@
     "profileId": "a5187f72-dc4f-4207-a520-57d2714ce6e9",
     "text": "Which TV channel you view in your day to day life? (Select all that apply). Music Channels",
     "displayOrder": 81,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -724,7 +725,7 @@
     "profileId": "a5187f72-dc4f-4207-a520-57d2714ce6e9",
     "text": "Which TV channel you view in your day to day life? (Select all that apply). News Channels",
     "displayOrder": 82,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -733,7 +734,7 @@
     "profileId": "a5187f72-dc4f-4207-a520-57d2714ce6e9",
     "text": "Which TV channel you view in your day to day life? (Select all that apply). Devotional Channels",
     "displayOrder": 83,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -742,7 +743,7 @@
     "profileId": "a5187f72-dc4f-4207-a520-57d2714ce6e9",
     "text": "What kind of Movies do you see? (Select all that apply)",
     "displayOrder": 84,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -751,7 +752,7 @@
     "profileId": "a5187f72-dc4f-4207-a520-57d2714ce6e9",
     "text": "Where do you go to watch movies? (Select all that apply)",
     "displayOrder": 85,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -760,7 +761,7 @@
     "profileId": "db66c69d-8137-45e6-8c22-5d1e81d78f13",
     "text": "Please indicate the item(s) your household owns, or is planning to buy in the next 12 months.(Select the answer(s) that apply in each row). Big Screen TV (larger than 35 inches)",
     "displayOrder": 86,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -769,7 +770,7 @@
     "profileId": "db66c69d-8137-45e6-8c22-5d1e81d78f13",
     "text": "Please indicate the item(s) your household owns, or is planning to buy in the next 12 months.(Select the answer(s) that apply in each row). High Definition TV",
     "displayOrder": 87,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -778,7 +779,7 @@
     "profileId": "db66c69d-8137-45e6-8c22-5d1e81d78f13",
     "text": "Please indicate the item(s) your household owns, or is planning to buy in the next 12 months.(Select the answer(s) that apply in each row). Plasma TV",
     "displayOrder": 88,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -787,7 +788,7 @@
     "profileId": "db66c69d-8137-45e6-8c22-5d1e81d78f13",
     "text": "Please indicate the item(s) your household owns, or is planning to buy in the next 12 months.(Select the answer(s) that apply in each row). LCD TV (20)",
     "displayOrder": 89,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -796,7 +797,7 @@
     "profileId": "db66c69d-8137-45e6-8c22-5d1e81d78f13",
     "text": "Please indicate the item(s) your household owns, or is planning to buy in the next 12 months.(Select the answer(s) that apply in each row). LCD Projection TV",
     "displayOrder": 90,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -805,7 +806,7 @@
     "profileId": "db66c69d-8137-45e6-8c22-5d1e81d78f13",
     "text": "Please indicate the item(s) your household owns, or is planning to buy in the next 12 months.(Select the answer(s) that apply in each row). CD Player",
     "displayOrder": 91,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -814,7 +815,7 @@
     "profileId": "db66c69d-8137-45e6-8c22-5d1e81d78f13",
     "text": "Please indicate the item(s) your household owns, or is planning to buy in the next 12 months.(Select the answer(s) that apply in each row). DVD Player",
     "displayOrder": 92,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -823,7 +824,7 @@
     "profileId": "db66c69d-8137-45e6-8c22-5d1e81d78f13",
     "text": "Please indicate the item(s) your household owns, or is planning to buy in the next 12 months.(Select the answer(s) that apply in each row). Home game system (eg. PlayStation)",
     "displayOrder": 93,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -832,7 +833,7 @@
     "profileId": "db66c69d-8137-45e6-8c22-5d1e81d78f13",
     "text": "Please indicate the item(s) your household owns, or is planning to buy in the next 12 months.(Select the answer(s) that apply in each row). Color computer printer",
     "displayOrder": 94,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -841,7 +842,7 @@
     "profileId": "db66c69d-8137-45e6-8c22-5d1e81d78f13",
     "text": "Please indicate the item(s) your household owns, or is planning to buy in the next 12 months.(Select the answer(s) that apply in each row). Desktop computer",
     "displayOrder": 95,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -850,7 +851,7 @@
     "profileId": "db66c69d-8137-45e6-8c22-5d1e81d78f13",
     "text": "Please indicate the item(s) your household owns, or is planning to buy in the next 12 months.(Select the answer(s) that apply in each row). Laptop computer",
     "displayOrder": 96,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -859,16 +860,16 @@
     "profileId": "db66c69d-8137-45e6-8c22-5d1e81d78f13",
     "text": "Please indicate the item(s) your household owns, or is planning to buy in the next 12 months.(Select the answer(s) that apply in each row). Wireless Ethernet card",
     "displayOrder": 97,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 97,
     "profileId": "db66c69d-8137-45e6-8c22-5d1e81d78f13",
-    "text": "Please indicate the item(s) your household owns, or is planning to buy in the next 12 months.(Select the answer(s) that apply in each row). MP3\/iPOD",
+    "text": "Please indicate the item(s) your household owns, or is planning to buy in the next 12 months.(Select the answer(s) that apply in each row). MP3/iPOD",
     "displayOrder": 98,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -877,16 +878,16 @@
     "profileId": "db66c69d-8137-45e6-8c22-5d1e81d78f13",
     "text": "Please indicate the item(s) your household owns, or is planning to buy in the next 12 months.(Select the answer(s) that apply in each row). Personal communication devices (eg. Blackberry)",
     "displayOrder": 99,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 99,
     "profileId": "db66c69d-8137-45e6-8c22-5d1e81d78f13",
-    "text": "Please indicate the item(s) your household owns, or is planning to buy in the next 12 months.(Select the answer(s) that apply in each row). Cellular \/ Digital Phone",
+    "text": "Please indicate the item(s) your household owns, or is planning to buy in the next 12 months.(Select the answer(s) that apply in each row). Cellular / Digital Phone",
     "displayOrder": 100,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -895,7 +896,7 @@
     "profileId": "db66c69d-8137-45e6-8c22-5d1e81d78f13",
     "text": "Please indicate the item(s) your household owns, or is planning to buy in the next 12 months.(Select the answer(s) that apply in each row). Digital Camera",
     "displayOrder": 101,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -904,7 +905,7 @@
     "profileId": "db66c69d-8137-45e6-8c22-5d1e81d78f13",
     "text": "Please indicate the item(s) your household owns, or is planning to buy in the next 12 months.(Select the answer(s) that apply in each row). Video Camera",
     "displayOrder": 102,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -913,7 +914,7 @@
     "profileId": "db66c69d-8137-45e6-8c22-5d1e81d78f13",
     "text": "Please indicate the item(s) your household owns, or is planning to buy in the next 12 months.(Select the answer(s) that apply in each row). Web Camera",
     "displayOrder": 103,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -922,7 +923,7 @@
     "profileId": "db66c69d-8137-45e6-8c22-5d1e81d78f13",
     "text": "Please indicate the item(s) your household owns, or is planning to buy in the next 12 months.(Select the answer(s) that apply in each row). High-speed internet access at home",
     "displayOrder": 104,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -931,7 +932,7 @@
     "profileId": "db66c69d-8137-45e6-8c22-5d1e81d78f13",
     "text": "Please indicate the item(s) your household owns, or is planning to buy in the next 12 months.(Select the answer(s) that apply in each row). Satellite Radio",
     "displayOrder": 105,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -940,7 +941,7 @@
     "profileId": "db66c69d-8137-45e6-8c22-5d1e81d78f13",
     "text": "Please indicate the item(s) your household owns, or is planning to buy in the next 12 months.(Select the answer(s) that apply in each row). Home Network",
     "displayOrder": 106,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -949,7 +950,7 @@
     "profileId": "db66c69d-8137-45e6-8c22-5d1e81d78f13",
     "text": "Please select your main internet service provider for home use?",
     "displayOrder": 107,
-
+    "isactive": 1,
     "displayType": 1,
     "dataType": 4
   },
@@ -958,16 +959,16 @@
     "profileId": "db66c69d-8137-45e6-8c22-5d1e81d78f13",
     "text": "Where do you usually access the internet from? (Please check all that apply)",
     "displayOrder": 108,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 108,
     "profileId": "db66c69d-8137-45e6-8c22-5d1e81d78f13",
-    "text": "Who is your mobile\/cellular phone service provider?",
+    "text": "Who is your mobile/cellular phone service provider?",
     "displayOrder": 109,
-
+    "isactive": 1,
     "displayType": 1,
     "dataType": 4
   },
@@ -976,7 +977,7 @@
     "profileId": "db66c69d-8137-45e6-8c22-5d1e81d78f13",
     "text": "Which of the following provides your local telephone service?",
     "displayOrder": 110,
-
+    "isactive": 1,
     "displayType": 1,
     "dataType": 4
   },
@@ -985,7 +986,7 @@
     "profileId": "db66c69d-8137-45e6-8c22-5d1e81d78f13",
     "text": "To which of the following TV services, if any, does your household subscribe?",
     "displayOrder": 111,
-
+    "isactive": 1,
     "displayType": 1,
     "dataType": 4
   },
@@ -994,7 +995,7 @@
     "profileId": "db66c69d-8137-45e6-8c22-5d1e81d78f13",
     "text": "Which of the following have you done online in the past 12 months? (Select all that apply.)",
     "displayOrder": 112,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -1003,7 +1004,7 @@
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
     "text": "Do you currently have health insurance coverage for yourself?",
     "displayOrder": 113,
-
+    "isactive": 1,
     "displayType": 1,
     "dataType": 5
   },
@@ -1012,7 +1013,7 @@
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
     "text": "How would you describe your overall health?",
     "displayOrder": 114,
-
+    "isactive": 1,
     "displayType": 1,
     "dataType": 4
   },
@@ -1021,7 +1022,7 @@
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
     "text": "Do you have a primary care physician? (family doctor, general practitioner, etc)",
     "displayOrder": 115,
-
+    "isactive": 1,
     "displayType": 1,
     "dataType": 5
   },
@@ -1030,439 +1031,439 @@
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
     "text": "How important is your overall health to you?",
     "displayOrder": 116,
-
+    "isactive": 1,
     "displayType": 1,
     "dataType": 4
   },
   {
     "questionId": 116,
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
-    "text": "Do you and\/or anyone living in your household use any of the following? Prescription eyeglasses",
+    "text": "Do you and/or anyone living in your household use any of the following? Prescription eyeglasses",
     "displayOrder": 117,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 117,
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
-    "text": "Do you and\/or anyone living in your household use any of the following? Reading glasses",
+    "text": "Do you and/or anyone living in your household use any of the following? Reading glasses",
     "displayOrder": 118,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 118,
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
-    "text": "Do you and\/or anyone living in your household use any of the following? Cane",
+    "text": "Do you and/or anyone living in your household use any of the following? Cane",
     "displayOrder": 119,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 119,
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
-    "text": "Do you and\/or anyone living in your household use any of the following? Contact lenses",
+    "text": "Do you and/or anyone living in your household use any of the following? Contact lenses",
     "displayOrder": 120,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 120,
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
-    "text": "Do you and\/or anyone living in your household use any of the following? Dentures",
+    "text": "Do you and/or anyone living in your household use any of the following? Dentures",
     "displayOrder": 121,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 121,
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
-    "text": "Do you and\/or anyone living in your household use any of the following? Hearing aids",
+    "text": "Do you and/or anyone living in your household use any of the following? Hearing aids",
     "displayOrder": 122,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 122,
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
-    "text": "Do you and\/or anyone living in your household use any of the following? Hip Replacement",
+    "text": "Do you and/or anyone living in your household use any of the following? Hip Replacement",
     "displayOrder": 123,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 123,
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
-    "text": "Do you and\/or anyone living in your household use any of the following? Mouthguard",
+    "text": "Do you and/or anyone living in your household use any of the following? Mouthguard",
     "displayOrder": 124,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 124,
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
-    "text": "Do you and\/or anyone living in your household use any of the following? Nebulizer",
+    "text": "Do you and/or anyone living in your household use any of the following? Nebulizer",
     "displayOrder": 125,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 125,
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
-    "text": "Do you and\/or anyone living in your household use any of the following? Pacemakers",
+    "text": "Do you and/or anyone living in your household use any of the following? Pacemakers",
     "displayOrder": 126,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 126,
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
-    "text": "Do you and\/or anyone living in your household use any of the following? Prosthetic device",
+    "text": "Do you and/or anyone living in your household use any of the following? Prosthetic device",
     "displayOrder": 127,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 127,
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
-    "text": "Do you and\/or anyone living in your household use any of the following? Stent",
+    "text": "Do you and/or anyone living in your household use any of the following? Stent",
     "displayOrder": 128,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 128,
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
-    "text": "Do you and\/or anyone living in your household use any of the following? Walker",
+    "text": "Do you and/or anyone living in your household use any of the following? Walker",
     "displayOrder": 129,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 129,
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
-    "text": "Do you and\/or anyone living in your household use any of the following? Wheelchair",
+    "text": "Do you and/or anyone living in your household use any of the following? Wheelchair",
     "displayOrder": 130,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 130,
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
-    "text": "Please indicate any Over the Counter medications or treatments you and\/or your household members have used in the past 12 months. Acne Medicine",
+    "text": "Please indicate any Over the Counter medications or treatments you and/or your household members have used in the past 12 months. Acne Medicine",
     "displayOrder": 131,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 131,
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
-    "text": "Please indicate any Over the Counter medications or treatments you and\/or your household members have used in the past 12 months. Allery Relief",
+    "text": "Please indicate any Over the Counter medications or treatments you and/or your household members have used in the past 12 months. Allery Relief",
     "displayOrder": 132,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 132,
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
-    "text": "Please indicate any Over the Counter medications or treatments you and\/or your household members have used in the past 12 months. Antacids",
+    "text": "Please indicate any Over the Counter medications or treatments you and/or your household members have used in the past 12 months. Antacids",
     "displayOrder": 133,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 133,
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
-    "text": "Please indicate any Over the Counter medications or treatments you and\/or your household members have used in the past 12 months. Anti-Diuretics",
+    "text": "Please indicate any Over the Counter medications or treatments you and/or your household members have used in the past 12 months. Anti-Diuretics",
     "displayOrder": 134,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 134,
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
-    "text": "Please indicate any Over the Counter medications or treatments you and\/or your household members have used in the past 12 months. Anti-Diarrheal",
+    "text": "Please indicate any Over the Counter medications or treatments you and/or your household members have used in the past 12 months. Anti-Diarrheal",
     "displayOrder": 135,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 135,
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
-    "text": "Please indicate any Over the Counter medications or treatments you and\/or your household members have used in the past 12 months. Anti-Hemorrhoidal",
+    "text": "Please indicate any Over the Counter medications or treatments you and/or your household members have used in the past 12 months. Anti-Hemorrhoidal",
     "displayOrder": 136,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 136,
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
-    "text": "Please indicate any Over the Counter medications or treatments you and\/or your household members have used in the past 12 months. Breath Freshener",
+    "text": "Please indicate any Over the Counter medications or treatments you and/or your household members have used in the past 12 months. Breath Freshener",
     "displayOrder": 137,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 137,
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
-    "text": "Please indicate any Over the Counter medications or treatments you and\/or your household members have used in the past 12 months. Canker Sore Medicine",
+    "text": "Please indicate any Over the Counter medications or treatments you and/or your household members have used in the past 12 months. Canker Sore Medicine",
     "displayOrder": 138,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 138,
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
-    "text": "Please indicate any Over the Counter medications or treatments you and\/or your household members have used in the past 12 months. Cold Sore Medicine",
+    "text": "Please indicate any Over the Counter medications or treatments you and/or your household members have used in the past 12 months. Cold Sore Medicine",
     "displayOrder": 139,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 139,
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
-    "text": "Please indicate any Over the Counter medications or treatments you and\/or your household members have used in the past 12 months. Cold & Flu Medicine",
+    "text": "Please indicate any Over the Counter medications or treatments you and/or your household members have used in the past 12 months. Cold & Flu Medicine",
     "displayOrder": 140,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 140,
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
-    "text": "Please indicate any Over the Counter medications or treatments you and\/or your household members have used in the past 12 months. Dandruff Shampoo",
+    "text": "Please indicate any Over the Counter medications or treatments you and/or your household members have used in the past 12 months. Dandruff Shampoo",
     "displayOrder": 141,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 141,
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
-    "text": "Please indicate any Over the Counter medications or treatments you and\/or your household members have used in the past 12 months. Laxatives",
+    "text": "Please indicate any Over the Counter medications or treatments you and/or your household members have used in the past 12 months. Laxatives",
     "displayOrder": 142,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 142,
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
-    "text": "Please indicate any Over the Counter medications or treatments you and\/or your household members have used in the past 12 months. Flu Shot",
+    "text": "Please indicate any Over the Counter medications or treatments you and/or your household members have used in the past 12 months. Flu Shot",
     "displayOrder": 143,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 143,
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
-    "text": "Please indicate any Over the Counter medications or treatments you and\/or your household members have used in the past 12 months. Gas\/Bloating Medicine",
+    "text": "Please indicate any Over the Counter medications or treatments you and/or your household members have used in the past 12 months. Gas/Bloating Medicine",
     "displayOrder": 144,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 144,
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
-    "text": "Please indicate any Over the Counter medications or treatments you and\/or your household members have used in the past 12 months. Hair Loss Medicine",
+    "text": "Please indicate any Over the Counter medications or treatments you and/or your household members have used in the past 12 months. Hair Loss Medicine",
     "displayOrder": 145,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 145,
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
-    "text": "Please indicate any Over the Counter medications or treatments you and\/or your household members have used in the past 12 months. Heartburn\/Indigestion Medicine",
+    "text": "Please indicate any Over the Counter medications or treatments you and/or your household members have used in the past 12 months. Heartburn/Indigestion Medicine",
     "displayOrder": 146,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 146,
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
-    "text": "Please indicate any Over the Counter medications or treatments you and\/or your household members have used in the past 12 months. Nasal Spray\/Strips",
+    "text": "Please indicate any Over the Counter medications or treatments you and/or your household members have used in the past 12 months. Nasal Spray/Strips",
     "displayOrder": 147,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 147,
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
-    "text": "Please indicate any Over the Counter medications or treatments you and\/or your household members have used in the past 12 months. Nausea & Motion Sickness Medicine",
+    "text": "Please indicate any Over the Counter medications or treatments you and/or your household members have used in the past 12 months. Nausea & Motion Sickness Medicine",
     "displayOrder": 148,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 148,
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
-    "text": "Please indicate any Over the Counter medications or treatments you and\/or your household members have used in the past 12 months. Pain Reliever",
+    "text": "Please indicate any Over the Counter medications or treatments you and/or your household members have used in the past 12 months. Pain Reliever",
     "displayOrder": 149,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 149,
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
-    "text": "Please indicate any Over the Counter medications or treatments you and\/or your household members have used in the past 12 months. Sleep Aids\/ Sleeping Pills",
+    "text": "Please indicate any Over the Counter medications or treatments you and/or your household members have used in the past 12 months. Sleep Aids/ Sleeping Pills",
     "displayOrder": 150,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 150,
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
-    "text": "Please indicate any Over the Counter medications or treatments you and\/or your household members have used in the past 12 months. Snoring Treatment",
+    "text": "Please indicate any Over the Counter medications or treatments you and/or your household members have used in the past 12 months. Snoring Treatment",
     "displayOrder": 151,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 151,
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
-    "text": "Please indicate any Over the Counter medications or treatments you and\/or your household members have used in the past 12 months. Dry Skin Lotion\/Moisturizer",
+    "text": "Please indicate any Over the Counter medications or treatments you and/or your household members have used in the past 12 months. Dry Skin Lotion/Moisturizer",
     "displayOrder": 152,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 152,
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
-    "text": "Behavioral\/Mental Health. ADD\/ADHD",
+    "text": "Behavioral/Mental Health. ADD/ADHD",
     "displayOrder": 153,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 153,
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
-    "text": "Behavioral\/Mental Health. Alcoholism",
+    "text": "Behavioral/Mental Health. Alcoholism",
     "displayOrder": 154,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 154,
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
-    "text": "Behavioral\/Mental Health. Anxiety",
+    "text": "Behavioral/Mental Health. Anxiety",
     "displayOrder": 155,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 155,
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
-    "text": "Behavioral\/Mental Health. Bi-Polar Disorder (Manic Depression)",
+    "text": "Behavioral/Mental Health. Bi-Polar Disorder (Manic Depression)",
     "displayOrder": 156,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 156,
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
-    "text": "Behavioral\/Mental Health. Chemical Dependency (Narcotics, etc.)",
+    "text": "Behavioral/Mental Health. Chemical Dependency (Narcotics, etc.)",
     "displayOrder": 157,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 157,
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
-    "text": "Behavioral\/Mental Health. Depression",
+    "text": "Behavioral/Mental Health. Depression",
     "displayOrder": 158,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 158,
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
-    "text": "Behavioral\/Mental Health. Eating Disorders",
+    "text": "Behavioral/Mental Health. Eating Disorders",
     "displayOrder": 159,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 159,
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
-    "text": "Behavioral\/Mental Health. Self Household Member",
+    "text": "Behavioral/Mental Health. Self Household Member",
     "displayOrder": 160,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 160,
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
-    "text": "Behavioral\/Mental Health. OCD (Obsessive Compulsive Disorder)",
+    "text": "Behavioral/Mental Health. OCD (Obsessive Compulsive Disorder)",
     "displayOrder": 161,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 161,
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
-    "text": "Behavioral\/Mental Health. Schizophrenia",
+    "text": "Behavioral/Mental Health. Schizophrenia",
     "displayOrder": 162,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 162,
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
-    "text": "Please indicate the medical condition(s) that affect you and\/or any members of your household. Suffered from blood related conditions like, Anemia?",
+    "text": "Please indicate the medical condition(s) that affect you and/or any members of your household. Suffered from blood related conditions like, Anemia?",
     "displayOrder": 163,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 163,
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
-    "text": "Please indicate the medical condition(s) that affect you and\/or any members of your household. Suffered from blood related conditions like, Iron Deficiency?",
+    "text": "Please indicate the medical condition(s) that affect you and/or any members of your household. Suffered from blood related conditions like, Iron Deficiency?",
     "displayOrder": 164,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -1471,7 +1472,7 @@
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
     "text": "Have you visited an Allergist & Clinical Immunologist in past 12 months?",
     "displayOrder": 165,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -1480,7 +1481,7 @@
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
     "text": "Have you visited a Cardiologist in past 12 months?",
     "displayOrder": 166,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -1489,7 +1490,7 @@
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
     "text": "Have you visited a Dentist in past 12 months?",
     "displayOrder": 167,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -1498,7 +1499,7 @@
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
     "text": "Have you visited a Dermatologist in past 12 months?",
     "displayOrder": 168,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -1507,7 +1508,7 @@
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
     "text": "Have you visited an Endocrinologist in past 12 months?",
     "displayOrder": 169,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -1516,7 +1517,7 @@
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
     "text": "Have you visited a Gastroenterologist in past 12 months?",
     "displayOrder": 170,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -1525,7 +1526,7 @@
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
     "text": "Have you visited an Infectious Disease Specialist in past 12 months?",
     "displayOrder": 171,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -1534,7 +1535,7 @@
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
     "text": "Have you taken any Internal Medicine in past 12 months?",
     "displayOrder": 172,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -1543,16 +1544,16 @@
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
     "text": "Have you visited a Neurologist & Neurosurgeon in past 12 months?",
     "displayOrder": 173,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 173,
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
-    "text": "Have you visited a Ob\/Gyn & Women in past 12 months?",
+    "text": "Have you visited a Ob/Gyn & Women in past 12 months?",
     "displayOrder": 174,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -1561,7 +1562,7 @@
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
     "text": "Have you visited a Pediatrician in past 12 months?",
     "displayOrder": 175,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -1570,7 +1571,7 @@
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
     "text": "Have you visited a Rheumatologist in past 12 months?",
     "displayOrder": 176,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -1579,7 +1580,7 @@
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
     "text": "Have you visited an Oncologist in past 12 months?",
     "displayOrder": 177,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -1588,7 +1589,7 @@
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
     "text": "Have you visited an Ophthalmologist in past 12 months?",
     "displayOrder": 178,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -1597,7 +1598,7 @@
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
     "text": "Infections. Ear Infection (Otitis Media)",
     "displayOrder": 179,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -1606,7 +1607,7 @@
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
     "text": "Infections. Hepatitis B",
     "displayOrder": 180,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -1615,7 +1616,7 @@
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
     "text": "Infections. Hepatitis C",
     "displayOrder": 181,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -1624,16 +1625,16 @@
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
     "text": "Infections. Herpes",
     "displayOrder": 182,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
   {
     "questionId": 182,
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
-    "text": "Infections. HIV\/AIDS",
+    "text": "Infections. HIV/AIDS",
     "displayOrder": 183,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -1642,7 +1643,7 @@
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
     "text": "Infections. Human Papilloma Virus (HPV)",
     "displayOrder": 184,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -1651,7 +1652,7 @@
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
     "text": "Infections. Lyme Disease",
     "displayOrder": 185,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -1660,7 +1661,7 @@
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
     "text": "Infections. Mononucleosis",
     "displayOrder": 186,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -1669,7 +1670,7 @@
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
     "text": "Infections. Nail Fungus (Onychomycosis)",
     "displayOrder": 187,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -1678,7 +1679,7 @@
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
     "text": "Infections. Pneumonia",
     "displayOrder": 188,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -1687,7 +1688,7 @@
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
     "text": "Infections. Tuberculosis",
     "displayOrder": 189,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -1696,7 +1697,7 @@
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
     "text": "Infections. Upper Respiratory Infection",
     "displayOrder": 190,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -1705,7 +1706,7 @@
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
     "text": "Infections. Urinary Tract Infection",
     "displayOrder": 191,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -1714,7 +1715,7 @@
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
     "text": "Sufferred or suffering from Cancer - Breast?",
     "displayOrder": 192,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -1723,7 +1724,7 @@
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
     "text": "Sufferred or suffering from Cancer - Lung?",
     "displayOrder": 193,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -1732,7 +1733,7 @@
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
     "text": "Sufferred or suffering from Cancer - Prostrate?",
     "displayOrder": 194,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -1741,7 +1742,7 @@
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
     "text": "Sufferred or suffering from Cancer - Others?",
     "displayOrder": 195,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -1750,7 +1751,7 @@
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
     "text": "Please indicate the following items you regularly participate in or use. (Select all that apply)",
     "displayOrder": 196,
-
+    "isactive": 1,
     "displayType": 4,
     "dataType": 4
   },
@@ -1759,7 +1760,7 @@
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
     "text": "What is your height? Feet",
     "displayOrder": 197,
-
+    "isactive": 1,
     "displayType": 1,
     "dataType": 1
   },
@@ -1768,7 +1769,7 @@
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
     "text": "What is your height? Inches",
     "displayOrder": 198,
-
+    "isactive": 1,
     "displayType": 1,
     "dataType": 1
   },
@@ -1776,8 +1777,8 @@
     "questionId": 198,
     "profileId": "b6e9d661-bd50-492c-a2ab-a4551607d9be",
     "text": "Please enter your Date of Birth",
-    "displayOrder": 10,
-
+    "displayOrder": 199,
+    "isactive": 1,
     "displayType": 1,
     "dataType": 2
   },
@@ -1785,9 +1786,387 @@
     "questionId": 199,
     "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
     "text": "What is your current weight (in kg)?",
-    "displayOrder": 199,
-
+    "displayOrder": 200,
+    "isactive": 1,
     "displayType": 5,
     "dataType": 1
+  },
+  {
+    "questionId": 200,
+    "profileId": "2339588b-55cc-4d20-976c-ea83283caa83",
+    "text": "What is your current occupational status?",
+    "displayOrder": 201,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 4
+  },
+  {
+    "questionId": 201,
+    "profileId": "2339588b-55cc-4d20-976c-ea83283caa83",
+    "text": "What is your occupation?",
+    "displayOrder": 202,
+    "isactive": 1,
+    "displayType": 2,
+    "dataType": 4
+  },
+  {
+    "questionId": 202,
+    "profileId": "2339588b-55cc-4d20-976c-ea83283caa83",
+    "text": "Which of the following categories best describes your organisation's primary industry?",
+    "displayOrder": 203,
+    "isactive": 1,
+    "displayType": 3,
+    "dataType": 4
+  },
+  {
+    "questionId": 203,
+    "profileId": "2339588b-55cc-4d20-976c-ea83283caa83",
+    "text": "Approximately how many employees work at your organisation (all locations)?",
+    "displayOrder": 204,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+  },
+  {
+    "questionId": 204,
+    "profileId": "2339588b-55cc-4d20-976c-ea83283caa83",
+    "text": "Which department do you primarily work within at your organisation?",
+    "displayOrder": 205,
+    "isactive": 1,
+    "displayType": 5,
+    "dataType": 4
+  },
+  {
+    "questionId": 205,
+    "profileId": "2339588b-55cc-4d20-976c-ea83283caa83",
+    "text": "Please specify the occupation of the person who makes the biggest contribution to your household income?",
+    "displayOrder": 206,
+    "isactive": 1,
+    "displayType": 6,
+    "dataType": 4
+  },
+  {
+    "questionId": 206,
+    "profileId": "2339588b-55cc-4d20-976c-ea83283caa83",
+    "text": "What is your primary role in your organisation?",
+    "displayOrder": 207,
+    "isactive": 1,
+    "displayType": 7,
+    "dataType": 4
+  },
+  {
+    "questionId": 207,
+    "profileId": "2339588b-55cc-4d20-976c-ea83283caa83",
+    "text": "What is your professional position in the organisation you work for?",
+    "displayOrder": 208,
+    "isactive": 1,
+    "displayType": 8,
+    "dataType": 4
+  },
+  {
+    "questionId": 208,
+    "profileId": "2339588b-55cc-4d20-976c-ea83283caa83",
+    "text": "Please choose which departments/products you have influence or decision making authority on spending/purchasing.",
+    "displayOrder": 209,
+    "isactive": 1,
+    "displayType": 9,
+    "dataType": 4
+  },
+  {
+    "questionId": 209,
+    "profileId": "2339588b-55cc-4d20-976c-ea83283caa83",
+    "text": "Which mobile operator/network do you use for business purposes?",
+    "displayOrder": 210,
+    "isactive": 1,
+    "displayType": 10,
+    "dataType": 4
+  },
+  {
+    "questionId": 210,
+    "profileId": "2339588b-55cc-4d20-976c-ea83283caa83",
+    "text": "What is the occupation of the person who contributes the most to the running of your household? If this person is retired or unemployed,please answer as if he/she was still working full time.",
+    "displayOrder": 211,
+    "isactive": 1,
+    "displayType": 11,
+    "dataType": 4
+  },
+  {
+    "questionId": 211,
+    "profileId": "1ce0afed-01c9-46b0-b16c-35069d7236ca",
+    "text": "Which of the following electronic products do you own?",
+    "displayOrder": 212,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 4
+  },
+  {
+    "questionId": 212,
+    "profileId": "1ce0afed-01c9-46b0-b16c-35069d7236ca",
+    "text": "Would you consider yourself to be an early adopter of new technology (the first to buy new gadgets/electronics/etc)?",
+    "displayOrder": 213,
+    "isactive": 1,
+    "displayType": 2,
+    "dataType": 4
+  },
+  {
+    "questionId": 213,
+    "profileId": "1ce0afed-01c9-46b0-b16c-35069d7236ca",
+    "text": "Are you the primary decision maker of the purchases of  electronic products in your household?",
+    "displayOrder": 214,
+    "isactive": 1,
+    "displayType": 3,
+    "dataType": 4
+  },
+  {
+    "questionId": 214,
+    "profileId": "1ce0afed-01c9-46b0-b16c-35069d7236ca",
+    "text": "Which of the following features do you use on your mobile phone?",
+    "displayOrder": 215,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+  },
+  {
+    "questionId": 215,
+    "profileId": "1ce0afed-01c9-46b0-b16c-35069d7236ca",
+    "text": "Which mobile operator/network do you use for personal purposes?",
+    "displayOrder": 216,
+    "isactive": 1,
+    "displayType": 5,
+    "dataType": 4
+  },
+  {
+    "questionId": 216,
+    "profileId": "1ce0afed-01c9-46b0-b16c-35069d7236ca",
+    "text": "Do you use a smartphone for personal purposes?",
+    "displayOrder": 217,
+    "isactive": 1,
+    "displayType": 6,
+    "dataType": 4
+  },
+  {
+    "questionId": 217,
+    "profileId": "1ce0afed-01c9-46b0-b16c-35069d7236ca",
+    "text": "Which of following smart speakers do you own?",
+    "displayOrder": 218,
+    "isactive": 1,
+    "displayType": 7,
+    "dataType": 4
+  },
+  {
+    "questionId": 218,
+    "profileId": "1ce0afed-01c9-46b0-b16c-35069d7236ca",
+    "text": "Which of the following electronic devices did you purchase within three years?",
+    "displayOrder": 219,
+    "isactive": 1,
+    "displayType": 8,
+    "dataType": 4
+  },
+  {
+    "questionId": 219,
+    "profileId": "9ce620cd-bd19-4cd4-9135-1bcdc167a802",
+    "text": "When was the last time you smoked a cigarette, even one or two puffs?",
+    "displayOrder": 220,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 4
+  },
+  {
+    "questionId": 220,
+    "profileId": "9ce620cd-bd19-4cd4-9135-1bcdc167a802",
+    "text": "During the past 30 days, what brand of cigarettes did you usually smoke? ( CHOOSE ONLY ONE ANSWER)",
+    "displayOrder": 221,
+    "isactive": 1,
+    "displayType": 2,
+    "dataType": 4
+  },
+  {
+    "questionId": 221,
+    "profileId": "9ce620cd-bd19-4cd4-9135-1bcdc167a802",
+    "text": "During the last 30 days, about how much money did you have each week to spend on cigarette?",
+    "displayOrder": 222,
+    "isactive": 1,
+    "displayType": 3,
+    "dataType": 4
+  },
+  {
+    "questionId": 222,
+    "profileId": "9ce620cd-bd19-4cd4-9135-1bcdc167a802",
+    "text": "During the past 30 days, on the days you smoked,how many cigarettes did you smoke per day?",
+    "displayOrder": 223,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+  },
+  {
+    "questionId": 223,
+    "profileId": "9ce620cd-bd19-4cd4-9135-1bcdc167a802",
+    "text": "Do you think that you will try a cigarette soon?",
+    "displayOrder": 224,
+    "isactive": 1,
+    "displayType": 5,
+    "dataType": 4
+  },
+  {
+    "questionId": 224,
+    "profileId": "9ce620cd-bd19-4cd4-9135-1bcdc167a802",
+    "text": "Menthol cigarettes are cigarettes that taste like mint. During the past 30 days, were the cigarettes that you usually smoked menthol?",
+    "displayOrder": 225,
+    "isactive": 1,
+    "displayType": 6,
+    "dataType": 4
+  },
+  {
+    "questionId": 225,
+    "profileId": "9ce620cd-bd19-4cd4-9135-1bcdc167a802",
+    "text": "During the past 30 days, on how many days did you smoke  cigarettes?",
+    "displayOrder": 226,
+    "isactive": 1,
+    "displayType": 7,
+    "dataType": 4
+  },
+  {
+    "questionId": 226,
+    "profileId": "d0c9cbee-b5b7-4e18-a872-9210bd4668df",
+    "text": "Are you the primary decision maker in your household for automotive-related purchases?",
+    "displayOrder": 227,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 4
+  },
+  {
+    "questionId": 227,
+    "profileId": "d0c9cbee-b5b7-4e18-a872-9210bd4668df",
+    "text": "How many cars are there in your household (including leasing or company cars)?",
+    "displayOrder": 228,
+    "isactive": 1,
+    "displayType": 2,
+    "dataType": 4
+  },
+  {
+    "questionId": 228,
+    "profileId": "d0c9cbee-b5b7-4e18-a872-9210bd4668df",
+    "text": "If you own/lease a car(s) which brand are they?",
+    "displayOrder": 229,
+    "isactive": 1,
+    "displayType": 3,
+    "dataType": 4
+  },
+  {
+    "questionId": 229,
+    "profileId": "d0c9cbee-b5b7-4e18-a872-9210bd4668df",
+    "text": "How would you describe the car(s) you own/lease?",
+    "displayOrder": 230,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+  },
+  {
+    "questionId": 230,
+    "profileId": "d0c9cbee-b5b7-4e18-a872-9210bd4668df",
+    "text": "Do you own a motorcycle?",
+    "displayOrder": 231,
+    "isactive": 1,
+    "displayType": 5,
+    "dataType": 4
+  },
+  {
+    "questionId": 231,
+    "profileId": "d0c9cbee-b5b7-4e18-a872-9210bd4668df",
+    "text": "If you own a two wheeled vehicle which brand are they?",
+    "displayOrder": 232,
+    "isactive": 1,
+    "displayType": 6,
+    "dataType": 4
+  },
+  {
+    "questionId": 232,
+    "profileId": "d0c9cbee-b5b7-4e18-a872-9210bd4668df",
+    "text": "If you own a two wheeled vehicle what engine capacity does it have?",
+    "displayOrder": 233,
+    "isactive": 1,
+    "displayType": 7,
+    "dataType": 4
+  },
+  {
+    "questionId": 233,
+    "profileId": "d0c9cbee-b5b7-4e18-a872-9210bd4668df",
+    "text": "If you own a two wheeled vehicle how would you describe it?",
+    "displayOrder": 234,
+    "isactive": 1,
+    "displayType": 8,
+    "dataType": 4
+  },
+  {
+    "questionId": 234,
+    "profileId": "d0c9cbee-b5b7-4e18-a872-9210bd4668df",
+    "text": "If you own/lease a car(s) what fuel do they use?",
+    "displayOrder": 235,
+    "isactive": 1,
+    "displayType": 9,
+    "dataType": 4
+  },
+  {
+    "questionId": 235,
+    "profileId": "d0c9cbee-b5b7-4e18-a872-9210bd4668df",
+    "text": "Are you considering buying or leasing a new or used car within the next 2 years?",
+    "displayOrder": 236,
+    "isactive": 1,
+    "displayType": 10,
+    "dataType": 4
+  },
+  {
+    "questionId": 236,
+    "profileId": "d5219ed7-6855-4f68-89f3-27d748eece68",
+    "text": "Do you consider yourself the primary grocery shopper in your household?",
+    "displayOrder": 237,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 4
+  },
+  {
+    "questionId": 237,
+    "profileId": "d5219ed7-6855-4f68-89f3-27d748eece68",
+    "text": "How often do you eat fast food (any quick service restaurant) in any given week (on average)?",
+    "displayOrder": 238,
+    "isactive": 1,
+    "displayType": 2,
+    "dataType": 4
+  },
+  {
+    "questionId": 238,
+    "profileId": "d5219ed7-6855-4f68-89f3-27d748eece68",
+    "text": "Which fast food (quick service) restaurants do you go to,if any?",
+    "displayOrder": 239,
+    "isactive": 1,
+    "displayType": 3,
+    "dataType": 4
+  },
+  {
+    "questionId": 239,
+    "profileId": "d5219ed7-6855-4f68-89f3-27d748eece68",
+    "text": "Which of the following beverages do you regularly consume?",
+    "displayOrder": 240,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+  },
+  {
+    "questionId": 240,
+    "profileId": "d5219ed7-6855-4f68-89f3-27d748eece68",
+    "text": "Do you consume any of the following?",
+    "displayOrder": 241,
+    "isactive": 1,
+    "displayType": 5,
+    "dataType": 4
+  },
+  {
+    "questionId": 241,
+    "profileId": "d5219ed7-6855-4f68-89f3-27d748eece68",
+    "text": "Which fast food (quick service) delivery serive you used,if any?",
+    "displayOrder": 242,
+    "isactive": 1,
+    "displayType": 6,
+    "dataType": 4
   }
 ]
