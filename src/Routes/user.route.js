@@ -62,7 +62,7 @@ module.exports= function(app) {
 
 	app.post(
 		'/api/v1/auth/user/change-password',
-		usersController.updateNewPassword,
+		usersController.changePassword,
 	);
 
 	app.get(
