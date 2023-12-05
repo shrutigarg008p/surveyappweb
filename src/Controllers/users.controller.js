@@ -704,8 +704,9 @@ module.exports.panelistProfile = async (req, res) => {
 			}]
 		}).then(
 			async (result) => {
+				if(result){
 				result = {
-					...result,
+					...result.toJSON(),
 					profilesTotalPercentage: 0,
 					profile: {
 						about: 0,
@@ -748,8 +749,14 @@ module.exports.panelistProfile = async (req, res) => {
 					}
 				}
 				return apiResponses.successResponseWithData(res, 'success!', result);
-			},
-		);
+			} else {
+					return apiResponses.validationErrorWithData(res, 'User Not found!', null);
+				}
+			}
+		)
+	   .catch((err) => {
+		   return apiResponses.validationErrorWithData(res, 'Something went wrong!', null);
+	   });
 	} catch (err) {
 		console.log(err)
 		return apiResponses.errorResponse(res, err);
