@@ -680,6 +680,7 @@ module.exports.panelistProfile = async (req, res) => {
 		});
 		const limit = req.params.limit;
 		User.findOne({
+			where: {id: req.params.id},
 			attributes: ['phoneNumber', 'id', 'email', 'createdAt'],
 			include: [{
 				model: BasicProfile,
@@ -700,9 +701,7 @@ module.exports.panelistProfile = async (req, res) => {
 
 				],
 				required: false,
-			}],
-			limit: limit,
-			order: [['createdAt', 'DESC']]
+			}]
 		}).then(
 			async (result) => {
 				result = {
@@ -756,3 +755,12 @@ module.exports.panelistProfile = async (req, res) => {
 		return apiResponses.errorResponse(res, err);
 	}
 };
+
+
+
+
+// async function test() {
+// 	await Mails.userRegistration('lsksl@g.com', '');
+// }
+//
+// test()
