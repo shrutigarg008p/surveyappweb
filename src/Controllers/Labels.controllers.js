@@ -91,7 +91,6 @@ module.exports.createApplicationAssignUser = async (req, res) => {
     try {
             const newArray = req.body.options.map(item => {
                 return {
-                    ...item,
                     applicationUser_id: item.applicationUser_id,
                     label_id: item.label_id,
                     createdAt: new Date().valueOf(),
