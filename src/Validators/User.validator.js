@@ -6,9 +6,10 @@ const User = db.user;
 const signUpValidator = [
 	body('phoneNumber').isLength({min: 1})
 		.trim().withMessage('Phone number must be specified.'),
-	body('email').isLength({min: 1})
-		.trim().withMessage('Email must be specified.')
-		.isEmail().withMessage('Email must be a valid email address.'),
+	body('email')
+		.isLength({min: 1})
+		.trim()
+		.withMessage('Email must be specified.'),
 	body('password').isLength({min: 1})
 		.trim().withMessage('password must be specified.'),
 	    sanitizeBody('email').escape(),
@@ -105,8 +106,8 @@ const emailValidator = [
 
 	const lawyerLogInValidator = [
 		body('email').isLength({min: 1})
-			.trim().withMessage('email must be specified.')
-			.isEmail().withMessage('Email must be a valid email address.'),
+			.trim()
+			.withMessage('email must be specified.'),
 		sanitizeBody('email').escape(),
 		(req, res, next) => {
 			const errors = validationResult(req);
