@@ -619,11 +619,11 @@ module.exports.allPanelists = async (req, res) => {
 			console.log('whereClause--->', whereClauseUser, whereClauseProfile)
 		    filteredUserPanelists = await User.findAll({
 				where: whereClauseUser,
-				attributes: ['phoneNumber', 'id', 'email', 'createdAt', 'deleteRequestDate'],
+				attributes: ['phoneNumber', 'id', 'email', 'createdAt', 'deleteRequestDate', 'activeStatus'],
 				include: [
 					{
 						model: BasicProfile,
-						attributes: ['firstName', 'lastName', 'dateOfBirth', 'city', 'firstName', 'lastName', 'gender', 'mobile'],
+						attributes: ['firstName', 'lastName', 'dateOfBirth', 'city', 'firstName', 'lastName', 'gender', 'mobile', 'state'],
 						required: false
 					},
 				],
@@ -664,7 +664,7 @@ module.exports.allPanelists = async (req, res) => {
 					}
 				});
 			}
-		return apiResponses.successResponseWithData(res, 'success!',  mergedArray);
+		return apiResponses.successResponseWithData(res, 'success!',  filteredUserPanelists);
 	} catch (err) {
 		console.log(err)
 		return apiResponses.errorResponse(res, err);
