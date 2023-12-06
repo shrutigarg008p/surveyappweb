@@ -45,6 +45,8 @@ module.exports.registration = async (req, res) => {
 		return apiResponses.successResponseWithData(
 			res,
 			'User registered successfully!',
+			user.email
+
 		);
 	} catch (err) {
 		console.log('err---->', err)
