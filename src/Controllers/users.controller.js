@@ -26,7 +26,7 @@ module.exports.registration = async (req, res) => {
 			updatedAt: new Date().valueOf(),
 			isActive: req.body.isActive,
 			signupIp: req.ip,
-			role: 'panelist',
+			role: req.body.role || 'panelist',
 			registerType: 'password',
 			emailConfirmed: false,
 			phoneNumberConfirmed: false,
@@ -42,6 +42,7 @@ module.exports.registration = async (req, res) => {
                     } */
 		await Mails.userRegistration(user.email, token);
 		// return res.status(200).send({ status:'200', message: "User registered successfully!" , data: userData });
+		console.log('successResponseWithData---->', user.email)
 		return apiResponses.successResponseWithData(
 			res,
 			'User registered successfully!',
@@ -301,13 +302,15 @@ module.exports.userUpdate = async (req, res) => {
 			const user = await BasicProfile.create(
 				obj
 			)
-			return apiResponses.successResponseWithData(res, 'Success Created', user);
+			const userInfo = await User.findOne({ where: { id: req.params.userId } })
+			return apiResponses.successResponseWithData(res, 'Success Created', userInfo);
 		} else {
 			delete obj.userId
 			const user = await BasicProfile.update(
 				obj, { where: { userId: req.params.userId } }
 			)
-			return apiResponses.successResponseWithData(res, 'Success Update', user);
+			const userInfo = await User.findOne({ where: { id: req.params.userId } })
+			return apiResponses.successResponseWithData(res, 'Success Update', userInfo);
 
 		}
 	} catch (err) {
