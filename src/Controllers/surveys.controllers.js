@@ -1,6 +1,9 @@
 const db = require('../models');
 const Surveys = db.surveys;
+const SurveysPartners = db.surveyPartners;
 const BlacklistedSurveys = db.blacklistedSurveys;
+const SurveyTemplates = db.surveyTemplates;
+
 const apiResponses = require('../Components/apiresponse');
 const {DataTypes} = require("sequelize");
 
@@ -125,11 +128,19 @@ module.exports.getAll = async (req, res) => {
 
 module.exports.getOne = async (req, res) => {
     try {
-        Surveys.hasOne(BlacklistedSurveys, { foreignKey: 'surveyId' });
+        Surveys.hasMany(BlacklistedSurveys, { foreignKey: 'surveyId' });
+        Surveys.hasMany(SurveysPartners, { foreignKey: 'surveyId' });
+        Surveys.hasMany(SurveyTemplates, { foreignKey: 'surveyId' });
         const data = await Surveys.findOne({where: {id: req.params.id, deletedAt: null},
             include: [
                 {
                     model: BlacklistedSurveys,
+                },
+                {
+                    model: SurveysPartners,
+                },
+                {
+                    model: SurveyTemplates,
                 }
             ],
         })
@@ -146,6 +157,24 @@ module.exports.delete = async (req, res) => {
             },
             { where: { id : req.params.id },
             })
+        return apiResponses.successResponseWithData(res, 'Success');
+    } catch (err) {
+        return apiResponses.errorResponse(res, err);
+    }
+};
+
+
+module.exports.AddPartners = async (req, res) => {
+    try {
+        const newArray = req.body.partners.map(item => {
+            return {
+                ...item,
+                createdAt: new Date().valueOf(),
+                updatedAt: new Date().valueOf(),
+            };
+        });
+        console.log('newArray--->', newArray)
+        const Option = await SurveysPartners.bulkCreate(newArray)
         return apiResponses.successResponseWithData(res, 'Success');
     } catch (err) {
         return apiResponses.errorResponse(res, err);

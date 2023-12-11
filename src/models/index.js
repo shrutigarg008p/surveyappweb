@@ -43,9 +43,8 @@ db.newsletters = require('./NewsLetter.model')(sequelize, Sequelize);
 db.newslettersSamples = require('./NewsletterSamples.model')(sequelize, Sequelize);
 db.messages = require('./Messages.model')(sequelize, Sequelize);
 db.applicationAssignUser = require('./ApplicationsAssignUser.model')(sequelize, Sequelize);
-
-
-
+db.surveyPartners = require('./SurveyPartners.model')(sequelize, Sequelize);
+db.surveyTemplates = require('./SurveyTemplates.model')(sequelize, Sequelize);
 
 // db.user.hasMany(db.basicProfile, {
 // 	sourceKey: 'id',
