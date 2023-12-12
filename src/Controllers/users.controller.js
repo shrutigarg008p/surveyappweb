@@ -172,7 +172,7 @@ module.exports.userLogin = async (req, res) => {
 				null,
 			);
 		}
-		if (user.deletedAt) {
+		if (user.deletedAt || user.deleteConfirmDate) {
 			/* #swagger.responses[401] = {
                     description: "Your email is not verified, please verify before logging in.",
                     schema: { $accessToken: "", $message: "Your email is not verified, please verify before logging in." }
@@ -320,18 +320,29 @@ module.exports.userUpdate = async (req, res) => {
 
 module.exports.unSubscribeUser = async (req, res) => {
 	try {
-		let obj = {
-			unsubscribeDate: new Date().valueOf(),
-			unsubscribeRequestDate: new Date().valueOf(),
-			updatedAt: new Date().valueOf()
-		}
-
-		const isExist = await User.findOne({ where: { userId: req.params.userId } })
-		if(!isExist) {
-			const user = await BasicProfile.create(
-				obj
-			)
-			return apiResponses.successResponseWithData(res, 'Success Created', user);
+		const isExist = await User.findOne({ where: { id: req.params.userId } })
+		console.log('isExist--->', isExist)
+		if(isExist) {
+			if(isExist.unsubscribeDate) {
+				let obj = {
+					unsubscribeDate: null,
+					unsubscribeRequestDate: null,
+					updatedAt: new Date().valueOf()
+				}
+				const user = await User.update(
+					obj, { where: { id: req.params.userId } }
+				)
+			} else {
+				let obj = {
+					unsubscribeDate: new Date().valueOf(),
+					unsubscribeRequestDate: new Date().valueOf(),
+					updatedAt: new Date().valueOf()
+				}
+				const user = await User.update(
+					obj, {where: {id: req.params.userId}}
+				)
+			}
+			return apiResponses.successResponseWithData(res, 'Success');
 		} else {
 			return apiResponses.validationErrorWithData(res, 'User not found', null);
 		}
@@ -440,7 +451,7 @@ module.exports.updateNewPassword = async (req, res) => {
 module.exports.changePassword = async (req, res) => {
 	try {
 		User.update({
-				password: await bcrypt.hashSync(req.body.password, 8),
+				passwordHash: await bcrypt.hashSync(req.body.password, 8),
 			},
 			{where: {id: req.body.userId},
 			})
@@ -453,6 +464,58 @@ module.exports.changePassword = async (req, res) => {
 			.catch((error) => {
 				return apiResponses.errorResponse(res, error.message, {});
 			});
+	} catch (err) {
+		return apiResponses.errorResponse(res, err);
+	}
+};
+
+
+module.exports.temporaryDelete = async (req, res) => {
+	try {
+		const isExist = await User.findOne({ where: { id: req.params.userId } })
+		if(isExist) {
+			if (isExist.deletedAt) {
+				let obj = {
+					deletedAt: null,
+					updatedAt: new Date().valueOf()
+				}
+				const user = await User.update(
+					obj, {where: {id: req.params.userId}}
+				)
+			} else {
+				let obj = {
+					deletedAt: new Date().valueOf(),
+					updatedAt: new Date().valueOf()
+				}
+				const user = await User.update(
+					obj, {where: {id: req.params.userId}}
+				)
+			}
+			return apiResponses.successResponseWithData(res, 'Success');
+		} else {
+			return apiResponses.validationErrorWithData(res, 'User not found', null);
+		}
+	} catch (err) {
+		return apiResponses.errorResponse(res, err);
+	}
+};
+
+module.exports.permanentlyDelete = async (req, res) => {
+	try {
+		const isExist = await User.findOne({ where: { id: req.params.userId } })
+		if(isExist) {
+				let obj = {
+					deleteRequestDate: new Date().valueOf(),
+					deleteConfirmDate: new Date().valueOf(),
+					updatedAt: new Date().valueOf()
+				}
+				const user = await User.update(
+					obj, {where: {id: req.params.userId}}
+				)
+			return apiResponses.successResponseWithData(res, 'Success');
+		} else {
+			return apiResponses.validationErrorWithData(res, 'User not found', null);
+		}
 	} catch (err) {
 		return apiResponses.errorResponse(res, err);
 	}
