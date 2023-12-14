@@ -26,7 +26,8 @@ const processScheduledEmails = async () => {
 };
 
 const startScheduledEmailsCronJob = () => {
-    cron.schedule('*/2 * * * * *', processScheduledEmails);
+    // cron.schedule('*/2 * * * * *', processScheduledEmails);
+    cron.schedule('*/15 * * * *', processScheduledEmails);
 };
 
 module.exports = { startScheduledEmailsCronJob };

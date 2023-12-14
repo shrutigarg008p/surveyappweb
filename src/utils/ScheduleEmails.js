@@ -102,9 +102,9 @@ const triggerSurveyEmail = async (id) => {
                                 let link = ''
                                 if (survey.useUniqueLinks === true) {
                                     sixDigitRandomNumber = Math.floor(100000 + Math.random() * 900000);
-                                    link = `http://localhost:9000/surveys/${sixDigitRandomNumber}/${users[i].userId}`
+                                    link = `https://indiapolls.com:9000/surveys/${sixDigitRandomNumber}/${users[i].userId}`
                                 } else {
-                                    link = `http://localhost:9000/surveys/${sixDigitRandomNumber}/${users[i].userId}`
+                                    link = `https://indiapolls.com:9000/surveys/${sixDigitRandomNumber}/${users[i].userId}`
                                 }
                                 const data = {
                                     firstName: users[i].firstName,
