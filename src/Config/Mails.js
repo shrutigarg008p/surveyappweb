@@ -41,6 +41,26 @@ module.exports = {
 				return true;
 			}
 		});
+	},
+
+	surveyInvite: (subject, email, template) => {
+		console.log('logIn_Mail====>' + email);
+		const mailOptions = {
+			from: 'softpk@gmail.com',
+			to: email,
+			subject: subject,
+			html: template
+		};
+
+		transporter.sendMail(mailOptions, (error, info) => {
+			if (error) {
+				console.log('error=========>>>' + error);
+				return true;
+			} else {
+				console.log('data=========>>>' + JSON.stringify(data));
+				return true;
+			}
+		});
 	}
 }
 

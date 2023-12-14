@@ -5,6 +5,9 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const port = process.env.PORT || 9000;
 require('dotenv').config();
+const { startScheduledEmailsCronJob } = require('./utils/CronJobs');
+
+startScheduledEmailsCronJob();
 
 app.use(cors());
 app.use(

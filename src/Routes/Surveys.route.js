@@ -67,4 +67,20 @@ module.exports= function(app) {
         '/api/v1/surveys/delete-template/:id',
         surveyTemplateControllers.delete,
     );
+
+    app.get(
+        '/surveys/:id/:userId',
+        surveyTemplateControllers.redirectToSurvey,
+    );
+
+
+    app.get(
+        '/api/v1/surveys/panelist-surveys/:userId',
+        surveyControllers.GetUserAllAssignedSurvey,
+    );
+
+    app.get(
+        '/api/v1/surveys/panelist-one-surveys/:id',
+        surveyControllers.GetUserOneAssignedSurvey,
+    );
 };

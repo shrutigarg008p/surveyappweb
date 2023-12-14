@@ -1,6 +1,8 @@
 const db = require('../models');
 const SurveyTemplates = db.surveyTemplates;
+const SurveyAssign = db.asssignSurveys;
 const apiResponses = require('../Components/apiresponse');
+const {Op} = require("sequelize");
 
 module.exports.create = async (req, res) => {
     try {
@@ -74,3 +76,30 @@ module.exports.delete = async (req, res) => {
     }
 };
 
+module.exports.redirectToSurvey = async (req, res) => {
+    try {
+        const assignedSurvey = await SurveyAssign.findOne({
+            temporarySurveyLinkId: req.params.id,
+            userId: req.params.userId,
+            expiryDate: {
+                [Op.gt]: new Date()
+            }
+        })
+        if(assignedSurvey) {
+            await SurveyAssign.update({
+                isStarted: true,
+                isCompleted: true
+            }, { where: {
+                    temporarySurveyLinkId: req.params.id,
+                    userId: req.params.userId,
+                    expiryDate: {
+                        [Op.gt]: new Date()
+                    } } })
+            res.redirect(assignedSurvey.originalSurveyLink);
+        } else {
+            res.redirect('https://indiapolls.com/');
+        }
+    } catch (err) {
+        return apiResponses.errorResponse(res, err);
+    }
+};

@@ -16,4 +16,5 @@ module.exports=(app)=> {
 	require('./Sample.route')(app);
 	require('./NewsLetter.route')(app);
 	require('./Messages.route')(app);
+	require('./surveyEmailSchedule.route')(app);
 };

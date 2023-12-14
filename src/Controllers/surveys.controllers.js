@@ -3,6 +3,7 @@ const Surveys = db.surveys;
 const SurveysPartners = db.surveyPartners;
 const BlacklistedSurveys = db.blacklistedSurveys;
 const SurveyTemplates = db.surveyTemplates;
+const SurveyAssigned = db.asssignSurveys;
 
 const apiResponses = require('../Components/apiresponse');
 const {DataTypes} = require("sequelize");
@@ -176,6 +177,52 @@ module.exports.AddPartners = async (req, res) => {
         console.log('newArray--->', newArray)
         const Option = await SurveysPartners.bulkCreate(newArray)
         return apiResponses.successResponseWithData(res, 'Success');
+    } catch (err) {
+        return apiResponses.errorResponse(res, err);
+    }
+};
+
+
+module.exports.GetUserAllAssignedSurvey = async (req, res) => {
+    try {
+        SurveyAssigned.belongsTo(Surveys, { foreignKey: 'surveyId' });
+        const surveysList = await SurveyAssigned.findAll({
+            where: {
+                userId: req.params.userId
+            },
+                include: [
+                    {
+                        model: Surveys,
+                        required: false,
+                        attributes: ['name', 'description', 'ceggPoints', 'expiryDate']
+                    },
+                ],
+                limit: 100000,
+            order: [['createdAt', 'DESC']]
+        })
+        return apiResponses.successResponseWithData(res, 'Success', surveysList);
+    } catch (err) {
+        console.log('erro-->', err)
+        return apiResponses.errorResponse(res, err);
+    }
+};
+
+
+module.exports.GetUserOneAssignedSurvey = async (req, res) => {
+    try {
+        SurveyAssigned.belongsTo(Surveys, { foreignKey: 'surveyId' });
+        const surveysDetails = await SurveyAssigned.findOne({
+            where: {
+                id: req.params.id},
+                include: [
+                    {
+                        model: Surveys,
+                        required: false,
+                        attributes: ['name', 'description', 'ceggPoints', 'expiryDate']
+                    },
+                ]
+        })
+        return apiResponses.successResponseWithData(res, 'Success', surveysDetails);
     } catch (err) {
         return apiResponses.errorResponse(res, err);
     }
