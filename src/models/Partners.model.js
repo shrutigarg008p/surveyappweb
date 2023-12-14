@@ -23,6 +23,10 @@ module.exports = (sequelize, Sequelize) => {
             type: DataTypes.STRING,
             allowNull: true,
         },
+        badTerminatedUrl: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
         createdAt: {
             type: DataTypes.DATE,
             allowNull: false,
