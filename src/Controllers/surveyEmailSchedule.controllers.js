@@ -6,7 +6,7 @@ const {triggerSurveyEmail} = require("../utils/ScheduleEmails");
 
 module.exports.create = async (req, res) => {
     try {
-        const isExist = await SurveyEmailSchedule.findOne({ where: { surveyId: req.body.surveyId, surveyTemplateId: req.body.surveyTemplateId, deletedAt: null }})
+        const isExist = await SurveyEmailSchedule.findOne({ where: { surveyId: req.body.surveyId, surveyTemplateId: req.body.surveyTemplateId, deletedAt: null, scheduleStatus: 'Pending' }})
         console.log(isExist)
         if(!isExist) {
             const Survey = await SurveyEmailSchedule.create({
