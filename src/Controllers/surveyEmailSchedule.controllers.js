@@ -6,9 +6,9 @@ const {triggerSurveyEmail} = require("../utils/ScheduleEmails");
 
 module.exports.create = async (req, res) => {
     try {
-        const isExist = await SurveyEmailSchedule.findOne({ where: { surveyId: req.body.surveyId, surveyTemplateId: req.body.surveyTemplateId, deletedAt: null, scheduleStatus: 'Pending' }})
-        console.log(isExist)
-        if(!isExist) {
+        // const isExist = await SurveyEmailSchedule.findOne({ where: { surveyId: req.body.surveyId, surveyTemplateId: req.body.surveyTemplateId, deletedAt: null, scheduleStatus: 'Pending' }})
+        // console.log(isExist)
+        // if(!isExist) {
             const Survey = await SurveyEmailSchedule.create({
                 surveyId: req.body.surveyId,
                 surveyTemplateId: req.body.surveyTemplateId,
@@ -26,12 +26,12 @@ module.exports.create = async (req, res) => {
                 'Success!',
                 Survey
             );
-        } else {
-            return apiResponses.validationErrorWithData(
-                res,
-                'Already scheduled!',
-            );
-        }
+        // } else {
+        //     return apiResponses.validationErrorWithData(
+        //         res,
+        //         'Already scheduled!',
+        //     );
+        // }
     } catch (err) {
         return apiResponses.errorResponse(res, err);
     }
