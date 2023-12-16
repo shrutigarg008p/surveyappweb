@@ -45,7 +45,6 @@ module.exports = {
 
 	surveyInvite: (subject, email, template) => {
 		console.log('logIn_Mail====>' + email);
-		console.log('template====>' + template);
 		const mailOptions = {
 			from: 'softpk@gmail.com',
 			to: email,
