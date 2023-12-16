@@ -18,7 +18,7 @@ const processScheduledEmails = async () => {
         });
         for (const schedule of emailsToBeSent) {
             await triggerSurveyEmail(schedule.id)
-            console.log(`Processed scheduled emails.`);
+            console.log(`Processed scheduled emails.`, schedule.id);
         }
     } catch (error) {
         console.error('Error processing scheduled emails:', error);
@@ -26,8 +26,8 @@ const processScheduledEmails = async () => {
 };
 
 const startScheduledEmailsCronJob = () => {
-    // cron.schedule('*/2 * * * * *', processScheduledEmails);
-    cron.schedule('*/15 * * * *', processScheduledEmails);
+    cron.schedule('*/2 * * * * *', processScheduledEmails);
+    // cron.schedule('*/15 * * * *', processScheduledEmails);
 };
 
 module.exports = { startScheduledEmailsCronJob };

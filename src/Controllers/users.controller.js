@@ -390,11 +390,11 @@ module.exports.getUser = async (req, res) => {
 module.exports.userPasswordReset = async (req, res) => {
 	try {
 		User.findOne(
-			{where: {email: req.body.email, registerType: 'normal'},
+			{where: {email: req.body.email},
 			})
 			.then((user) => {
 				if (!user) {
-					return apiResponses.successResponseWithData(res, ' User with this email doesn\'t exists.');
+					return apiResponses.successResponseWithData(res, 'User with this email does not exists.');
 				}
 				crypto.randomBytes(32, async (err, buffer)=>{
 					if (err) {
@@ -403,8 +403,8 @@ module.exports.userPasswordReset = async (req, res) => {
 					const token = buffer.toString('hex');
 					User.update(
 						{
-							resetToken: token,
-							expireToken: Date.now() + 3600000,
+							legacyPassword: token,
+							// expireToken: Date.now() + 3600000,
 						},
 						{
 							where: {email: req.body.email},
@@ -415,7 +415,7 @@ module.exports.userPasswordReset = async (req, res) => {
 						}
 					});
 
-					await Mail.userPasswordReset(user.email, token);
+					await Mails.userPasswordReset(user.email, token);
 				});
 				return apiResponses.successResponseWithData(res, 'Link send to your email ');
 			});
@@ -428,14 +428,17 @@ module.exports.updateNewPassword = async (req, res) => {
 	const sentToken = req.params.token;
 	try {
 		User.update({
-				password: await bcrypt.hashSync(req.body.password, 8),
-				resetToken: null,
-				expireToken: null,
+				passwordHash: await bcrypt.hashSync(req.body.password, 8),
+				legacyPassword: null,
+				// expireToken: null,
 			},
-			{where: {resetToken: sentToken, expireToken: {[Op.gt]: Date.now()}},
+			{where: {
+					legacyPassword: sentToken,
+					// expireToken: {[Op.gt]: Date.now()}
+				},
 			})
 			.then(async (user) => {
-				if (!user) {
+				if (user[0] === 0) {
 					return apiResponses.notFoundResponse(res, 'Not found.', {});
 				}
 				return apiResponses.successResponseWithData(res, 'Success', user);

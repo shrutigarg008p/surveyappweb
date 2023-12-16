@@ -115,7 +115,7 @@ module.exports.createState = async (req, res) => {
 
 module.exports.getAllStatesByCountryId = async (req, res) => {
     try {
-        const limit = req.params.limit;
+        const limit = 10000 || req.params.limit;
         const data = await States.findAll({ where: {
                 countryId: req.params.countryId,
                 deletedAt: null
@@ -128,7 +128,7 @@ module.exports.getAllStatesByCountryId = async (req, res) => {
 
 module.exports.getAllStates = async (req, res) => {
     try {
-        const limit = req.params.limit;
+        const limit = 10000 || req.params.limit;
         const data = await States.findAll({ where: {
                 deletedAt: null
             }, limit: limit, order: [['createdAt', 'DESC']]})
@@ -170,7 +170,7 @@ module.exports.createCity = async (req, res) => {
 
 module.exports.getAllCitiesByStateId = async (req, res) => {
     try {
-        const limit = req.params.limit;
+        const limit = 10000 || req.params.limit;
         console.log('req.params.stateId--->', req.params.stateId)
         const data = await Cities.findAll( { where: {
             stateId: req.params.stateId,
@@ -193,3 +193,39 @@ module.exports.getAllCities = async (req, res) => {
         return apiResponses.errorResponse(res, err);
     }
 };
+
+
+
+const jsonFile = require('../../States.json')
+async function statesImport() {
+    for(let i = 0; i < jsonFile.length; i++) {
+            console.log('llllll----->', i)
+            const Question = await States.create({
+                "name": jsonFile[i].name,
+                "countryId": jsonFile[i].country_id,
+                createdAt: new Date().valueOf(),
+                updatedAt: new Date().valueOf(),
+            })
+        }
+
+}
+
+
+
+const citiesJson = require('../../Cities.json')
+async function citiesImport() {
+    for(let i = 0; i < citiesJson.length; i++) {
+        console.log('llllll----->', i)
+        const isExist = await States.findOne({where: {name: citiesJson[i].state_name}})
+        console.log(isExist)
+        if (isExist) {
+            const Question = await Cities.create({
+                "name": citiesJson[i].name,
+                "stateId": isExist.id,
+                "tier": 1,
+                createdAt: new Date().valueOf(),
+                updatedAt: new Date().valueOf(),
+            })
+        }
+    }
+}

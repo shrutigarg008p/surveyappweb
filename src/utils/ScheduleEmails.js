@@ -25,7 +25,11 @@ function replaceVariables(html, variables) {
 const triggerSurveyEmail = async (id) => {
     try {
         console.log('calling--->')
-        const scheduleEmail = await SurveyEmailSchedules.findOne({where: {id: id, deletedAt: null, scheduleStatus: 'Pending'}})
+        const scheduleEmail = await SurveyEmailSchedules.findOne({where: {
+                id: id,
+                deletedAt: null,
+                scheduleStatus: 'Pending'
+        }})
         if (scheduleEmail) {
             const survey = await Surveys.findOne({
                 where: {
@@ -92,13 +96,13 @@ const triggerSurveyEmail = async (id) => {
                         ],
                     });
 
-                    console.log('result---->', users.length)
+                    console.log('result---->', users.length, scheduleEmail.surveyTemplateId)
                     if(users.length > 0) {
-                       const emailTemplate = await SurveyTemplates.findOne({ id: scheduleEmail.templateId, deletedAt: null })
+                       const emailTemplate = await SurveyTemplates.findOne({ where: { id: scheduleEmail.surveyTemplateId, deletedAt: null }})
                         if(emailTemplate) {
                             let sixDigitRandomNumber = Math.floor(100000 + Math.random() * 900000);
                             let assignedSurvey  = []
-                            for( let i = 0; i < users.length; i++ ) {
+                            for( let i = 0; i < 1; i++ ) {
                                 let link = ''
                                 if (survey.useUniqueLinks === true) {
                                     sixDigitRandomNumber = Math.floor(100000 + Math.random() * 900000);

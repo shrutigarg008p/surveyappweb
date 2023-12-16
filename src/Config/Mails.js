@@ -45,6 +45,7 @@ module.exports = {
 
 	surveyInvite: (subject, email, template) => {
 		console.log('logIn_Mail====>' + email);
+		console.log('template====>' + template);
 		const mailOptions = {
 			from: 'softpk@gmail.com',
 			to: email,
@@ -61,7 +62,28 @@ module.exports = {
 				return true;
 			}
 		});
-	}
+	},
+
+
+	userPasswordReset: (email, token) => {
+		console.log('logIn_Mail====>' + email);
+		const details = {
+			from: senderAddress, // sender address same as above
+			to: email, // Receiver's email id
+			subject: 'Regarding Password reset on INDIA-POLLS!', // Subject of the mail.
+			html:
+				`<div><span>Dear User,</span><div><p>Please follow the link below to reset your password.</p><br><p>Click here to reset password <a href='https://indiapolls.com/#/reset-password/${token}'>link</a></p></p><br><p>Please do not share your password credentials with anyone and keep it stored safely.</p><br><p>Important: If this email is in your Spam folder mark it as "Not Spam" first. If you have any issue, please forward this email support@indiapolls.com</p><br></br>`, // Sending OTP
+		};
+		transporter.sendMail(details, function(error, data) {
+			if (error) {
+				console.log('error=========>>>' + error);
+				return true;
+			} else {
+				console.log('data=========>>>' + JSON.stringify(data));
+				return true;
+			}
+		});
+	},
 }
 
 
