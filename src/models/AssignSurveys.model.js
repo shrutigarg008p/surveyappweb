@@ -15,6 +15,10 @@ module.exports = (sequelize, Sequelize) => {
             type: DataTypes.UUID,
             allowNull: false,
         },
+        status: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
         isStarted: {
             type: DataTypes.BOOLEAN,
             allowNull: false,

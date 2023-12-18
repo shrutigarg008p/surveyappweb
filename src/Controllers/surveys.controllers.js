@@ -79,6 +79,7 @@ module.exports.update = async (req, res) => {
             userLimitCommitted: req.body.userLimitCommitted,
             surveyType: req.body.surveyType,
             pointAllocationType: req.body.pointAllocationType,
+            surveyUrlIdentifier: req.body.surveyUrlIdentifier,
             client: req.body.client,
             surveyLength: req.body.surveyLength,
             companyLogo: req.body.companyLogo,
@@ -167,17 +168,23 @@ module.exports.delete = async (req, res) => {
 
 module.exports.AddPartners = async (req, res) => {
     try {
-        const newArray = req.body.partners.map(item => {
-            return {
-                ...item,
-                createdAt: new Date().valueOf(),
-                updatedAt: new Date().valueOf(),
-            };
-        });
-        console.log('newArray--->', newArray)
-        const Option = await SurveysPartners.bulkCreate(newArray)
+        let surveyId = null
+        if(req.body.partners) {
+            const newArray = req.body.partners.map(item => {
+                surveyId = item.surveyId
+                return {
+                    ...item,
+                    createdAt: new Date().valueOf(),
+                    updatedAt: new Date().valueOf(),
+                };
+            });
+            await SurveysPartners.destroy({where: {surveyId: surveyId}})
+            console.log('newArray--->', newArray)
+            const Option = await SurveysPartners.bulkCreate(newArray)
+        }
         return apiResponses.successResponseWithData(res, 'Success');
     } catch (err) {
+        console.log('error--->', err)
         return apiResponses.errorResponse(res, err);
     }
 };

@@ -1,5 +1,7 @@
 const db = require('../models');
 const {Op, DataTypes} = require("sequelize");
+const { URL } = require('url');
+const axios = require('axios');
 const {surveyInvite} = require("../Config/Mails");
 const SurveyEmailSchedules = db.surveyEmailSchedule;
 const SurveyTemplates = db.surveyTemplates;
@@ -128,6 +130,7 @@ const triggerSurveyEmail = async (id) => {
                                     isClosedSurvey: false,
                                     isOutlier: false,
                                     isRejected: false,
+                                    status: 'pending',
                                     pointsRewarded: 0,
                                     temporarySurveyLink: link,
                                     originalSurveyLink: survey.url,
@@ -157,8 +160,145 @@ const triggerSurveyEmail = async (id) => {
     }
 }
 
-module.exports = {
-    triggerSurveyEmail
+const monkeyCron = async (id, surveyId) => {
+    let config = {
+        method: 'get',
+        maxBodyLength: Infinity,
+        url: `https://api.surveymonkey.com/v3/surveys/${id}/responses/bulk`,
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'bearer tOt-QCvM5tKO73Krcx3Kwe4d0z1NIzdshw.GbENnC2XbMaUhZ9wLaZWbYMUtvXMF5JGZYhjdYH4sAiKo8DvhTpCPYom7i4m43n3Mrt21RD7aNTQv1LmCNN4aluc5JGDR',
+            'Cookie': 'attr_multitouch="yD//P8q3ZlnM34fwaCqP4Lwz34k="; cdp_seg="hT1pBWP5PpzsSumonxF63JY1kq0="; ep201="cY14kpTNgMeyqPVHKQ9sXVOFoVQ="; ep202="KVRIDiURxVtYZl8266oMGEHveVE="; ep203="fCyYyK4sFFuSj2UuvTp9RJh++/M="'
+        }
+    };
+
+    axios.request(config)
+        .then(async (response) => {
+            const surveyData = response.data
+            const groupedData = {};
+            surveyData.data.forEach(response => {
+                const ip_address = response.ip_address;
+                if (!groupedData[ip_address]) {
+                    groupedData[ip_address] = [];
+                }
+                groupedData[ip_address].push(response);
+            });
+            const groupedDataArray = Object.entries(groupedData).map(([ip_address, responses]) => ({
+                ip_address,
+                responses,
+            }));
+            const resultJson = {groupedData: groupedDataArray};
+            const processedData = resultJson.groupedData.map(ipGroup => {
+                const hasCompleted = ipGroup.responses.some(response => response.response_status === 'completed');
+                const latestDateModified = ipGroup.responses.reduce((latestDate, response) => {
+                    const dateModified = new Date(response.date_modified).getTime();
+                    return dateModified > latestDate ? dateModified : latestDate;
+                }, 0);
+                const status = hasCompleted ? 'completed' : ipGroup.responses.find(response => new Date(response.date_modified).getTime() === latestDateModified).response_status;
+                return {
+                    ip_address: ipGroup.ip_address,
+                    status,
+                };
+            });
+            const results = {processedData};
+            if (results && results.processedData.length > 0) {
+                for (const processed of results.processedData) {
+                    const user = await Users.findOne({
+                        where: {
+                            signupIp: {
+                                [Op.like]: `::ffff:${processed.ip_address}`,
+                            },
+                        },
+                    });
+                    if (user) {
+                        await AssignSurveys.update({
+                            status: processed.status
+                        }, {
+                            where: {
+                                userId: user.id,
+                                surveyId: surveyId
+                            }
+                        })
+                    }
+                }
+            }
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+
 }
 
+const questionPro = async (id, surveyId) => {
+    let config = {
+        method: 'get',
+        maxBodyLength: Infinity,
+        url: 'https://api.questionpro.com/a/api/v2/surveys/11783740/responses?page=1&perPage=10000&apiKey=3e158e6c-f112-4925-b1dc-ec1406881337',
+        headers: {
+            'Cookie': 'api=86c488cb5f1515dc514a304b45c39121; JSESSIONID=aaaQpmCHyrC1z7NxefNXy'
+        }
+    };
+
+    axios.request(config)
+        .then(async (response) => {
+            const surveyData = response.data
+            const groupedData = {};
+            surveyData.response.forEach(response => {
+                const ipAddress = response.ipAddress;
+                if (!groupedData[ipAddress]) {
+                    groupedData[ipAddress] = [];
+                }
+                groupedData[ipAddress].push(response);
+            });
+            const groupedDataArray = Object.entries(groupedData).map(([ipAddress, responses]) => ({
+                ipAddress,
+                responses,
+            }));
+            const resultJson = {groupedData: groupedDataArray};
+            const processedData = resultJson.groupedData.map(ipGroup => {
+                const hasCompleted = ipGroup.responses.some(response => response.responseStatus === 'completed');
+                const latestDateModified = ipGroup.responses.reduce((latestDate, response) => {
+                    const dateModified = new Date(response.utctimestamp).getTime();
+                    return dateModified > latestDate ? dateModified : latestDate;
+                }, 0);
+                const status = hasCompleted ? 'completed' : ipGroup.responses.find(response => new Date(response.utctimestamp).getTime() === latestDateModified).responseStatus;
+                return {
+                    ipAddress: ipGroup.ipAddress,
+                    status,
+                };
+            });
+            const results = {processedData};
+            if (results && results.processedData.length > 0) {
+                for (const processed of results.processedData) {
+                    const user = await Users.findOne({
+                        where: {
+                            signupIp: {
+                                [Op.like]: `::ffff:${processed.ipAddress}`,
+                            },
+                        },
+                    });
+                    if (user) {
+                        await AssignSurveys.update({
+                            status: processed.status
+                        }, {
+                            where: {
+                                userId: user.id,
+                                surveyId: surveyId
+                            }
+                        })
+                    }
+                }
+            }
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+
+}
+
+module.exports = {
+    triggerSurveyEmail,
+    monkeyCron,
+    questionPro
+}
 
