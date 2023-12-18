@@ -71,7 +71,7 @@ module.exports = {
 			to: email, // Receiver's email id
 			subject: 'Regarding Password reset on INDIA-POLLS!', // Subject of the mail.
 			html:
-				`<div><span>Dear User,</span><div><p>Please follow the link below to reset your password.</p><br><p>Click here to reset password <a href='https://indiapolls.com/#/reset-password/${token}'>link</a></p></p><br><p>Please do not share your password credentials with anyone and keep it stored safely.</p><br><p>Important: If this email is in your Spam folder mark it as "Not Spam" first. If you have any issue, please forward this email support@indiapolls.com</p><br></br>`, // Sending OTP
+				`<div><span>Dear User,</span><div><p>Please follow the link below to reset your password.</p><br><p><a href='https://indiapolls.com/#/reset-password/${token}'>Click here to reset password</a></p></p><br><p>Please do not share your password credentials with anyone and keep it stored safely.</p><br><p>Important: If this email is in your Spam folder mark it as "Not Spam" first. If you have any issue, please forward this email support@indiapolls.com</p><br></br>`, // Sending OTP
 		};
 		transporter.sendMail(details, function(error, data) {
 			if (error) {
