@@ -15,7 +15,7 @@ module.exports.create = async (req, res) => {
                 sampleId: req.body.sampleId,
                 count: req.body.count,
                 isSendAll: req.body.isSendAll,
-                scheduleDate: new Date(req.body.scheduleDate).toUTCString(),
+                scheduleDate: new Date(req.body.scheduleDate).toISOString(),
                 scheduleType: req.body.scheduleType,
                 scheduleStatus: req.body.scheduleStatus,
                 createdAt: new Date().valueOf(),
