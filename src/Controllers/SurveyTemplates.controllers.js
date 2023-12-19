@@ -78,19 +78,22 @@ module.exports.delete = async (req, res) => {
 
 module.exports.redirectToSurvey = async (req, res) => {
     try {
-        const assignedSurvey = await SurveyAssign.findOne({
-            temporarySurveyLinkId: req.params.id,
-            userId: req.params.userId,
-            expiryDate: {
-                [Op.gt]: new Date()
+        console.log('req.params--->', req.params)
+        const assignedSurvey = await SurveyAssign.findOne({ where: {
+                temporarySurveyLinkId: parseInt(req.params.id, 10),
+                userId: req.params.userId,
+                expiryDate: {
+                    [Op.gt]: new Date()
+                }
             }
         })
+        console.log('assignedSurvey---->', assignedSurvey)
         if(assignedSurvey) {
             await SurveyAssign.update({
                 isStarted: true,
                 isCompleted: true
             }, { where: {
-                    temporarySurveyLinkId: req.params.id,
+                    temporarySurveyLinkId: parseInt(req.params.id, 10),
                     userId: req.params.userId,
                     expiryDate: {
                         [Op.gt]: new Date()
