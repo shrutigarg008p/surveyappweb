@@ -93,7 +93,7 @@ const UpdateSurveyStatusTrigger = async () => {
 const startScheduledEmailsCronJob = () => {
     // cron.schedule('*/2 * * * * *', processScheduledEmails); // Every 2 sec
     // cron.schedule('*/15 * * * *', processScheduledEmails); //Every 15 min
-    cron.schedule('*/15 * * * * ', () => {
+    cron.schedule('*/5 * * * * ', () => {
         processScheduledEmails();
         UpdateSurveyStatusTrigger()
 
