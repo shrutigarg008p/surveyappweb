@@ -10,6 +10,7 @@ const Mails = require("../Config/Mails");
 const {BOOLEAN, literal} = require("sequelize");
 const {bool} = require("twilio/lib/base/serialize");
 const {userRegistration} = require("../Config/Mails");
+const axios = require("axios");
 const Op = db.Sequelize.Op;
 
 module.exports.registration = async (req, res) => {
@@ -198,6 +199,9 @@ module.exports.userLogin = async (req, res) => {
 		//   email: user.email,
 		//   accessToken: token
 		// });
+		const ip = await axios.get("https://ipapi.co/json/")
+		console.log('IP---->', ip, req.ip  )
+		await User.update({ signupIp: req.ip }, {where: { userId: user.id }} )
 		const isExist = await BasicProfile.findOne({ where: { userId: user.id } })
 		const obj = {
 			id: user.id,

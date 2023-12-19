@@ -204,6 +204,7 @@ const monkeyCron = async (id, surveyId) => {
             const results = {processedData};
             if (results && results.processedData.length > 0) {
                 for (const processed of results.processedData) {
+                    console.log('processed.ip_address---->', processed.ip_address)
                     const user = await Users.findOne({
                         where: {
                             signupIp: {
@@ -234,7 +235,7 @@ const questionPro = async (id, surveyId) => {
     let config = {
         method: 'get',
         maxBodyLength: Infinity,
-        url: 'https://api.questionpro.com/a/api/v2/surveys/11783740/responses?page=1&perPage=10000&apiKey=3e158e6c-f112-4925-b1dc-ec1406881337',
+        url: `https://api.questionpro.com/a/api/v2/surveys/${id}/responses?page=1&perPage=10000&apiKey=3e158e6c-f112-4925-b1dc-ec1406881337`,
         headers: {
             'Cookie': 'api=86c488cb5f1515dc514a304b45c39121; JSESSIONID=aaaQpmCHyrC1z7NxefNXy'
         }
