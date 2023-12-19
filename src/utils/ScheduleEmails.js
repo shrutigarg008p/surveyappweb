@@ -98,7 +98,7 @@ const triggerSurveyEmail = async (id) => {
                         ],
                     });
 
-                    let users = usersQuery.filter(item => item.user.role === 'panelist')
+                    let users = usersQuery.filter(item => item.user ? item.user.role === 'panelist' : '')
                     console.log('result---->', users.length, scheduleEmail.surveyTemplateId)
                     if(users.length > 0) {
                        const emailTemplate = await SurveyTemplates.findOne({ where: { id: scheduleEmail.surveyTemplateId, deletedAt: null }})
