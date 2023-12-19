@@ -87,17 +87,18 @@ const triggerSurveyEmail = async (id) => {
 
                     BasicProfile.belongsTo(Users, { foreignKey: 'userId' });
                     console.log('whereClause--->', whereClause)
-                    const users = await BasicProfile.findAll({
+                    const usersQuery = await BasicProfile.findAll({
                         where: whereClause,
                         include: [
                             {
                                 model: Users,
                                 required: false,
-                                attributes: ['email']
+                                attributes: ['email', 'role']
                             },
                         ],
                     });
 
+                    let users = usersQuery.filter(item => item.user.role === 'panelist')
                     console.log('result---->', users.length, scheduleEmail.surveyTemplateId)
                     if(users.length > 0) {
                        const emailTemplate = await SurveyTemplates.findOne({ where: { id: scheduleEmail.surveyTemplateId, deletedAt: null }})

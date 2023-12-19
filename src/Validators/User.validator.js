@@ -5,10 +5,12 @@ const User = db.user;
 
 const signUpValidator = [
 	body('phoneNumber').isLength({min: 1})
-		.trim().withMessage('Phone number must be specified.'),
+		.trim()
+		.withMessage('Phone number must be specified.'),
 	body('email')
 		.isLength({min: 1})
 		.trim()
+		.isEmail().withMessage('Email must be a valid email address.')
 		.withMessage('Email must be specified.'),
 	body('password').isLength({min: 1})
 		.trim().withMessage('password must be specified.'),

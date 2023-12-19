@@ -3,8 +3,16 @@ const Samples = db.sample;
 const SamplesQuestions = db.sampleQuestions;
 const Questions = db.questions;
 const Options = db.options;
+const BasicProfile = db.basicProfile;
+const Users = db.user;
 const apiResponses = require('../Components/apiresponse');
-const {DataTypes} = require("sequelize");
+const {DataTypes, Op} = require("sequelize");
+
+function calculateBirthDate(age) {
+    const today = new Date();
+    const birthYear = today.getFullYear() - age;
+    return new Date(birthYear, today.getMonth(), today.getDate());
+}
 
 module.exports.create = async (req, res) => {
     try {
@@ -82,10 +90,67 @@ module.exports.getAll = async (req, res) => {
 
 module.exports.getOne = async (req, res) => {
     try {
-        const data = await Samples.findOne({where: {id: req.params.id, deletedAt: null},
-        })
-        return apiResponses.successResponseWithData(res, 'success!', data);
+        const sample = await Samples.findOne({where: {id: req.params.id, deletedAt: null}})
+        let user = []
+        if(sample) {
+            let whereClause = {};
+            // whereClause.role = 'panelist';
+            // Gender filter
+            if (sample.gender) {
+                whereClause.gender = sample.gender;
+            }
+
+            // Age filter
+            if (sample.fromAge || sample.toAge) {
+                whereClause.dateOfBirth = {
+                    [Op.between]: [calculateBirthDate(sample.toAge), calculateBirthDate(sample.fromAge)]
+                };
+            }
+
+            // Registration date filter
+            if (sample.fromRegistrationDate && sample.toRegistrationDate) {
+                whereClause.createdAt = {
+                    [Op.between]: [new Date(sample.fromRegistrationDate), new Date(sample.toRegistrationDate)]
+                };
+            }
+
+            // States filter
+            if (sample.stateIds && sample.stateIds.length > 0) {
+                const states = sample.stateIds.map((item => item.label))
+                whereClause.state = {
+                    [Op.in]: states
+                };
+            }
+
+            // Cities filter
+            if (sample.cityIds && sample.cityIds.length > 0) {
+                const city = sample.cityIds.map((item => item.label))
+                whereClause.city = {
+                    [Op.in]: city
+                };
+            }
+
+            BasicProfile.belongsTo(Users, {foreignKey: 'userId'});
+            console.log('whereClause--->', whereClause)
+            user = await BasicProfile.findAll({
+                where: whereClause,
+                include: [
+                    {
+                        model: Users,
+                        required: false,
+                        attributes: ['email', 'role']
+                    },
+                ],
+            });
+        }
+        let filteredUsers = user.filter(item => item.user.role === 'panelist')
+        let obj = {
+            sample,
+            user: filteredUsers ? filteredUsers : []
+        }
+            return apiResponses.successResponseWithData(res, 'success!', obj);
     } catch (err) {
+        console.log('err---->', err)
         return apiResponses.errorResponse(res, err);
     }
 };
