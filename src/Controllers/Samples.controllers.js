@@ -143,7 +143,7 @@ module.exports.getOne = async (req, res) => {
                 ],
             });
         }
-        let filteredUsers = user.filter(item => item.user.role === 'panelist')
+        let filteredUsers = user.filter(item => item.user ? item.user.role === 'panelist' : '')
         let obj = {
             sample,
             user: filteredUsers ? filteredUsers : []
