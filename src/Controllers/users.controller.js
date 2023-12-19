@@ -137,143 +137,147 @@ module.exports.userLogin = async (req, res) => {
             description: "User details for login - email, registerType and password",
             schema: { $email: "", $registerType:"", $password: ""}
     } */
-	if (req.body.registerType === 'password') {
-		const user = await User.findOne({
-			where: {
-				email: req.body.email,
-				registerType: req.body.registerType,
-			},
-		})
-		if (!user) {
-			/* #swagger.responses[404] = {
-                   description: "User Not found.",
-                   schema: { $statusCode: "404",  $status: false, $message: "User Not found.",  $data: {}}
-               } */
-			// return res.status(404).send({ message: "User Not found." });
-			return apiResponses.notFoundResponse(res, 'User Not found.', {});
-		}
-
-		const passwordIsValid = bcrypt.compareSync(
-			req.body.password,
-			user.passwordHash,
-		);
-
-		if (!passwordIsValid) {
-			/* #swagger.responses[401] = {
-                    description: "Invalid Password!",
-                    schema: { $accessToken: "", $message: "Invalid Password!" }
-                } */
-			// return res.status(401).send({
-			//   accessToken: null,
-			//   message: "Invalid Password!"
-			// });
-			return apiResponses.unauthorizedResponse(
-				res,
-				'Invalid Password!',
-				null,
-			);
-		}
-		if (user.deletedAt || user.deleteConfirmDate) {
-			/* #swagger.responses[401] = {
-                    description: "Your email is not verified, please verify before logging in.",
-                    schema: { $accessToken: "", $message: "Your email is not verified, please verify before logging in." }
-                } */
-			// return res.status(401).send({
-			//   accessToken: null,
-			//   message: "User not available."
-			// });
-			return apiResponses.unauthorizedResponse(
-				res,
-				'User not available',
-				null,
-			);
-		}
-
-		const token = createToken(user.id, user.email, user.role);
-		/* #swagger.responses[500] = {
-                    description: "User logged in!",
-                    schema: { $id: "user id", $email: "user email",  $accessToken: "user token"}
-                } */
-		// return res.status(200).send({
-		//   id: user.id,
-		//   email: user.email,
-		//   accessToken: token
-		// });
-		const ip = await axios.get("https://ipapi.co/json/")
-		console.log('IP---->', ip, req.ip  )
-		await User.update({ signupIp: req.ip }, {where: { userId: user.id }} )
-		const isExist = await BasicProfile.findOne({ where: { userId: user.id } })
-		const obj = {
-			id: user.id,
-			email: user.email,
-			phoneNumber: user.phoneNumber,
-			registerType: user.registerType,
-			role: user.role,
-			emailConfirmed: user.emailConfirmed,
-			token: token,
-			basicProfile: isExist
-		};
-		return apiResponses.successResponseWithData(
-			res,
-			'Successfully login',
-			obj,
-		);
-	} else if (req.body.registerType === 'facebook') {
-		User.findOne({
-			where: {
-				facebookToken: req.body.facebookToken,
-				registerType: req.body.registerType,
-			},
-		}).then(async (user) => {
-			if (!user) {
-				User.create({
+	try {
+		if (req.body.registerType === 'password') {
+			const user = await User.findOne({
+				where: {
 					email: req.body.email,
 					registerType: req.body.registerType,
-					phoneNumber: req.body.phoneNumber,
+				},
+			})
+			if (!user) {
+				/* #swagger.responses[404] = {
+                       description: "User Not found.",
+                       schema: { $statusCode: "404",  $status: false, $message: "User Not found.",  $data: {}}
+                   } */
+				// return res.status(404).send({ message: "User Not found." });
+				return apiResponses.notFoundResponse(res, 'User Not found.', {});
+			}
+
+			const passwordIsValid = bcrypt.compareSync(
+				req.body.password,
+				user.passwordHash,
+			);
+
+			if (!passwordIsValid) {
+				/* #swagger.responses[401] = {
+                        description: "Invalid Password!",
+                        schema: { $accessToken: "", $message: "Invalid Password!" }
+                    } */
+				// return res.status(401).send({
+				//   accessToken: null,
+				//   message: "Invalid Password!"
+				// });
+				return apiResponses.unauthorizedResponse(
+					res,
+					'Invalid Password!',
+					null,
+				);
+			}
+			if (user.deletedAt || user.deleteConfirmDate) {
+				/* #swagger.responses[401] = {
+                        description: "Your email is not verified, please verify before logging in.",
+                        schema: { $accessToken: "", $message: "Your email is not verified, please verify before logging in." }
+                    } */
+				// return res.status(401).send({
+				//   accessToken: null,
+				//   message: "User not available."
+				// });
+				return apiResponses.unauthorizedResponse(
+					res,
+					'User not available',
+					null,
+				);
+			}
+
+			const token = createToken(user.id, user.email, user.role);
+			/* #swagger.responses[500] = {
+                        description: "User logged in!",
+                        schema: { $id: "user id", $email: "user email",  $accessToken: "user token"}
+                    } */
+			// return res.status(200).send({
+			//   id: user.id,
+			//   email: user.email,
+			//   accessToken: token
+			// });
+			const ip = await axios.get("https://ipapi.co/json/")
+			console.log('IP---->', ip, req.ip)
+			await User.update({signupIp: req.ip}, {where: {id: user.id}})
+			const isExist = await BasicProfile.findOne({where: {userId: user.id}})
+			const obj = {
+				id: user.id,
+				email: user.email,
+				phoneNumber: user.phoneNumber,
+				registerType: user.registerType,
+				role: user.role,
+				emailConfirmed: user.emailConfirmed,
+				token: token,
+				basicProfile: isExist
+			};
+			return apiResponses.successResponseWithData(
+				res,
+				'Successfully login',
+				obj,
+			);
+		} else if (req.body.registerType === 'facebook') {
+			User.findOne({
+				where: {
 					facebookToken: req.body.facebookToken,
-					isActive: req.body.isActive,
-				}).then(async (user) => {
+					registerType: req.body.registerType,
+				},
+			}).then(async (user) => {
+				if (!user) {
+					User.create({
+						email: req.body.email,
+						registerType: req.body.registerType,
+						phoneNumber: req.body.phoneNumber,
+						facebookToken: req.body.facebookToken,
+						isActive: req.body.isActive,
+					}).then(async (user) => {
+						const token = createToken(user.id, user.email, user.role);
+						const userData = {
+							id: user.id,
+							email: user.email,
+							country: user.country,
+							city: user.city,
+							phoneNumber: user.phoneNumber,
+							registerType: user.registerType,
+							role: user.role,
+							token: token,
+						};
+						if (req.body.email) {
+							await Mails.userRegistration(user.email, 'Unknown');
+						}
+
+						// return res.status(200).send({ status:'200', message: "User registered successfully!" , data: userData });
+						return apiResponses.successResponseWithData(
+							res,
+							'Success!',
+							userData,
+						);
+					});
+				} else {
+					const isExist = await BasicProfile.findOne({where: {userId: user.id}})
 					const token = createToken(user.id, user.email, user.role);
-					const userData = {
+					const obj = {
 						id: user.id,
 						email: user.email,
-						country: user.country,
-						city: user.city,
 						phoneNumber: user.phoneNumber,
 						registerType: user.registerType,
 						role: user.role,
 						token: token,
+						basicProfile: isExist
 					};
-					if(req.body.email) {
-						await Mails.userRegistration(user.email, 'Unknown');
-					}
-
-					// return res.status(200).send({ status:'200', message: "User registered successfully!" , data: userData });
 					return apiResponses.successResponseWithData(
 						res,
-						'Success!',
-						userData,
+						'Successfully login',
+						obj,
 					);
-				});
-			} else {
-				const isExist = await BasicProfile.findOne({ where: { userId: user.id } })
-				const token = createToken(user.id, user.email, user.role);
-				const obj = {
-					id: user.id,
-					email: user.email,
-					phoneNumber: user.phoneNumber,
-					registerType: user.registerType,
-					role: user.role,
-					token: token,
-					basicProfile: isExist
-				};
-				return apiResponses.successResponseWithData(
-					res,
-					'Successfully login',
-					obj,
-				);
-			}
-		});
+				}
+			});
+		}
+	} catch (err){
+		console.log('err--->', err)
 	}
 };
 
