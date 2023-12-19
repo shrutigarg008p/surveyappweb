@@ -104,7 +104,7 @@ const triggerSurveyEmail = async (id) => {
                         if(emailTemplate) {
                             let sixDigitRandomNumber = Math.floor(100000 + Math.random() * 900000);
                             let assignedSurvey  = []
-                            for( let i = 0; i < 1; i++ ) {
+                            for( let i = 0; i < users.length; i++ ) {
                                 let link = ''
                                 if (survey.useUniqueLinks === true) {
                                     sixDigitRandomNumber = Math.floor(100000 + Math.random() * 900000);
