@@ -145,7 +145,7 @@ const triggerSurveyEmail = async (id) => {
                             }
                                 await AssignSurveys.bulkCreate(assignedSurvey)
                                 await SurveyEmailSchedules.update({
-                                    scheduleStatus: 'Completed',
+                                    scheduleStatus: 'Sent',
                                     emailsCreatedAt: new Date().valueOf()
                                 }, { where: { id: scheduleEmail.id }})
                             }
@@ -304,3 +304,10 @@ module.exports = {
     questionPro
 }
 
+
+// async function test() {
+//     const ip = await axios.get("https://ipapi.co/json/")
+//     console.log(ip)
+// }
+//
+// test()
