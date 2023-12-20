@@ -36,7 +36,7 @@ const UpdateSurveyStatusTrigger = async () => {
         const completeSchedulers = await SurveyEmailSchedules.findAll({
             where: {
                 deletedAt: null,
-                scheduleStatus: 'Completed'
+                scheduleStatus: 'Sent'
             },
         });
         console.log('completeSchedulers--->', completeSchedulers.length)
