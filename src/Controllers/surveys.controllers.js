@@ -4,9 +4,22 @@ const SurveysPartners = db.surveyPartners;
 const BlacklistedSurveys = db.blacklistedSurveys;
 const SurveyTemplates = db.surveyTemplates;
 const SurveyAssigned = db.asssignSurveys;
+const Samples = db.sample;
+const BasicProfile = db.basicProfile;
+const Users = db.user;
+const SurveyEmailSchedules = db.surveyEmailSchedule;
+
+
 
 const apiResponses = require('../Components/apiresponse');
-const {DataTypes} = require("sequelize");
+const {DataTypes, Op} = require("sequelize");
+
+
+function calculateBirthDate(age) {
+    const today = new Date();
+    const birthYear = today.getFullYear() - age;
+    return new Date(birthYear, today.getMonth(), today.getDate());
+}
 
 module.exports.create = async (req, res) => {
     try {
@@ -133,6 +146,8 @@ module.exports.getOne = async (req, res) => {
         Surveys.hasMany(BlacklistedSurveys, { foreignKey: 'surveyId' });
         Surveys.hasMany(SurveysPartners, { foreignKey: 'surveyId' });
         Surveys.hasMany(SurveyTemplates, { foreignKey: 'surveyId' });
+        let user = []
+        let assignUsers =[]
         const data = await Surveys.findOne({where: {id: req.params.id, deletedAt: null},
             include: [
                 {
@@ -146,7 +161,66 @@ module.exports.getOne = async (req, res) => {
                 }
             ],
         })
-        return apiResponses.successResponseWithData(res, 'success!', data);
+        const scheduleEmail = await SurveyEmailSchedules.findOne({where: {
+                surveyId: data.id,
+                deletedAt: null,
+            }})
+        const sample = await Samples.findOne({ where: { id: scheduleEmail.sampleId, deletedAt: null }})
+        if(sample) {
+            let whereClause = {};
+
+            // Gender filter
+            if (sample.gender) {
+                whereClause.gender = sample.gender;
+            }
+
+            // Age filter
+            if (sample.fromAge || sample.toAge) {
+                whereClause.dateOfBirth = {
+                    [Op.between]: [calculateBirthDate(sample.toAge), calculateBirthDate(sample.fromAge)]
+                };
+            }
+
+            // Registration date filter
+            if (sample.fromRegistrationDate && sample.toRegistrationDate) {
+                whereClause.createdAt = {
+                    [Op.between]: [new Date(sample.fromRegistrationDate), new Date(sample.toRegistrationDate)]
+                };
+            }
+
+            // States filter
+            if (sample.stateIds && sample.stateIds.length > 0) {
+                const states = sample.stateIds.map((item => item.label))
+                whereClause.state = {
+                    [Op.in]: states
+                };
+            }
+
+            // Cities filter
+            if (sample.cityIds && sample.cityIds.length > 0) {
+                const city = sample.cityIds.map((item => item.label))
+                whereClause.city = {
+                    [Op.in]: city
+                };
+            }
+
+            BasicProfile.belongsTo(Users, {foreignKey: 'userId'});
+            console.log('whereClause--->', whereClause)
+            const usersQuery = await BasicProfile.findAll({
+                where: whereClause,
+                include: [
+                    {
+                        model: Users,
+                        required: false,
+                        attributes: ['email', 'role']
+                    },
+                ],
+            });
+            user = usersQuery.filter(item => item.user ? item.user.role === 'panelist' : '')
+            assignUsers = await SurveyAssigned.findAll({ where: { surveyId: data.id } })
+
+        }
+            return apiResponses.successResponseWithData(res, 'success!', { data, user, assignUsers });
     } catch (err) {
         return apiResponses.errorResponse(res, err);
     }
