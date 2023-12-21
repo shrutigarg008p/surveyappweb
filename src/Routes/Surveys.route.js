@@ -31,6 +31,11 @@ module.exports= function(app) {
         surveyControllers.getOne,
     );
 
+    app.get(
+        '/api/v1/surveys/getOneDetails/:id',
+        surveyControllers.getOneDetails,
+    );
+
     app.delete(
         '/api/v1/surveys/delete/:id',
         surveyControllers.delete,
