@@ -30,9 +30,19 @@ module.exports= function(app) {
         profileControllers.getOne,
     );
 
+    app.get(
+        '/api/v1/profileManagement/getOneDetails/:id/:userId',
+        profileControllers.getOneDetails,
+    );
+
     app.delete(
         '/api/v1/profileManagement/delete/:id',
         profileControllers.delete,
+    );
+
+    app.post(
+        '/api/v1/profileManagement/createUserProfiles',
+        profileControllers.createUserProfiles,
     );
 
 };
