@@ -1,5 +1,9 @@
 const db = require('../models');
 const Profiles = db.profiles;
+const Questions = db.questions;
+const Options = db.options;
+const ProfileUserResponses = db.profileUserResponse;
+
 const apiResponses = require('../Components/apiresponse');
 
 module.exports.create = async (req, res) => {
@@ -67,8 +71,52 @@ module.exports.getAll = async (req, res) => {
 
 module.exports.getOne = async (req, res) => {
     try {
-        const data = await Profiles.findOne({where: {id: req.params.id, deletedAt: null}})
+        let data = await Profiles.findOne({where: {id: req.params.id, deletedAt: null}})
         return apiResponses.successResponseWithData(res, 'success!', data);
+    } catch (err) {
+        return apiResponses.errorResponse(res, err);
+    }
+};
+
+module.exports.getOneDetails = async (req, res) => {
+    try {
+        if(req.params.id && req.params.userId) {
+            let data = await Profiles.findOne({
+                where: {
+                    id: req.params.id,
+                    deletedAt: null
+                }
+            })
+            let userResponse = await ProfileUserResponses.findOne({
+                where: {
+                    profileId: req.params.id,
+                    userId: req.params.userId,
+                    deletedAt: null
+                }
+            })
+            if (!data) {
+                return apiResponses.validationErrorWithData(res, 'Profile not found');
+            }
+            Questions.hasMany(Options, {foreignKey: 'questionId'});
+            const questions = await Questions.findAll({
+                where: {
+                    profileId: req.params.id,
+                    deletedAt: null,
+                },
+                include: [
+                    {
+                        model: Options,
+                        required: false,
+                    },
+                ]
+
+            });
+
+            let response = { data, questions, response: userResponse ? userResponse : {} }
+            return apiResponses.successResponseWithData(res, 'success!', response);
+        } else {
+            return apiResponses.validationErrorWithData(res, 'UserId or Profile id not found');
+        }
     } catch (err) {
         return apiResponses.errorResponse(res, err);
     }
@@ -86,3 +134,44 @@ module.exports.delete = async (req, res) => {
         return apiResponses.errorResponse(res, err);
     }
 };
+
+
+module.exports.createUserProfiles = async (req, res) => {
+    try {
+        const isExist = await ProfileUserResponses.findOne({ where: { userId: req.body.userId, profileId: req.body.profileId, deletedAt: null }})
+        if(!isExist) {
+            const Profile = await ProfileUserResponses.create({
+                userId: req.body.userId,
+                profileId: req.body.profileId,
+                response: req.body.response,
+                createdAt: new Date().valueOf(),
+                updatedAt: new Date().valueOf(),
+            })
+            return apiResponses.successResponseWithData(
+                res,
+                'Success!',
+                Profile
+            );
+        } else {
+            let obj = {
+                response: req.body.response,
+                updatedAt: new Date().valueOf(),
+            }
+            const profile = await ProfileUserResponses.update(
+                obj, { where: {
+                    userId: req.body.userId,
+                    profileId: req.body.profileId,
+                    deletedAt: null
+                }}
+            )
+            return apiResponses.successResponseWithData(
+                res,
+                'Success!',
+                profile
+            );
+        }
+    } catch (err) {
+        return apiResponses.errorResponse(res, err);
+    }
+};
+

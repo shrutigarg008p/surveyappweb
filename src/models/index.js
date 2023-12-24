@@ -47,6 +47,8 @@ db.surveyPartners = require('./SurveyPartners.model')(sequelize, Sequelize);
 db.surveyTemplates = require('./SurveyTemplates.model')(sequelize, Sequelize);
 db.surveyEmailSchedule = require('./surveyEmailSchedule.model')(sequelize, Sequelize);
 db.asssignSurveys = require('./AssignSurveys.model')(sequelize, Sequelize);
+db.profileUserResponse = require('./ProfileUserResponse.model')(sequelize, Sequelize);
+
 
 
 // db.user.hasMany(db.basicProfile, {
