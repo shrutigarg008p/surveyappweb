@@ -89,4 +89,9 @@ module.exports= function(app) {
 		'/api/v1/auth/user/panelistProfile/:id',
 		usersController.panelistProfile,
 	);
+
+	app.get(
+		'/api/v1/auth/user/respondentProfileOverview/:id',
+		usersController.respondentProfileOverview,
+	);
 };
