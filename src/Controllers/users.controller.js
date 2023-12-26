@@ -1,6 +1,9 @@
 const db = require('../models');
 const User = db.user;
 const BasicProfile = db.basicProfile;
+const Questions = db.questions;
+const Profiles = db.profiles;
+const ProfileUserResponse = db.profileUserResponse;
 const apiResponses = require('../Components/apiresponse');
 const {createToken} = require('../Middlewares/userAuthentications');
 const bcrypt = require('bcryptjs');
@@ -842,6 +845,64 @@ module.exports.panelistProfile = async (req, res) => {
 	}
 };
 
+
+const Sequelize = db.Sequelize;
+module.exports.respondentProfileOverview = async (req, res) => {
+	try {
+		db.profiles.hasMany(db.questions, { foreignKey: 'profileId' });
+		db.questions.belongsTo(db.profiles, { foreignKey: 'profileId' });
+		db.profiles.hasMany(ProfileUserResponse, { foreignKey: 'profileId' });
+		const profilesWithQuestionsCount = await Profiles.findAll({
+			attributes: {
+				include: [
+					[Sequelize.literal('(SELECT COUNT(*) FROM questions WHERE questions."profileId" = profiles.id)'), 'questionCount']
+				]
+			},
+			include: [
+				{
+					model: ProfileUserResponse,
+					where: { userId: req.params.id },
+					attributes: ['id', "response"],
+					required: false
+				}
+			],
+			raw: true
+		})
+		const result = profilesWithQuestionsCount.map(section => {
+			const totalQuestions = parseInt(section.questionCount);
+			const response = section['profileuserresponses.response'];
+			if (response && Object.keys(response).length > 0) {
+				const attemptedQuestions = Object.keys(response).length;
+				const remainingQuestions = totalQuestions - attemptedQuestions;
+				const attemptedPercentage = Math.round((attemptedQuestions / totalQuestions) * 100);
+				delete section['profileuserresponses.response'];
+				delete section['profileuserresponses.id'];
+				return {
+					...section,
+					totalQuestions,
+					attemptedQuestions,
+					remainingQuestions,
+					attemptedPercentage
+				};
+			} else {
+				return {
+					...section,
+					totalQuestions,
+					attemptedQuestions: 0,
+					remainingQuestions: totalQuestions,
+					attemptedPercentage: 0
+				};
+			}
+		});
+		const overallTotalQuestions = result.reduce((total, section) => total + section.totalQuestions, 0);
+		const overallAttemptedQuestions = result.reduce((total, section) => total + section.attemptedQuestions, 0);
+		const overallAttemptedPercentage = Math.round((overallAttemptedQuestions / overallTotalQuestions) * 100);
+		return apiResponses.successResponseWithData(res, 'success!', {result, overallAttemptedPercentage});
+	} catch (err) {
+		console.log(err)
+		return apiResponses.errorResponse(res, err);
+	}
+};
 
 
 
