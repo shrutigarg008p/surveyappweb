@@ -8,9 +8,6 @@ const Samples = db.sample;
 const BasicProfile = db.basicProfile;
 const Users = db.user;
 const SurveyEmailSchedules = db.surveyEmailSchedule;
-
-
-
 const apiResponses = require('../Components/apiresponse');
 const {DataTypes, Op} = require("sequelize");
 
@@ -49,6 +46,7 @@ module.exports.create = async (req, res) => {
                 useUniqueLinks: req.body.useUniqueLinks,
                 ipUnique: req.body.ipUnique,
                 isPaused: req.body.isPaused,
+                disclaimer: req.body.disclaimer,
                 createdAt: new Date().valueOf(),
                 updatedAt: new Date().valueOf(),
             })
@@ -102,6 +100,7 @@ module.exports.update = async (req, res) => {
             useUniqueLinks: req.body.useUniqueLinks,
             ipUnique: req.body.ipUnique,
             isPaused: req.body.isPaused,
+            disclaimer: req.body.disclaimer,
             updatedAt: new Date().valueOf(),
         }
 
@@ -333,6 +332,43 @@ module.exports.GetUserOneAssignedSurvey = async (req, res) => {
         })
         return apiResponses.successResponseWithData(res, 'Success', surveysDetails);
     } catch (err) {
+        return apiResponses.errorResponse(res, err);
+    }
+};
+
+
+module.exports.GetUserOneAssignedSurveyCallback = async (req, res) => {
+    try {
+        SurveyAssigned.belongsTo(Surveys, { foreignKey: 'surveyId' });
+        await SurveyAssigned.update({ status: req.body.status }, {
+            where: {
+                temporarySurveyLinkId: req.body.surveyId,
+                userId: req.body.userId
+                //uniqueId if required if user can attempt multiple time single survey
+            }
+        })
+        const surveysDetails = await SurveyAssigned.findOne({
+            where: {
+                temporarySurveyLinkId: req.body.surveyId,
+                userId: req.body.userId
+                //uniqueId if required if user can attempt multiple time single survey
+            },
+            attributes: ['id'],
+            include: [
+                {
+                    model: Surveys,
+                    required: false,
+                    attributes: ['name', 'description', 'ceggPoints', 'expiryDate', 'createdAt', 'disclaimer']
+                }
+            ]
+        })
+        const user = await BasicProfile.findOne({
+            where: { userId: req.body.userId },
+            attributes: ['firstName', 'lastName']})
+
+        return apiResponses.successResponseWithData(res, 'Success', {surveysDetails,user});
+    } catch (err) {
+        console.log('err-r-->', err)
         return apiResponses.errorResponse(res, err);
     }
 };

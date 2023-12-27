@@ -88,4 +88,9 @@ module.exports= function(app) {
         '/api/v1/surveys/panelist-one-surveys/:id',
         surveyControllers.GetUserOneAssignedSurvey,
     );
+
+    app.post(
+        '/api/v1/surveys/GetUserOneAssignedSurveyCallback',
+        surveyControllers.GetUserOneAssignedSurveyCallback,
+    );
 };
