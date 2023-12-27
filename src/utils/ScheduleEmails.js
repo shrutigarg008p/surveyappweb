@@ -134,7 +134,7 @@ const triggerSurveyEmail = async (id) => {
                                     status: 'pending',
                                     pointsRewarded: 0,
                                     temporarySurveyLink: link,
-                                    originalSurveyLink: survey.url,
+                                    originalSurveyLink: `${survey.url}?userid=${users[i].userId}&surveyid=${sixDigitRandomNumber}`,
                                     temporarySurveyLinkId: sixDigitRandomNumber,
                                     expiryDate: survey.expiryDate,
                                     createdAt: new Date().valueOf(),
