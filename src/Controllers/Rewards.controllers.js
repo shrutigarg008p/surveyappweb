@@ -1,7 +1,11 @@
 const db = require('../models');
 const Rewards = db.rewards;
+const Users = db.user;
+const Surveys = db.surveys;
 const apiResponses = require('../Components/apiresponse');
 const {DataTypes} = require("sequelize");
+const Sequelize = db.Sequelize;
+
 
 module.exports.createRewards = async (req, res) => {
     try {
@@ -65,6 +69,37 @@ module.exports.getAll = async (req, res) => {
             order: [['createdAt', 'DESC']]
         });
         return apiResponses.successResponseWithData(res, 'success!', data);
+    } catch (err) {
+        return apiResponses.errorResponse(res, err);
+    }
+};
+
+module.exports.getAllByUserId = async (req, res) => {
+    try {
+        Rewards.belongsTo(Surveys, { foreignKey: 'surveyId' });
+        Rewards.belongsTo(Users, { foreignKey: 'userId' });
+        // Rewards.belongsTo(Users, { foreignKey: 'referralId' });
+        const limit = req.params.limit;
+        const data = await Rewards.findAll({
+            where: { userId: req.params.userId, deletedAt: null },
+            include: [
+                {
+                    model: Surveys,
+                    required: false,
+                    attributes: ['name', 'description', 'ceggPoints', 'expiryDate', 'createdAt', 'disclaimer']
+                },
+                {
+                    model: Users,
+                    required: false,
+                    attributes: ['email']
+                }
+            ],
+            limit: limit,
+            order: [['createdAt', 'DESC']]
+        });
+
+        const totalPoints = data.reduce((sum, reward) => sum + reward.points, 0);
+        return apiResponses.successResponseWithData(res, 'success!', {data, totalPoints});
     } catch (err) {
         return apiResponses.errorResponse(res, err);
     }

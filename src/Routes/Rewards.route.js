@@ -26,6 +26,11 @@ module.exports= function(app) {
     );
 
     app.get(
+        '/api/v1/rewards/getAllByUserId/:userId/:limit',
+        rewardsController.getAllByUserId,
+    );
+
+    app.get(
         '/api/v1/rewards/getOne/:id',
         rewardsController.getOne,
     );
