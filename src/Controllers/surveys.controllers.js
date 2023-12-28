@@ -5,6 +5,7 @@ const BlacklistedSurveys = db.blacklistedSurveys;
 const SurveyTemplates = db.surveyTemplates;
 const SurveyAssigned = db.asssignSurveys;
 const Samples = db.sample;
+const Rewards = db.rewards;
 const BasicProfile = db.basicProfile;
 const Users = db.user;
 const SurveyEmailSchedules = db.surveyEmailSchedule;
@@ -340,20 +341,21 @@ module.exports.GetUserOneAssignedSurvey = async (req, res) => {
 module.exports.GetUserOneAssignedSurveyCallback = async (req, res) => {
     try {
         SurveyAssigned.belongsTo(Surveys, { foreignKey: 'surveyId' });
-        await SurveyAssigned.update({ status: req.body.status }, {
+        await SurveyAssigned.update({
+            status: req.body.status,
+            updatedAt:  new Date().valueOf() },
+            {
             where: {
                 temporarySurveyLinkId: req.body.surveyId,
                 userId: req.body.userId
-                //uniqueId if required if user can attempt multiple time single survey
             }
         })
         const surveysDetails = await SurveyAssigned.findOne({
             where: {
                 temporarySurveyLinkId: req.body.surveyId,
                 userId: req.body.userId
-                //uniqueId if required if user can attempt multiple time single survey
             },
-            attributes: ['id'],
+            attributes: ['id', 'updatedAt', 'surveyId'],
             include: [
                 {
                     model: Surveys,
@@ -366,7 +368,19 @@ module.exports.GetUserOneAssignedSurveyCallback = async (req, res) => {
             where: { userId: req.body.userId },
             attributes: ['firstName', 'lastName']})
 
-        return apiResponses.successResponseWithData(res, 'Success', {surveysDetails,user});
+        if(req.body.status === 'Completed' && surveysDetails && surveysDetails.survey) {
+            const Reward = await Rewards.create({
+                points: surveysDetails.survey.ceggPoints,
+                rewardType: 'Survey',
+                surveyId: surveysDetails.surveyId,
+                rewardStatus: 'Pending',
+                userId: req.body.userId,
+                createdAt: new Date().valueOf(),
+                updatedAt: new Date().valueOf(),
+                rewardDate: new Date().valueOf(),
+            })
+        }
+        return apiResponses.successResponseWithData(res, 'Success', { surveysDetails,user });
     } catch (err) {
         console.log('err-r-->', err)
         return apiResponses.errorResponse(res, err);

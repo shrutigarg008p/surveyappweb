@@ -1,5 +1,8 @@
 const db = require('../models');
 const RedemptionRequests = db.redemptionRequest;
+const Users = db.user;
+const Surveys = db.surveys;
+const Rewards = db.rewards;
 const apiResponses = require('../Components/apiresponse');
 const {DataTypes} = require("sequelize");
 
@@ -62,8 +65,16 @@ module.exports.updateRedemptionRequest = async (req, res) => {
 module.exports.getAll = async (req, res) => {
     try {
         const limit = req.params.limit;
+        RedemptionRequests.belongsTo(Users, { foreignKey: 'userId' });
         const data = await RedemptionRequests.findAll({
             where: { deletedAt: null },
+            include: [
+                {
+                    model: Users,
+                    required: false,
+                    attributes: ['email', "phoneNumber"]
+                }
+            ],
             limit: limit,
             order: [['createdAt', 'DESC']]
         });
@@ -72,6 +83,45 @@ module.exports.getAll = async (req, res) => {
         return apiResponses.errorResponse(res, err);
     }
 };
+
+module.exports.getAllByUserId = async (req, res) => {
+    try {
+        const limit = req.params.limit;
+        RedemptionRequests.belongsTo(Users, { foreignKey: 'userId' });
+        const data = await RedemptionRequests.findAll({
+            where: { userId: req.params.userId, deletedAt: null },
+            include: [
+                {
+                    model: Users,
+                    required: false,
+                    attributes: ['email', "phoneNumber"]
+                }
+            ],
+            limit: limit,
+            order: [['createdAt', 'DESC']]
+        });
+        const totalCountData = await Rewards.findAll({
+            where: { userId: req.params.userId, deletedAt: null },
+        });
+        const totalRedeemedData = await RedemptionRequests.findAll({
+            where: { userId: req.params.userId, deletedAt: null, redemptionRequestStatus: 'Redeemed' },
+        });
+        const totalPendingData = await RedemptionRequests.findAll({
+            where: { userId: req.params.userId, deletedAt: null, redemptionRequestStatus: 'New' },
+        });
+
+        const totalEarned = totalCountData.reduce((sum, reward) => sum + reward.points, 0);
+        const totalRedeemed = totalRedeemedData.reduce((sum, reward) => sum + reward.pointsRedeemed, 0);
+        const totalPendingRedeemed = totalPendingData.reduce((sum, reward) => sum + reward.pointsRequested, 0);
+        const totalLeft = totalEarned - totalRedeemed
+
+
+        return apiResponses.successResponseWithData(res, 'success!', { data, totalEarned, totalRedeemed, totalPendingRedeemed, totalLeft});
+    } catch (err) {
+        return apiResponses.errorResponse(res, err);
+    }
+};
+
 
 module.exports.getOne = async (req, res) => {
     try {

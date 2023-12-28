@@ -27,6 +27,11 @@ module.exports= function(app) {
     );
 
     app.get(
+        '/api/v1/redemptionRequest/getAllByUserId/:userId/:limit',
+        redemptionRequestController.getAllByUserId,
+    );
+
+    app.get(
         '/api/v1/redemptionRequest/getOne/:id',
         redemptionRequestController.getOne,
     );
