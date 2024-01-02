@@ -119,7 +119,7 @@ module.exports.getAllStatesByCountryId = async (req, res) => {
         const data = await States.findAll({ where: {
                 countryId: req.params.countryId,
                 deletedAt: null
-            }, limit: limit, order: [['createdAt', 'DESC']]})
+            }, limit: limit, order: [['createdAt', 'ASC']]})
         return apiResponses.successResponseWithData(res, 'success!', data);
     } catch (err) {
         return apiResponses.errorResponse(res, err);
@@ -175,7 +175,7 @@ module.exports.getAllCitiesByStateId = async (req, res) => {
         const data = await Cities.findAll( { where: {
             stateId: req.params.stateId,
            deletedAt: null
-        }, limit: limit, order: [['createdAt', 'DESC']]})
+        }, limit: limit, order: [['createdAt', 'ASC']]})
         return apiResponses.successResponseWithData(res, 'success!', data);
     } catch (err) {
         return apiResponses.errorResponse(res, err);

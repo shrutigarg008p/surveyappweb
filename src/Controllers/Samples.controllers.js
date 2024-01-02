@@ -219,7 +219,7 @@ const filterUserResponses = async (sampleQuestions) => {
 
             switch (operand) {
                 case Operands.All:
-                    return responseValue && checkOptionValue(responseValue);
+                    return responseValue;
                 case Operands.ANSWERED:
                     return responseValue && checkOptionValue(responseValue);
                 case Operands.ANY:
