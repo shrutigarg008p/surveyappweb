@@ -4,9 +4,11 @@ const SamplesQuestions = db.sampleQuestions;
 const Questions = db.questions;
 const Options = db.options;
 const BasicProfile = db.basicProfile;
+const ProfileUserResponses = db.profileUserResponse;
 const Users = db.user;
 const apiResponses = require('../Components/apiresponse');
 const {DataTypes, Op} = require("sequelize");
+const Sequelize = require("sequelize");
 
 function calculateBirthDate(age) {
     const today = new Date();
@@ -91,6 +93,7 @@ module.exports.getAll = async (req, res) => {
 module.exports.getOne = async (req, res) => {
     try {
         const sample = await Samples.findOne({where: {id: req.params.id, deletedAt: null}})
+        const sampleQuestions = await SamplesQuestions.findAll({where: {sampleId: sample.id, deletedAt: null}})
         let user = []
         if(sample) {
             let whereClause = {};
@@ -143,6 +146,34 @@ module.exports.getOne = async (req, res) => {
                 ],
             });
         }
+        if(sampleQuestions.length > 0) {
+            let usersResponseList = await filterUserResponses(sampleQuestions);
+            const userIdArray = usersResponseList.map(userResponse => userResponse.get('userId'));
+            let usersQuestionCriteria = await BasicProfile.findAll({
+                where: {
+                    userId: {
+                        [Op.in]: userIdArray,
+                    },
+                },
+                include: [
+                    {
+                        model: Users,
+                        required: false,
+                        attributes: ['email', 'role']
+                    },
+                ],
+            })
+            const filterCommonUsers = (arrA, arrB) => {
+                return arrA.filter(userA => arrB.some(userB => userB.userId === userA.userId));
+            };
+            const commonUsers = filterCommonUsers(usersQuestionCriteria, user);
+            let filteredUsers = commonUsers.filter(item => item.user ? item.user.role === 'panelist' : '')
+            let obj = {
+                sample,
+                user: filteredUsers ? filteredUsers : []
+            }
+            return apiResponses.successResponseWithData(res, 'success!', obj);
+        }
         let filteredUsers = user.filter(item => item.user ? item.user.role === 'panelist' : '')
         let obj = {
             sample,
@@ -154,6 +185,57 @@ module.exports.getOne = async (req, res) => {
         return apiResponses.errorResponse(res, err);
     }
 };
+
+const filterUserResponses = async (sampleQuestions) => {
+    const allUserResponses = await ProfileUserResponses.findAll({
+        where: {
+            deletedAt: null,
+        },
+    });
+
+    const Operands = {
+        All: 1,
+        ANSWERED: 2,
+        ANY: 3,
+        EXCEPT: 4,
+        NOT_ANSWERED: 5,
+    };
+
+    return allUserResponses.filter(userResponse => {
+        return sampleQuestions.every(({ questionId, operand, optionIds }) => {
+            const responseValue = userResponse.get('response')[questionId];
+
+            const checkOptionValue = (value) => {
+                if (Array.isArray(optionIds)) {
+                    return Array.isArray(value)
+                        ? optionIds.every(opt => value.includes(opt))
+                        : optionIds.includes(value);
+                } else {
+                    return Array.isArray(value)
+                        ? value.includes(optionIds)
+                        : value === optionIds;
+                }
+            };
+
+            switch (operand) {
+                case Operands.All:
+                    return responseValue && checkOptionValue(responseValue);
+                case Operands.ANSWERED:
+                    return responseValue && checkOptionValue(responseValue);
+                case Operands.ANY:
+                    return responseValue;
+                case Operands.EXCEPT:
+                    return !(responseValue && checkOptionValue(responseValue));
+                case Operands.NOT_ANSWERED:
+                    return !(responseValue && checkOptionValue(responseValue));
+                default:
+                    // Handle default case if needed
+                    return false;
+            }
+        });
+    });
+};
+
 
 module.exports.delete = async (req, res) => {
     try {
@@ -178,7 +260,7 @@ module.exports.createQuestion = async (req, res) => {
                 questionId: req.body.questionId,
                 sampleId: req.body.sampleId,
                 operand: req.body.operand,
-                optionIds: req.body.optionIds,
+                optionIds: req.body.optionIds ? req.body.optionIds : null,
                 createdAt: new Date().valueOf(),
                 updatedAt: new Date().valueOf(),
             })
