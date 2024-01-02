@@ -52,3 +52,12 @@ module.exports.TestimonialStatus = {
 	PENDING: 'PENDING',
 	APPROVED: 'APPROVED',
 };
+
+
+module.exports.Operands = {
+	All: 1,
+	ANSWERED: 2,
+	ANY: 3,
+	EXCEPT: 4,
+	NOT_ANSWERED: 5
+}
