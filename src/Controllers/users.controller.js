@@ -3,6 +3,7 @@ const User = db.user;
 const BasicProfile = db.basicProfile;
 const Questions = db.questions;
 const Profiles = db.profiles;
+const Referrals = db.referrals;
 const ProfileUserResponse = db.profileUserResponse;
 const apiResponses = require('../Components/apiresponse');
 const {createToken} = require('../Middlewares/userAuthentications');
@@ -47,6 +48,12 @@ module.exports.registration = async (req, res) => {
 		await Mails.userRegistration(user.email, token);
 		// return res.status(200).send({ status:'200', message: "User registered successfully!" , data: userData });
 		console.log('successResponseWithData---->', user.email)
+		if(req.body.referralId) {
+			await Referrals.update(
+				{ referredUserId: user.id },
+				{ where: { email: user.email } }
+			)
+		}
 		return apiResponses.successResponseWithData(
 			res,
 			'User registered successfully!',
@@ -320,7 +327,20 @@ module.exports.userUpdate = async (req, res) => {
 			const user = await BasicProfile.update(
 				obj, { where: { userId: req.params.userId } }
 			)
-			const userInfo = await User.findOne({ where: { id: req.params.userId } })
+			User.hasOne(BasicProfile, {
+				foreignKey: 'userId',
+			});
+			const limit = req.params.limit;
+			const userInfo = await User.findOne({
+				where: {
+					id: req.params.userId
+				},
+				include: [{
+					model: BasicProfile,
+					// attributes: ['firstName', 'lastName', 'dateOfBirth', 'city', 'firstName', 'lastName'],
+					required: false,
+				}],
+			})
 			return apiResponses.successResponseWithData(res, 'Success Update', userInfo);
 
 		}

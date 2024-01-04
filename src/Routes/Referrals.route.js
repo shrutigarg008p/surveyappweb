@@ -26,6 +26,11 @@ module.exports= function(app) {
     );
 
     app.get(
+        '/api/v1/referrals/getAllUserReferrals/:userId/:limit',
+        referralsControllers.getAllUserReferrals,
+    );
+
+    app.get(
         '/api/v1/referrals/getOne/:id',
         referralsControllers.getOne,
     );
