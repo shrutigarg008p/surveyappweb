@@ -126,6 +126,27 @@ module.exports.getAllStatesByCountryId = async (req, res) => {
     }
 };
 
+
+module.exports.getAllStatesAndCitiesByZipCode = async (req, res) => {
+    try {
+        const limit = 10000 || req.params.limit;
+        const cities = await Cities.findAll({ where: { zipCode: req.params.zipCode, deletedAt: null }, raw: true, limit: limit, order: [['createdAt', 'ASC']]})
+        let state = []
+        if(cities.length > 0) {
+            state = await States.findAll({
+                where: { id: cities[0].stateId, deletedAt: null},
+                limit: limit,
+                raw: true,
+                order: [['createdAt', 'ASC']]
+            })
+        }
+            const data = { cities, state }
+        return apiResponses.successResponseWithData(res, 'success!', data);
+    } catch (err) {
+        return apiResponses.errorResponse(res, err);
+    }
+};
+
 module.exports.getAllStates = async (req, res) => {
     try {
         const limit = 10000 || req.params.limit;
@@ -171,7 +192,6 @@ module.exports.createCity = async (req, res) => {
 module.exports.getAllCitiesByStateId = async (req, res) => {
     try {
         const limit = 10000 || req.params.limit;
-        console.log('req.params.stateId--->', req.params.stateId)
         const data = await Cities.findAll( { where: {
             stateId: req.params.stateId,
            deletedAt: null
@@ -186,10 +206,11 @@ module.exports.getAllCities = async (req, res) => {
     try {
         const limit = req.params.limit;
         const data = await Cities.findAll( { where: {
-                deletedAt: null
+                // deletedAt: null
             }, limit: limit, order: [['createdAt', 'DESC']]})
         return apiResponses.successResponseWithData(res, 'success!', data);
     } catch (err) {
+        console.log('rttt---->', err)
         return apiResponses.errorResponse(res, err);
     }
 };

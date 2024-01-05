@@ -11,6 +11,10 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.UUID,
             allowNull: false,
         },
+        zipCode: {
+            type: Sequelize.STRING,
+            allowNull: false,
+        },
         name: {
             type: DataTypes.STRING,
             allowNull: true,
@@ -29,7 +33,7 @@ module.exports = (sequelize, Sequelize) => {
         },
         tier: {
             type: DataTypes.INTEGER,
-            allowNull: false,
+            allowNull: true,
         }
     });
 };
