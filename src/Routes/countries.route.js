@@ -70,4 +70,9 @@ module.exports= function(app) {
         '/api/v1/country/getAllCities/:limit',
         countriesController.getAllCities,
     );
+
+    app.get(
+        '/api/v1/country/getAllStatesAndCitiesByZipCode/:zipCode/:limit',
+        countriesController.getAllStatesAndCitiesByZipCode,
+    );
 };
