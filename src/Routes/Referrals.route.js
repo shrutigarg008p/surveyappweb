@@ -15,6 +15,11 @@ module.exports= function(app) {
         referralsControllers.createReferrals,
     );
 
+    app.post(
+        '/api/v1/referrals/bulkCreateReferrals',
+        referralsControllers.bulkCreateReferrals,
+    );
+
     app.put(
         '/api/v1/referrals/update/:id',
         referralsControllers.updateReferrals,
