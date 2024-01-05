@@ -10,6 +10,7 @@ const Surveys = db.surveys;
 const Samples = db.sample;
 const Users = db.user;
 const BasicProfile = db.basicProfile;
+const ProfileUserResponses = db.profileUserResponse;
 const AssignSurveys = db.asssignSurveys;
 const SampleQuestions = db.sampleQuestions;
 

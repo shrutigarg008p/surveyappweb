@@ -49,10 +49,26 @@ module.exports.registration = async (req, res) => {
 		// return res.status(200).send({ status:'200', message: "User registered successfully!" , data: userData });
 		console.log('successResponseWithData---->', user.email)
 		if(req.body.referralId) {
-			await Referrals.update(
-				{ referredUserId: user.id },
-				{ where: { email: user.email } }
-			)
+			const isExist = await Referrals.findOne({ where: { email: user.email, userId: req.body.referralId } })
+			if(isExist) {
+				await Referrals.update(
+					{ referredUserId: user.id, referralStatus: "Accepted" },
+					{ where: { email: user.email, userId: req.body.referralId }}
+				)
+			} else {
+				await Referrals.create({
+					name: 'Unknown',
+					email: req.body.email,
+					phoneNumber: req.body.phoneNumber,
+					referralStatus: "Accepted",
+					referralMethod: "Link",
+					userId: req.body.referralId,
+					referredUserId: user.id,
+					createdAt: new Date().valueOf(),
+					updatedAt: new Date().valueOf(),
+					rewardDate: new Date().valueOf(),
+				})
+			}
 		}
 		return apiResponses.successResponseWithData(
 			res,
@@ -320,7 +336,23 @@ module.exports.userUpdate = async (req, res) => {
 			const user = await BasicProfile.create(
 				obj
 			)
-			const userInfo = await User.findOne({ where: { id: req.params.userId } })
+
+			await Referrals.update(
+				{ name: `${req.body.firstName} ${req.body.lastName}` },
+				{ where: { referredUserId: req.params.userId }}
+			)
+			User.hasOne(BasicProfile, {
+				foreignKey: 'userId',
+			});
+			const userInfo = await User.findOne({
+				where: {
+					id: req.params.userId
+				},
+				include: [{
+					model: BasicProfile,
+					required: false,
+				}],
+			})
 			return apiResponses.successResponseWithData(res, 'Success Created', userInfo);
 		} else {
 			delete obj.userId
@@ -330,14 +362,12 @@ module.exports.userUpdate = async (req, res) => {
 			User.hasOne(BasicProfile, {
 				foreignKey: 'userId',
 			});
-			const limit = req.params.limit;
 			const userInfo = await User.findOne({
 				where: {
 					id: req.params.userId
 				},
 				include: [{
 					model: BasicProfile,
-					// attributes: ['firstName', 'lastName', 'dateOfBirth', 'city', 'firstName', 'lastName'],
 					required: false,
 				}],
 			})

@@ -113,7 +113,7 @@ module.exports = {
         </p><p>
             To join <span class="il">IndiaPolls</span> and take paid surveys about the topics that matter to you, click on the link below:
         </p><p>
-            <a href="https://test.indiaPolls.com/referrals/view/${userId}" target="_blank">https://test.<span class="il">indiaPolls</span>.com/<wbr>referrals/view/${userId}</a><br><br>
+            <a href="https://test.indiaPolls.com/#/referrals/view/${userId}" target="_blank">https://test.<span class="il">indiaPolls</span>.com/<wbr>referrals/view/${userId}</a><br><br>
                 <img alt="logo" src="https://indiapolls.com:9000/Images/logo-black.png" class="CToWUd" data-bit="iit">
         <br>
             <br>
@@ -123,7 +123,7 @@ module.exports = {
         </p><p>
             Bye
             <br>
-            senderName
+            ${senderName}
         </p><div class="yj6qo"></div><div class="adL">
     </div></div><div class="adL">
 </div></div>`

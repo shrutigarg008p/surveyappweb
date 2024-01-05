@@ -74,9 +74,14 @@ module.exports.updateReferrals = async (req, res) => {
 
 module.exports.getAll = async (req, res) => {
     try {
+        Referrals.belongsTo(Users, {foreignKey: 'userId'});
         const limit = req.params.limit;
         const data = await Referrals.findAll({
             where: { deletedAt: null },
+            include: [{
+                model: Users,
+                required: false,
+            }],
             limit: limit,
             order: [['createdAt', 'DESC']]
         });
@@ -122,3 +127,67 @@ module.exports.deleteReferrals = async (req, res) => {
         return apiResponses.errorResponse(res, err);
     }
 };
+
+
+module.exports.bulkCreateReferrals = async (req, res) => {
+    try {
+        if (req.body.users.length > 0) {
+            const userIds = req.body.users.map(user => user.userId);
+            const existingReferrals = await Referrals.findAll({
+                where: {
+                    userId: userIds,
+                    email: req.body.users.map(user => user.email),
+                },
+                attributes: ['userId', 'email'],
+            });
+
+            const existingReferralMap = existingReferrals.reduce((map, existingReferral) => {
+                const key = `${existingReferral.userId}-${existingReferral.email}`;
+                map[key] = true;
+                return map;
+            }, {});
+
+            const referralsToCreate = req.body.users.filter(user => {
+                const key = `${user.userId}-${user.email}`;
+                return !existingReferralMap[key];
+            });
+
+            if (referralsToCreate.length > 0) {
+                const userInfos = await BasicProfile.findAll({
+                    where: {
+                        userId: userIds,
+                    },
+                    attributes: ['userId', 'firstName', 'lastName'],
+                    raw: true, //To Remove Default data with proper json
+                });
+
+                const bulkReferrals = referralsToCreate.map(user => {
+                    const userInfo = userInfos.find(info => info.userId === user.userId);
+                    const subject = `${userInfo.firstName} ${userInfo.lastName} has invited you to join IndiaPolls`;
+                    referralMail(user.email, user.userId, subject, user.name, `${userInfo.firstName} ${userInfo.lastName}`);
+                    return {
+                        name: user.name,
+                        email: user.email,
+                        phoneNumber: user.phoneNumber,
+                        referralStatus: user.referralStatus,
+                        referralMethod: user.referralMethod,
+                        userId: user.userId,
+                        createdAt: new Date().valueOf(),
+                        updatedAt: new Date().valueOf(),
+                        rewardDate: new Date().valueOf(),
+                    };
+                });
+
+                await Referrals.bulkCreate(bulkReferrals);
+            }
+        }
+        return apiResponses.successResponseWithData(
+            res,
+            'Success!',
+        );
+    } catch (err) {
+        console.log('error--->', err)
+        return apiResponses.errorResponse(res, err);
+    }
+};
+
