@@ -66,8 +66,13 @@ module.exports= function(app) {
 	);
 
 	app.post(
-		'/api/v1/auth/user/permanentlyDelete/:userId',
+		'/api/v1/auth/user/permanentlyDelete/:userId/:type',
 		usersController.permanentlyDelete,
+	);
+
+	app.put(
+		'/api/v1/auth/user/deleteActions/:userId/:action',
+		usersController.deleteActions,
 	);
 
 	app.post(

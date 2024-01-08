@@ -56,7 +56,7 @@ module.exports.update = async (req, res) => {
 module.exports.getAll = async (req, res) => {
     try {
         const limit = req.params.limit;
-        const data = await Countries.findAll({ deletedAt: null, limit: limit, order: [['createdAt', 'DESC']]})
+        const data = await Countries.findAll({ deletedAt: null, order: [['createdAt', 'DESC']]})
         return apiResponses.successResponseWithData(res, 'success!', data);
     } catch (err) {
         return apiResponses.errorResponse(res, err);
@@ -119,7 +119,9 @@ module.exports.getAllStatesByCountryId = async (req, res) => {
         const data = await States.findAll({ where: {
                 countryId: req.params.countryId,
                 deletedAt: null
-            }, limit: limit, order: [['createdAt', 'ASC']]})
+            },
+            // limit: limit,
+            order: [['createdAt', 'ASC']]})
         return apiResponses.successResponseWithData(res, 'success!', data);
     } catch (err) {
         return apiResponses.errorResponse(res, err);
@@ -130,7 +132,7 @@ module.exports.getAllStatesByCountryId = async (req, res) => {
 module.exports.getAllStatesAndCitiesByZipCode = async (req, res) => {
     try {
         const limit = 10000 || req.params.limit;
-        const cities = await Cities.findAll({ where: { zipCode: req.params.zipCode, deletedAt: null }, raw: true, limit: limit, order: [['createdAt', 'ASC']]})
+        const cities = await Cities.findAll({ where: { zipCode: req.params.zipCode, deletedAt: null }, raw: true, order: [['createdAt', 'ASC']]})
         let state = []
         if(cities.length > 0) {
             state = await States.findAll({
@@ -152,7 +154,9 @@ module.exports.getAllStates = async (req, res) => {
         const limit = 10000 || req.params.limit;
         const data = await States.findAll({ where: {
                 deletedAt: null
-            }, limit: limit, order: [['createdAt', 'DESC']]})
+            },
+            // limit: limit,
+            order: [['createdAt', 'DESC']]})
         return apiResponses.successResponseWithData(res, 'success!', data);
     } catch (err) {
         return apiResponses.errorResponse(res, err);
@@ -195,7 +199,9 @@ module.exports.getAllCitiesByStateId = async (req, res) => {
         const data = await Cities.findAll( { where: {
             stateId: req.params.stateId,
            deletedAt: null
-        }, limit: limit, order: [['createdAt', 'ASC']]})
+        },
+            limit: limit,
+            order: [['createdAt', 'ASC']]})
         return apiResponses.successResponseWithData(res, 'success!', data);
     } catch (err) {
         return apiResponses.errorResponse(res, err);
@@ -206,8 +212,12 @@ module.exports.getAllCities = async (req, res) => {
     try {
         const limit = req.params.limit;
         const data = await Cities.findAll( { where: {
-                // deletedAt: null
-            }, limit: limit, order: [['createdAt', 'DESC']]})
+                stateId: {
+                    [Op.in]: ['0572d5d8-a6c0-4598-8330-896b1d39c0c0', 'ba775358-b770-4ecc-85ea-925bad32231b'],
+                },
+            },
+            limit: limit,
+            order: [['createdAt', 'ASC']]})
         return apiResponses.successResponseWithData(res, 'success!', data);
     } catch (err) {
         console.log('rttt---->', err)
@@ -250,3 +260,63 @@ async function citiesImport() {
         }
     }
 }
+
+
+
+const { v4: isUUID } = require('uuid');
+const {Op} = require("sequelize");
+function csvCitiesImport() {
+    const fs = require('fs');
+    const csvFilePath = './Controllers/cities_1.csv';
+    const csvData = fs.readFileSync(csvFilePath, 'utf8');
+    const rows = csvData
+        .trim() // Remove leading/trailing whitespaces
+        .split('\n') // Split into rows
+        .map(row => row.split(',')); // Split each row into columns
+
+    // Process rows and handle "nan" values in the tier column
+    const dataArray = rows
+        .map(([createdAt, updatedAt, tier, zipCode, id, name, stateId]) => {
+            // Handle "nan" values in the tier column
+            tier = tier.trim() !== '' && tier.trim() !== 'nan' ? parseInt(tier.trim(), 10) : 0;
+
+            // Check if zipCode, id, name, and stateId are not empty
+            if (zipCode.trim() !== '' && id.trim() !== '' && name.trim() !== '' && stateId.trim() !== '') {
+                // Check if id and stateId are valid UUIDs
+                if (isUUID(id.trim()) && isUUID(stateId.trim())) {
+                    return {
+                        createdAt: new Date(createdAt),
+                        updatedAt: new Date(updatedAt),
+                        tier: tier,
+                        zipCode: zipCode.trim(),
+                        id: id.trim(),
+                        name: name.trim(),
+                        stateId: stateId.trim(),
+                    };
+                } else {
+                    console.error(`Invalid UUID format for id or stateId: ${id.trim()}, ${stateId.trim()}`);
+                    return null;
+                }
+            } else {
+                // If any of the required fields is empty, return null
+                return null;
+            }
+        })
+        .filter(Boolean);
+
+    console.log('dataArray--->', dataArray);
+
+    dataArray.shift();
+    Cities.bulkCreate(dataArray)
+        .then(() => {
+            console.log('Data import successful!');
+        })
+        .catch(error => {
+            console.error('Error importing data--->:', error);
+            const errorMessage = JSON.stringify(error, null, 2);
+            const jsonFilePath = './error_log.json';
+            fs.writeFileSync(jsonFilePath, errorMessage);
+        });
+}
+
+// csvCitiesImport()
