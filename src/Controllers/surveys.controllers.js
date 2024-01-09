@@ -399,3 +399,27 @@ module.exports.GetUserOneAssignedSurveyCallback = async (req, res) => {
         return apiResponses.errorResponse(res, err);
     }
 };
+
+
+
+
+module.exports.userRespondentDashboard = async (req, res) => {
+    try {
+        let obj = {
+            totalSurvey: 10,
+            incompleteSurvey: 5,
+            completeSurvey: 3,
+            surveyNotStarted: 2,
+            profileOverAllPending: 8,
+            rewardsPoints: 20,
+            referralsPoints: 30,
+            referralsStatistics: 20,
+            totalPointsLeft: 20,
+            totalReferralsApproved: 20,
+        }
+        return apiResponses.successResponseWithData(res, 'Success', obj);
+    } catch (err) {
+        console.log('err-r-->', err)
+        return apiResponses.errorResponse(res, err);
+    }
+};
