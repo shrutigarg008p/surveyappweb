@@ -48,6 +48,12 @@ module.exports.create = async (req, res) => {
                 ipUnique: req.body.ipUnique,
                 isPaused: req.body.isPaused,
                 disclaimer: req.body.disclaimer,
+                description_one: req.body.description_one,
+                description_two: req.body.description_two,
+                description_three: req.body.description_three,
+                description_four: req.body.description_four,
+                country: req.body.country,
+                colorcode: req.body.colorcode,
                 createdAt: new Date().valueOf(),
                 updatedAt: new Date().valueOf(),
             })
@@ -102,6 +108,12 @@ module.exports.update = async (req, res) => {
             ipUnique: req.body.ipUnique,
             isPaused: req.body.isPaused,
             disclaimer: req.body.disclaimer,
+            description_one: req.body.description_one,
+            description_two: req.body.description_two,
+            description_three: req.body.description_three,
+            description_four: req.body.description_four,
+            country: req.body.country,
+            colorcode: req.body.colorcode,
             updatedAt: new Date().valueOf(),
         }
 
@@ -343,6 +355,7 @@ module.exports.GetUserOneAssignedSurveyCallback = async (req, res) => {
         SurveyAssigned.belongsTo(Surveys, { foreignKey: 'surveyId' });
         await SurveyAssigned.update({
             status: req.body.status,
+            partnerid: req.body.partnerId,
             updatedAt:  new Date().valueOf() },
             {
             where: {

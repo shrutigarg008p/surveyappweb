@@ -267,7 +267,7 @@ const { v4: isUUID } = require('uuid');
 const {Op} = require("sequelize");
 function csvCitiesImport() {
     const fs = require('fs');
-    const csvFilePath = './Controllers/cities_1.csv';
+    const csvFilePath = './Controllers/cities_202401061813.csv';
     const csvData = fs.readFileSync(csvFilePath, 'utf8');
     const rows = csvData
         .trim() // Remove leading/trailing whitespaces
@@ -276,7 +276,7 @@ function csvCitiesImport() {
 
     // Process rows and handle "nan" values in the tier column
     const dataArray = rows
-        .map(([createdAt, updatedAt, tier, zipCode, id, name, stateId]) => {
+        .map(([id,stateId,zipCode,name,segment,region,createdAt,updatedAt,deletedAt,tier]) => {
             // Handle "nan" values in the tier column
             tier = tier.trim() !== '' && tier.trim() !== 'nan' ? parseInt(tier.trim(), 10) : 0;
 
@@ -285,12 +285,14 @@ function csvCitiesImport() {
                 // Check if id and stateId are valid UUIDs
                 if (isUUID(id.trim()) && isUUID(stateId.trim())) {
                     return {
-                        createdAt: new Date(createdAt),
-                        updatedAt: new Date(updatedAt),
+                        createdAt: new Date().valueOf(),
+                        updatedAt: new Date().valueOf(),
                         tier: tier,
                         zipCode: zipCode.trim(),
                         id: id.trim(),
                         name: name.trim(),
+                        region: region.trim(),
+                        segment: segment.trim(),
                         stateId: stateId.trim(),
                     };
                 } else {
@@ -304,7 +306,9 @@ function csvCitiesImport() {
         })
         .filter(Boolean);
 
+    console.log('dataArrayLength--->', dataArray.length);
     console.log('dataArray--->', dataArray);
+
 
     dataArray.shift();
     Cities.bulkCreate(dataArray)
