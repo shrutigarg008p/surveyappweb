@@ -2,18 +2,18 @@ const { DataTypes } = require('sequelize');
 module.exports = (sequelize, Sequelize) => {
     return sequelize.define('city', {
         id: {
-            type: Sequelize.UUID,
+            type: Sequelize.STRING,
             defaultValue: Sequelize.UUIDV4,
             allowNull: false,
             primaryKey: true,
         },
         stateId: {
-            type: Sequelize.UUID,
-            allowNull: false,
+            type: Sequelize.STRING,
+            allowNull: true,
         },
         zipCode: {
             type: Sequelize.STRING,
-            allowNull: false,
+            allowNull: true,
         },
         name: {
             type: DataTypes.STRING,

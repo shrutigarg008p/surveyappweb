@@ -514,22 +514,32 @@ module.exports.updateNewPassword = async (req, res) => {
 
 module.exports.changePassword = async (req, res) => {
 	try {
-		User.update({
-				passwordHash: await bcrypt.hashSync(req.body.password, 8),
-			},
-			{where: {id: req.body.userId},
-			})
-			.then(async (user) => {
-				if (!user) {
-					return apiResponses.notFoundResponse(res, 'Not found.', {});
-				}
-				return apiResponses.successResponseWithData(res, 'Success', user);
-			})
-			.catch((error) => {
-				return apiResponses.errorResponse(res, error.message, {});
-			});
+		const userId = req.body.userId;
+		const oldPassword = req.body.currentPassword;
+		const newPassword = req.body.newPassword;
+
+		// Fetch the user based on userId
+		const user = await User.findOne({ where: { id: userId } });
+
+		if (!user) {
+			return apiResponses.validationErrorWithData(res, 'User not found.', {});
+		}
+
+		// Compare the old password with the stored hashed password
+		const passwordMatch = await bcrypt.compare(oldPassword, user.passwordHash);
+
+		if (!passwordMatch) {
+			return apiResponses.unauthorizedResponse(res, 'Incorrect old password.', {});
+		}
+
+		// Update the password with the new one
+		const updatedUser = await user.update({
+			passwordHash: await bcrypt.hashSync(newPassword, 8),
+		});
+
+		return apiResponses.successResponseWithData(res, 'Password updated successfully.', updatedUser);
 	} catch (err) {
-		return apiResponses.errorResponse(res, err);
+		return apiResponses.errorResponse(res, err.message, {});
 	}
 };
 
@@ -568,6 +578,7 @@ module.exports.permanentlyDelete = async (req, res) => {
 	try {
 		const isExist = await User.findOne({ where: { id: req.params.userId } })
 		if(isExist) {
+			if(req.params.type === 'admin') {
 				let obj = {
 					deleteRequestDate: new Date().valueOf(),
 					deleteConfirmDate: new Date().valueOf(),
@@ -576,6 +587,46 @@ module.exports.permanentlyDelete = async (req, res) => {
 				const user = await User.update(
 					obj, {where: {id: req.params.userId}}
 				)
+			} else {
+				let obj = {
+					deleteRequestDate: new Date().valueOf(),
+					updatedAt: new Date().valueOf()
+				}
+				const user = await User.update(
+					obj, {where: {id: req.params.userId}}
+				)
+			}
+			return apiResponses.successResponseWithData(res, 'Success');
+		} else {
+			return apiResponses.validationErrorWithData(res, 'User not found', null);
+		}
+	} catch (err) {
+		return apiResponses.errorResponse(res, err);
+	}
+};
+
+
+module.exports.deleteActions = async (req, res) => {
+	try {
+		const isExist = await User.findOne({ where: { id: req.params.userId } })
+		if(isExist) {
+			if(req.params.action === 'accept') {
+				let obj = {
+					deleteConfirmDate: new Date().valueOf(),
+					updatedAt: new Date().valueOf()
+				}
+				const user = await User.update(
+					obj, {where: {id: req.params.userId}}
+				)
+			} else {
+				let obj = {
+					deleteRequestDate: null,
+					updatedAt: new Date().valueOf()
+				}
+				const user = await User.update(
+					obj, {where: {id: req.params.userId}}
+				)
+			}
 			return apiResponses.successResponseWithData(res, 'Success');
 		} else {
 			return apiResponses.validationErrorWithData(res, 'User not found', null);
@@ -622,8 +673,12 @@ module.exports.basicProfileOnly = async (req, res) => {
 					})
 				} else if(req.params.type === 'deleteRequestOnly') {
 					data = await User.findAll({
-						where: { deleteRequestDate: { $ne: null }},
-						attributes: ['phoneNumber', 'id', 'email', 'createdAt', 'deleteRequestDate'],
+						where: {
+							deleteRequestDate: {
+								[Sequelize.Op.ne]: null,
+							},
+						},
+						attributes: ['phoneNumber', 'id', 'email', 'createdAt', 'deleteRequestDate', 'deleteConfirmDate'],
 						include: [{
 							model: BasicProfile,
 							attributes: ['firstName', 'lastName', 'dateOfBirth', 'city', 'firstName', 'lastName'],
@@ -918,6 +973,8 @@ module.exports.respondentProfileOverview = async (req, res) => {
 			],
 			raw: true
 		})
+		const basicProfile = await BasicProfile.findOne({ where: { userId: req.params.id }})
+		const users = await User.findOne({ where: { id: req.params.id }, attributes: ['unsubscribeDate', 'id', 'deleteRequestDate']})
 		const result = profilesWithQuestionsCount.map(section => {
 			const totalQuestions = parseInt(section.questionCount);
 			const response = section['profileuserresponses.response'];
@@ -947,7 +1004,7 @@ module.exports.respondentProfileOverview = async (req, res) => {
 		const overallTotalQuestions = result.reduce((total, section) => total + section.totalQuestions, 0);
 		const overallAttemptedQuestions = result.reduce((total, section) => total + section.attemptedQuestions, 0);
 		const overallAttemptedPercentage = Math.round((overallAttemptedQuestions / overallTotalQuestions) * 100);
-		return apiResponses.successResponseWithData(res, 'success!', {result, overallAttemptedPercentage});
+		return apiResponses.successResponseWithData(res, 'success!', {result, overallAttemptedPercentage, basicProfile, users});
 	} catch (err) {
 		console.log(err)
 		return apiResponses.errorResponse(res, err);
