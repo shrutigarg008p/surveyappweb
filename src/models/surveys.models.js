@@ -118,6 +118,30 @@ module.exports = (sequelize, Sequelize) => {
         isPaused: {
             type: DataTypes.BOOLEAN,
             allowNull: false,
-        }
+        },
+        description_one: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+        description_two: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+        description_three: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+        description_four: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+        country: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+        colorcode: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
     });
 };

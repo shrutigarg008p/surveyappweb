@@ -15,6 +15,14 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING,
             allowNull: true,
         },
+        region: {
+            type: Sequelize.STRING,
+            allowNull: true,
+        },
+        segment: {
+            type: Sequelize.STRING,
+            allowNull: true,
+        },
         name: {
             type: DataTypes.STRING,
             allowNull: true,
