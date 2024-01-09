@@ -93,4 +93,9 @@ module.exports= function(app) {
         '/api/v1/surveys/GetUserOneAssignedSurveyCallback',
         surveyControllers.GetUserOneAssignedSurveyCallback,
     );
+
+    app.get(
+        '/api/v1/surveys/userRespondentDashboard/:userId',
+        surveyControllers.userRespondentDashboard,
+    );
 };
