@@ -6,6 +6,7 @@ const Options = db.options;
 const BasicProfile = db.basicProfile;
 const ProfileUserResponses = db.profileUserResponse;
 const Users = db.user;
+const Cities = db.city;
 const apiResponses = require('../Components/apiresponse');
 const {DataTypes, Op} = require("sequelize");
 const Sequelize = require("sequelize");
@@ -34,6 +35,8 @@ module.exports.create = async (req, res) => {
                 stateIds: req.body.stateIds,
                 cityIds: req.body.cityIds,
                 tierIds: req.body.tierIds,
+                segments: req.body.segments,
+                regions: req.body.regions,
                 secIds: req.body.secIds,
                 createdAt: new Date().valueOf(),
                 updatedAt: new Date().valueOf(),
@@ -70,6 +73,8 @@ module.exports.update = async (req, res) => {
             stateIds: req.body.stateIds,
             cityIds: req.body.cityIds,
             tierIds: req.body.tierIds,
+            segments: req.body.segments,
+            regions: req.body.regions,
             secIds: req.body.secIds,
             updatedAt: new Date().valueOf(),
         }
@@ -97,7 +102,6 @@ module.exports.getOne = async (req, res) => {
         let user = []
         if(sample) {
             let whereClause = {};
-            // whereClause.role = 'panelist';
             // Gender filter
             if (sample.gender) {
                 whereClause.gender = sample.gender;
@@ -131,6 +135,38 @@ module.exports.getOne = async (req, res) => {
                 whereClause.city = {
                     [Op.in]: city
                 };
+            }
+
+            //Segments
+            if(sample.segments && sample.segments.length > 0) {
+                let obj = {}
+                const segments = sample.segments.map((item => item.label))
+                obj.segment = {
+                    [Op.in]: segments
+                };
+                const segmentsCities = await Cities.findAll({ where: obj, attributes: ['name', 'segment'], raw: true })
+                if(segmentsCities.length > 0) {
+                    const city = segmentsCities.map((item => item.name))
+                    whereClause.city = {
+                        [Op.in]: city
+                    };
+                }
+            }
+
+            //Regions
+            if(sample.regions && sample.regions.length > 0) {
+                let obj = {}
+                const regions = sample.regions.map((item => item.label))
+                obj.region = {
+                    [Op.in]: regions
+                };
+                const regionsCities = await Cities.findAll({ where: obj, attributes: ['name', 'region'], raw: true })
+                if(regionsCities.length > 0) {
+                    const city = regionsCities.map((item => item.name))
+                    whereClause.city = {
+                        [Op.in]: city
+                    };
+                }
             }
 
             BasicProfile.belongsTo(Users, {foreignKey: 'userId'});

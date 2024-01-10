@@ -13,6 +13,7 @@ const BasicProfile = db.basicProfile;
 const ProfileUserResponses = db.profileUserResponse;
 const AssignSurveys = db.asssignSurveys;
 const SampleQuestions = db.sampleQuestions;
+const Cities = db.city;
 
 
 function calculateBirthDate(age) {
@@ -87,6 +88,38 @@ const triggerSurveyEmail = async (id) => {
                         whereClause.city = {
                             [Op.in]: city
                         };
+                    }
+
+                    //Segments
+                    if(sample.segments && sample.segments.length > 0) {
+                        let obj = {}
+                        const segments = sample.segments.map((item => item.label))
+                        obj.segment = {
+                            [Op.in]: segments
+                        };
+                        const segmentsCities = await Cities.findAll({ where: obj, attributes: ['name', 'segment'], raw: true })
+                        if(segmentsCities.length > 0) {
+                            const city = segmentsCities.map((item => item.name))
+                            whereClause.city = {
+                                [Op.in]: city
+                            };
+                        }
+                    }
+
+                    //Regions
+                    if(sample.regions && sample.regions.length > 0) {
+                        let obj = {}
+                        const regions = sample.regions.map((item => item.label))
+                        obj.region = {
+                            [Op.in]: regions
+                        };
+                        const regionsCities = await Cities.findAll({ where: obj, attributes: ['name', 'region'], raw: true })
+                        if(regionsCities.length > 0) {
+                            const city = regionsCities.map((item => item.name))
+                            whereClause.city = {
+                                [Op.in]: city
+                            };
+                        }
                     }
 
                     BasicProfile.belongsTo(Users, { foreignKey: 'userId' });
