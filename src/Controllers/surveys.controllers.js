@@ -375,7 +375,7 @@ module.exports.GetUserAllAssignedSurvey = async (req, res) => {
                     {
                         model: Surveys,
                         required: false,
-                        attributes: ['name', 'description', 'ceggPoints', 'expiryDate']
+                        attributes: ['name', 'description', 'ceggPoints', 'expiryDate', "description_one", "description_two", "description_three", "description_four", "colorcode"]
                     },
                 ],
                 limit: 100000,
@@ -399,7 +399,7 @@ module.exports.GetUserOneAssignedSurvey = async (req, res) => {
                     {
                         model: Surveys,
                         required: false,
-                        attributes: ['name', 'description', 'ceggPoints', 'expiryDate']
+                        attributes: ['name', 'description', 'ceggPoints', 'expiryDate', "description_one", "description_two", "description_three", "description_four", "colorcode"]
                     },
                 ]
         })
@@ -485,16 +485,46 @@ module.exports.GetUserOneAssignedSurveyCallback = async (req, res) => {
 module.exports.userRespondentDashboard = async (req, res) => {
     try {
         let obj = {
-            totalSurvey: 10,
-            incompleteSurvey: 5,
-            completeSurvey: 3,
-            surveyNotStarted: 2,
-            profileOverAllPending: 8,
-            rewardsPoints: 20,
-            referralsPoints: 30,
-            referralsStatistics: 20,
-            totalPointsLeft: 20,
-            totalReferralsApproved: 20,
+            totalSurvey: {
+                name: "Total Survey",
+                points: 10
+            },
+            incompleteSurvey: {
+                name: "Incomplete Survey",
+                points: 5
+            },
+            completeSurvey: {
+                name: "Complete Survey",
+                points: 3
+            },
+            surveyNotStarted: {
+                name: "Survey Not Started",
+                points: 2
+            },
+            profileOverAllPending: {
+                name: "Profile Pending",
+                points: 10
+            },
+            rewardsPoints: {
+                name: "Rewards Points",
+                points: 10
+            },
+            referralsPoints: {
+                name: "Referrals Points",
+                points: 10
+            },
+            referralsStatistics: {
+                name: "Referrals Statistics",
+                points: 10
+            },
+            totalPointsLeft: {
+                name: "Total Left Points",
+                points: 10
+            },
+            totalReferralsApproved: {
+                name: "Total Referrals Approved",
+                points: 10
+            },
         }
         return apiResponses.successResponseWithData(res, 'Success', obj);
     } catch (err) {
