@@ -484,48 +484,47 @@ module.exports.GetUserOneAssignedSurveyCallback = async (req, res) => {
 
 module.exports.userRespondentDashboard = async (req, res) => {
     try {
-        let obj = {
-            totalSurvey: {
+        let obj = [{
                 name: "Total Survey",
                 points: 10
             },
-            incompleteSurvey: {
+            {
                 name: "Incomplete Survey",
                 points: 5
             },
-            completeSurvey: {
+             {
                 name: "Complete Survey",
                 points: 3
             },
-            surveyNotStarted: {
+             {
                 name: "Survey Not Started",
                 points: 2
             },
-            profileOverAllPending: {
+            {
                 name: "Profile Pending",
                 points: 10
             },
-            rewardsPoints: {
+            {
                 name: "Rewards Points",
                 points: 10
             },
-            referralsPoints: {
+             {
                 name: "Referrals Points",
                 points: 10
             },
-            referralsStatistics: {
+             {
                 name: "Referrals Statistics",
                 points: 10
             },
-            totalPointsLeft: {
+            {
                 name: "Total Left Points",
                 points: 10
             },
-            totalReferralsApproved: {
+             {
                 name: "Total Referrals Approved",
                 points: 10
             },
-        }
+        ]
         return apiResponses.successResponseWithData(res, 'Success', obj);
     } catch (err) {
         console.log('err-r-->', err)
