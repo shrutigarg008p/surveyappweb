@@ -8,7 +8,11 @@ const Samples = db.sample;
 const Rewards = db.rewards;
 const BasicProfile = db.basicProfile;
 const Users = db.user;
+const Cities = db.city;
+const Partners = db.partners;
 const SurveyEmailSchedules = db.surveyEmailSchedule;
+const ProfileUserResponses = db.profileUserResponse;
+const SamplesQuestions = db.sampleQuestions;
 const apiResponses = require('../Components/apiresponse');
 const {DataTypes, Op} = require("sequelize");
 
@@ -205,6 +209,7 @@ module.exports.getOneDetails = async (req, res) => {
             }})
         if(scheduleEmail) {
             const sample = await Samples.findOne({where: {id: scheduleEmail.sampleId, deletedAt: null}})
+            const sampleQuestions = await SamplesQuestions.findAll({where: {sampleId: sample.id, deletedAt: null}})
             if (sample) {
                 let whereClause = {};
 
@@ -243,9 +248,41 @@ module.exports.getOneDetails = async (req, res) => {
                     };
                 }
 
+                //Segments
+                if(sample.segments && sample.segments.length > 0) {
+                    let obj = {}
+                    const segments = sample.segments.map((item => item.label))
+                    obj.segment = {
+                        [Op.in]: segments
+                    };
+                    const segmentsCities = await Cities.findAll({ where: obj, attributes: ['name', 'segment'], raw: true })
+                    if(segmentsCities.length > 0) {
+                        const city = segmentsCities.map((item => item.name))
+                        whereClause.city = {
+                            [Op.in]: city
+                        };
+                    }
+                }
+
+                //Regions
+                if(sample.regions && sample.regions.length > 0) {
+                    let obj = {}
+                    const regions = sample.regions.map((item => item.label))
+                    obj.region = {
+                        [Op.in]: regions
+                    };
+                    const regionsCities = await Cities.findAll({ where: obj, attributes: ['name', 'region'], raw: true })
+                    if(regionsCities.length > 0) {
+                        const city = regionsCities.map((item => item.name))
+                        whereClause.city = {
+                            [Op.in]: city
+                        };
+                    }
+                }
+
                 BasicProfile.belongsTo(Users, {foreignKey: 'userId'});
                 console.log('whereClause--->', whereClause)
-                const usersQuery = await BasicProfile.findAll({
+                let usersQuery = await BasicProfile.findAll({
                     where: whereClause,
                     include: [
                         {
@@ -255,9 +292,32 @@ module.exports.getOneDetails = async (req, res) => {
                         },
                     ],
                 });
+
+                if(sampleQuestions.length > 0) {
+                    let usersResponseList = await filterUserResponses(sampleQuestions);
+                    const userIdArray = usersResponseList.map(userResponse => userResponse.get('userId'));
+                    let usersQuestionCriteria = await BasicProfile.findAll({
+                        where: {
+                            userId: {
+                                [Op.in]: userIdArray,
+                            },
+                        },
+                        include: [
+                            {
+                                model: Users,
+                                required: false,
+                                attributes: ['email', 'role']
+                            },
+                        ],
+                    })
+                    const filterCommonUsers = (arrA, arrB) => {
+                        return arrA.filter(userA => arrB.some(userB => userB.userId === userA.userId));
+                    };
+                    usersQuery = filterCommonUsers(usersQuestionCriteria, usersQuery);
+                }
+
                 user = usersQuery.filter(item => item.user ? item.user.role === 'panelist' : '')
                 assignUsers = await SurveyAssigned.findAll({where: {surveyId: data.id}})
-
             }
         }
         return apiResponses.successResponseWithData(res, 'success!', { data, user, assignUsers });
@@ -352,6 +412,7 @@ module.exports.GetUserOneAssignedSurvey = async (req, res) => {
 
 module.exports.GetUserOneAssignedSurveyCallback = async (req, res) => {
     try {
+        console.log('body--->', req.body)
         SurveyAssigned.belongsTo(Surveys, { foreignKey: 'surveyId' });
         await SurveyAssigned.update({
             status: req.body.status,
@@ -393,7 +454,25 @@ module.exports.GetUserOneAssignedSurveyCallback = async (req, res) => {
                 rewardDate: new Date().valueOf(),
             })
         }
-        return apiResponses.successResponseWithData(res, 'Success', { surveysDetails,user });
+        if(req.body.partnerId && req.body.partnerId !== 'NA') {
+            let url = null
+            const partnerInfo = await Partners.findOne({ where: { id: req.body.partnerId }, raw: true})
+            if(partnerInfo && req.body.status === 'Completed') {
+                url = `${partnerInfo.successUrl}?userid=${req.body.userId}&surveyid=${req.body.surveyId}&partnerid=${req.body.partnerId}`;
+            }
+            if(partnerInfo && req.body.status === 'Over Quota') {
+                url = `${partnerInfo.overQuotaUrl}?userid=${req.body.userId}&surveyid=${req.body.surveyId}&partnerid=${req.body.partnerId}`;
+            }
+            if(partnerInfo && req.body.status === 'Quality Terminated') {
+                url = `${partnerInfo.badTerminatedUrl}?userid=${req.body.userId}&surveyid=${req.body.surveyId}&partnerid=${req.body.partnerId}`;
+            }
+            if(partnerInfo && req.body.status === 'Terminated') {
+                url = `${partnerInfo.disqualifiedUrl}?userid=${req.body.userId}&surveyid=${req.body.surveyId}&partnerid=${req.body.partnerId}`;
+            }
+            return apiResponses.successResponseWithData(res, 'Success', {surveysDetails, user, url});
+        } else {
+            return apiResponses.successResponseWithData(res, 'Success', {surveysDetails, user, url: ''});
+        }
     } catch (err) {
         console.log('err-r-->', err)
         return apiResponses.errorResponse(res, err);
@@ -422,4 +501,55 @@ module.exports.userRespondentDashboard = async (req, res) => {
         console.log('err-r-->', err)
         return apiResponses.errorResponse(res, err);
     }
+};
+
+
+const filterUserResponses = async (sampleQuestions) => {
+    const allUserResponses = await ProfileUserResponses.findAll({
+        where: {
+            deletedAt: null,
+        },
+    });
+
+    const Operands = {
+        All: 1,
+        ANSWERED: 2,
+        ANY: 3,
+        EXCEPT: 4,
+        NOT_ANSWERED: 5,
+    };
+
+    return allUserResponses.filter(userResponse => {
+        return sampleQuestions.every(({ questionId, operand, optionIds }) => {
+            const responseValue = userResponse.get('response')[questionId];
+
+            const checkOptionValue = (value) => {
+                if (Array.isArray(optionIds)) {
+                    return Array.isArray(value)
+                        ? optionIds.every(opt => value.includes(opt))
+                        : optionIds.includes(value);
+                } else {
+                    return Array.isArray(value)
+                        ? value.includes(optionIds)
+                        : value === optionIds;
+                }
+            };
+
+            switch (operand) {
+                case Operands.All:
+                    return responseValue;
+                case Operands.ANSWERED:
+                    return responseValue && checkOptionValue(responseValue);
+                case Operands.ANY:
+                    return responseValue;
+                case Operands.EXCEPT:
+                    return !(responseValue && checkOptionValue(responseValue));
+                case Operands.NOT_ANSWERED:
+                    return !(responseValue && checkOptionValue(responseValue));
+                default:
+                    // Handle default case if needed
+                    return false;
+            }
+        });
+    });
 };

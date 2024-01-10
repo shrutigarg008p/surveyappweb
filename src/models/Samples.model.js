@@ -74,6 +74,14 @@ module.exports = (sequelize, Sequelize) => {
         secIds: {
             type: DataTypes.STRING,
             allowNull: true,
+        },
+        segments: {
+            type: DataTypes.JSON,
+            allowNull: true,
+        },
+        regions: {
+            type: DataTypes.JSON,
+            allowNull: true,
         }
     });
 };
