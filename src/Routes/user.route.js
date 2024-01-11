@@ -61,6 +61,11 @@ module.exports= function(app) {
 	);
 
 	app.post(
+		'/api/v1/auth/user/updateDeviceToken',
+		usersController.updateDeviceToken,
+	);
+
+	app.post(
 		'/api/v1/auth/user/temporaryDelete/:userId',
 		usersController.temporaryDelete,
 	);
