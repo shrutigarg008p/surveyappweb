@@ -4,6 +4,7 @@ const BasicProfile = db.basicProfile;
 const Questions = db.questions;
 const Profiles = db.profiles;
 const Referrals = db.referrals;
+const Rewards = db.rewards;
 const ProfileUserResponse = db.profileUserResponse;
 const apiResponses = require('../Components/apiresponse');
 const {createToken} = require('../Middlewares/userAuthentications');
@@ -55,6 +56,16 @@ module.exports.registration = async (req, res) => {
 					{ referredUserId: user.id, referralStatus: "Accepted" },
 					{ where: { email: user.email, userId: req.body.referralId }}
 				)
+			    await Rewards.create({
+					points: 200,
+					rewardType: 'Referral',
+					referralId: user.id,
+					rewardStatus: 'Accepted',
+					userId: req.body.referralId,
+					createdAt: new Date().valueOf(),
+					updatedAt: new Date().valueOf(),
+					rewardDate: new Date().valueOf(),
+				})
 			} else {
 				await Referrals.create({
 					name: 'Unknown',
@@ -64,6 +75,16 @@ module.exports.registration = async (req, res) => {
 					referralMethod: "Link",
 					userId: req.body.referralId,
 					referredUserId: user.id,
+					createdAt: new Date().valueOf(),
+					updatedAt: new Date().valueOf(),
+					rewardDate: new Date().valueOf(),
+				})
+				await Rewards.create({
+					points: 200,
+					rewardType: 'Referral',
+					referralId: user.id,
+					rewardStatus: 'Accepted',
+					userId: req.body.referralId,
 					createdAt: new Date().valueOf(),
 					updatedAt: new Date().valueOf(),
 					rewardDate: new Date().valueOf(),
