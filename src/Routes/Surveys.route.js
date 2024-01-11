@@ -98,4 +98,9 @@ module.exports= function(app) {
         '/api/v1/surveys/userRespondentDashboard/:userId',
         surveyControllers.userRespondentDashboard,
     );
+
+    app.get(
+        '/api/v1/surveys/userRespondentDashboardWeb/:userId',
+        surveyControllers.userRespondentDashboardWeb,
+    );
 };

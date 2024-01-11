@@ -14,7 +14,9 @@ const SurveyEmailSchedules = db.surveyEmailSchedule;
 const ProfileUserResponses = db.profileUserResponse;
 const SamplesQuestions = db.sampleQuestions;
 const apiResponses = require('../Components/apiresponse');
-const {DataTypes, Op} = require("sequelize");
+const {DataTypes, Op, Sequelize} = require("sequelize");
+const {respondentSummary} = require("../utils/RespondentSummary");
+
 
 
 function calculateBirthDate(age) {
@@ -484,45 +486,57 @@ module.exports.GetUserOneAssignedSurveyCallback = async (req, res) => {
 
 module.exports.userRespondentDashboard = async (req, res) => {
     try {
+        const {
+            totalSurveys,
+            incompleteSurveys,
+            completeSurveys,
+            notStartedSurveys,
+            overallAttemptedPercentage,
+            totalRewardPoints,
+            totalReferralsPoints,
+            totalReferralsApproved,
+            totalLeft
+        } = await respondentSummary(req.params.userId);
+
         let obj = [{
                 name: "Total Survey",
-                points: 10
+                points: totalSurveys || 0
             },
             {
                 name: "Incomplete Survey",
-                points: 5
+                points: incompleteSurveys || 0
             },
              {
                 name: "Complete Survey",
-                points: 3
+                points: completeSurveys || 0
             },
              {
                 name: "Survey Not Started",
-                points: 2
+                points: notStartedSurveys || 0
             },
             {
                 name: "Profile Pending",
-                points: 10
+                points: 100 - overallAttemptedPercentage || 0
             },
             {
                 name: "Rewards Points",
-                points: 10
+                points: totalRewardPoints || 0
             },
              {
                 name: "Referrals Points",
-                points: 10
+                points: totalReferralsPoints || 0
             },
              {
                 name: "Referrals Statistics",
-                points: 10
+                points: 0
             },
             {
                 name: "Total Left Points",
-                points: 10
+                points: totalLeft || 0
             },
              {
                 name: "Total Referrals Approved",
-                points: 10
+                points: totalReferralsApproved || 0
             },
         ]
         return apiResponses.successResponseWithData(res, 'Success', obj);
@@ -531,6 +545,73 @@ module.exports.userRespondentDashboard = async (req, res) => {
         return apiResponses.errorResponse(res, err);
     }
 };
+
+
+module.exports.userRespondentDashboardWeb = async (req, res) => {
+    try {
+        const {
+            totalSurveys,
+            incompleteSurveys,
+            completeSurveys,
+            notStartedSurveys,
+            overallAttemptedPercentage,
+            totalRewardPoints,
+            totalReferralsPoints,
+            totalReferralsApproved,
+            totalLeft
+        } = await respondentSummary(req.params.userId);
+
+
+        let obj = {
+            totalSurveys: {
+                name: "Total Survey",
+                points: totalSurveys || 0
+            },
+            incompleteSurveys: {
+                name: "Incomplete Survey",
+                points: incompleteSurveys || 0
+            },
+            completeSurveys: {
+                name: "Complete Survey",
+                points: completeSurveys || 0
+            },
+            notStartedSurveys: {
+                name: "Survey Not Started",
+                points: notStartedSurveys || 0
+            },
+            overallAttemptedPercentage: {
+                name: "Profile Pending",
+                points: 100 - overallAttemptedPercentage || 0
+            },
+            totalRewardPoints: {
+                name: "Rewards Points",
+                points: totalRewardPoints || 0
+            },
+            totalReferralsPoints: {
+                name: "Referrals Points",
+                points: totalReferralsPoints || 0
+            },
+            totalReferralsStatistics: {
+                name: "Referrals Statistics",
+                points: 0
+            },
+            totalLeft: {
+                name: "Total Left Points",
+                points: totalLeft || 0
+            },
+            totalReferralsApproved: {
+                name: "Total Referrals Approved",
+                points: totalReferralsApproved || 0
+            },
+        }
+        return apiResponses.successResponseWithData(res, 'Success', obj);
+    } catch (err) {
+        console.log('err-r-->', err)
+        return apiResponses.errorResponse(res, err);
+    }
+};
+
+
 
 
 const filterUserResponses = async (sampleQuestions) => {
