@@ -101,6 +101,9 @@ module.exports = (sequelize, Sequelize) => {
 		},
 		registeredDate: {
 			type: DataTypes.DATE
-		}
+		},
+		devicetoken: {
+			type: DataTypes.STRING
+		},
 	});
 };

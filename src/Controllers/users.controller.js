@@ -433,6 +433,29 @@ module.exports.unSubscribeUser = async (req, res) => {
 	}
 };
 
+
+module.exports.updateDeviceToken = async (req, res) => {
+	try {
+		const isExist = await User.findOne({ where: { id: req.body.userId } })
+		if(isExist) {
+				let obj = {
+					devicetoken: req.body.devicetoken,
+					updatedAt: new Date().valueOf()
+				}
+				const user = await User.update(
+					obj, { where: { id: req.body.userId } }
+				)
+			return apiResponses.successResponseWithData(res, 'Success');
+		} else {
+			return apiResponses.validationErrorWithData(res, 'User not found', null);
+		}
+	} catch (err) {
+		console.log('isExist--->', err)
+		return apiResponses.errorResponse(res, err);
+	}
+};
+
+
 module.exports.users = async (req, res) => {
 	try {
 		const limit = req.params.limit;
