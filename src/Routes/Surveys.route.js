@@ -103,4 +103,9 @@ module.exports= function(app) {
         '/api/v1/surveys/userRespondentDashboardWeb/:userId',
         surveyControllers.userRespondentDashboardWeb,
     );
+
+    app.get(
+        '/api/v1/surveys/adminRespondentDashboardWeb',
+        surveyControllers.adminRespondentDashboardWeb,
+    );
 };

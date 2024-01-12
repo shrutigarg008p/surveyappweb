@@ -4,6 +4,7 @@ const { URL } = require('url');
 const axios = require('axios');
 const {surveyInvite} = require("../Config/Mails");
 const apiResponses = require("../Components/apiresponse");
+const {Notifications} = require("../Config/Notification");
 const SurveyEmailSchedules = db.surveyEmailSchedule;
 const SurveyTemplates = db.surveyTemplates;
 const Surveys = db.surveys;
@@ -130,7 +131,7 @@ const triggerSurveyEmail = async (id) => {
                             {
                                 model: Users,
                                 required: false,
-                                attributes: ['email', 'role']
+                                attributes: ['email', 'role', 'devicetoken']
                             },
                         ],
                     });
@@ -148,7 +149,7 @@ const triggerSurveyEmail = async (id) => {
                                 {
                                     model: Users,
                                     required: false,
-                                    attributes: ['email', 'role']
+                                    attributes: ['email', 'role', 'devicetoken']
                                 },
                             ],
                         })
@@ -202,6 +203,9 @@ const triggerSurveyEmail = async (id) => {
                                 }
                                 assignedSurvey.push(insertRecord)
                                 await surveyInvite(emailTemplate.subject, users[i].user.email, processedHtml)
+                                if(users[i].user.devicetoken) {
+                                    await Notifications(users[i].user.devicetoken, emailTemplate.subject, 'You have assigned new survey')
+                                }
                             }
                                 await AssignSurveys.bulkCreate(assignedSurvey)
                                 await SurveyEmailSchedules.update({
@@ -421,3 +425,4 @@ module.exports = {
 // }
 //
 // test()
+

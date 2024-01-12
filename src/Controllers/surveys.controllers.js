@@ -7,9 +7,11 @@ const SurveyAssigned = db.asssignSurveys;
 const Samples = db.sample;
 const Rewards = db.rewards;
 const BasicProfile = db.basicProfile;
+const RedemptionRequests = db.redemptionRequest;
 const Users = db.user;
 const Cities = db.city;
 const Partners = db.partners;
+const Profiles = db.profiles;
 const SurveyEmailSchedules = db.surveyEmailSchedule;
 const ProfileUserResponses = db.profileUserResponse;
 const SamplesQuestions = db.sampleQuestions;
@@ -611,6 +613,148 @@ module.exports.userRespondentDashboardWeb = async (req, res) => {
     }
 };
 
+module.exports.adminRespondentDashboardWeb = async (req, res) => {
+    try {
+            db.profiles.hasMany(db.questions, {foreignKey: 'profileId'});
+            db.questions.belongsTo(db.profiles, {foreignKey: 'profileId'});
+            db.profiles.hasMany(ProfileUserResponses, {foreignKey: 'profileId'});
+            const totalSurveys = await SurveyAssigned.count()
+            const incompleteSurveys = await SurveyAssigned.count({
+                where: {
+                    status: "pending",
+                    isStarted: true
+                }
+            })
+            const completeSurveys = await SurveyAssigned.count({
+                where: {
+                    status: {
+                        [Op.not]: 'pending'
+                    },
+                    isStarted: true
+                }
+            })
+            const notStartedSurveys = await SurveyAssigned.count({
+                where: {
+                    status: "pending",
+                    isStarted: false
+                }
+            })
+            const profilesWithQuestionsCount = await Profiles.findAll({
+                attributes: {
+                    include: [
+                        [Sequelize.literal('(SELECT COUNT(*) FROM questions WHERE questions."profileId" = profiles.id)'), 'questionCount']
+                    ]
+                },
+                include: [
+                    {
+                        model: ProfileUserResponses,
+                        attributes: ['id', "response"],
+                        required: false
+                    }
+                ],
+                raw: true
+            })
+            const result = profilesWithQuestionsCount.map(section => {
+                const totalQuestions = parseInt(section.questionCount);
+                const response = section['profileuserresponses.response'];
+                if (response && Object.keys(response).length > 0) {
+                    const attemptedQuestions = Object.keys(response).length;
+                    const remainingQuestions = totalQuestions - attemptedQuestions;
+                    const attemptedPercentage = Math.round((attemptedQuestions / totalQuestions) * 100);
+                    delete section['profileuserresponses.response'];
+                    delete section['profileuserresponses.id'];
+                    return {
+                        ...section,
+                        totalQuestions,
+                        attemptedQuestions,
+                        remainingQuestions,
+                        attemptedPercentage
+                    };
+                } else {
+                    return {
+                        ...section,
+                        totalQuestions,
+                        attemptedQuestions: 0,
+                        remainingQuestions: totalQuestions,
+                        attemptedPercentage: 0
+                    };
+                }
+            });
+            const overallTotalQuestions = result.reduce((total, section) => total + section.totalQuestions, 0);
+            const overallAttemptedQuestions = result.reduce((total, section) => total + section.attemptedQuestions, 0);
+            const overallAttemptedPercentage = Math.round((overallAttemptedQuestions / overallTotalQuestions) * 100);
+
+            const totalRewardPoints = await Rewards.sum('points');
+            const totalReferralsPoints = await Rewards.sum('points', {
+                where: {
+                    rewardType: 'Referral'
+                }
+            });
+            const totalReferralsApproved = await Rewards.sum('points', {
+                where: {
+                    rewardType: 'Accepted'
+                }
+            });
+
+            const totalRedeemedData = await RedemptionRequests.findAll({
+                where: { deletedAt: null, redemptionRequestStatus: 'Redeemed'},
+            });
+            const totalPendingData = await RedemptionRequests.findAll({
+                where: {deletedAt: null, redemptionRequestStatus: 'New'},
+            });
+
+            const totalRedeemed = totalRedeemedData.reduce((sum, reward) => sum + reward.pointsRedeemed, 0);
+            const totalPendingRedeemed = totalPendingData.reduce((sum, reward) => sum + reward.pointsRequested, 0);
+            const totalLeft = totalRewardPoints - totalRedeemed
+
+        let obj = {
+            totalSurveys: {
+                name: "Total Survey",
+                points: totalSurveys || 0
+            },
+            incompleteSurveys: {
+                name: "Incomplete Survey",
+                points: incompleteSurveys || 0
+            },
+            completeSurveys: {
+                name: "Complete Survey",
+                points: completeSurveys || 0
+            },
+            notStartedSurveys: {
+                name: "Survey Not Started",
+                points: notStartedSurveys || 0
+            },
+            overallAttemptedPercentage: {
+                name: "Profile Pending",
+                points: 100 - overallAttemptedPercentage || 0
+            },
+            totalRewardPoints: {
+                name: "Rewards Points",
+                points: totalRewardPoints || 0
+            },
+            totalReferralsPoints: {
+                name: "Referrals Points",
+                points: totalReferralsPoints || 0
+            },
+            totalReferralsStatistics: {
+                name: "Referrals Statistics",
+                points: 0
+            },
+            totalLeft: {
+                name: "Total Left Points",
+                points: totalLeft || 0
+            },
+            totalReferralsApproved: {
+                name: "Total Referrals Approved",
+                points: totalReferralsApproved || 0
+            },
+        }
+        return apiResponses.successResponseWithData(res, 'Success', obj);
+    } catch (err) {
+        console.log('err-r-->', err)
+        return apiResponses.errorResponse(res, err);
+    }
+};
 
 
 
