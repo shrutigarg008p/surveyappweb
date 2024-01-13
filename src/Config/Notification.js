@@ -1,5 +1,8 @@
 const admin = require('firebase-admin');
 const serviceAccount = require('../../indiapolls-a9288-firebase-adminsdk-35jcy-9d36fd37f6.json');
+const db = require('../models');
+const {DataTypes} = require("sequelize");
+const NotificationsDb = db.notifications
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -7,10 +10,23 @@ admin.initializeApp({
 
 
 module.exports = {
-  // notificationCreate: (notificationData) => new Promise((resolve, reject) => {
-  //   const addNotifications = new notifyDb(notificationData);
-  //   addNotifications.save().then((result) => resolve(result)).catch((error) => reject(error));
-  // }),
+  notificationCreate: (notificationData) => new Promise(async (resolve, reject) => {
+      try {
+          let body = {
+              userId: notificationData.userId,
+              message: notificationData.message,
+              messageType: notificationData.type,
+              itemId: notificationData.id,
+              isRead: false,
+              createdAt: new Date().valueOf(),
+              updatedAt: new Date().valueOf(),
+          }
+          console.log('body--->', body)
+          await NotificationsDb.create(body);
+      } catch (err) {
+          console.log('error------>', err)
+      }
+  }),
 
 
 

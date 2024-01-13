@@ -4,7 +4,7 @@ const { URL } = require('url');
 const axios = require('axios');
 const {surveyInvite} = require("../Config/Mails");
 const apiResponses = require("../Components/apiresponse");
-const {Notifications} = require("../Config/Notification");
+const {Notifications, notificationCreate} = require("../Config/Notification");
 const SurveyEmailSchedules = db.surveyEmailSchedule;
 const SurveyTemplates = db.surveyTemplates;
 const Surveys = db.surveys;
@@ -205,6 +205,13 @@ const triggerSurveyEmail = async (id) => {
                                 await surveyInvite(emailTemplate.subject, users[i].user.email, processedHtml)
                                 if(users[i].user.devicetoken) {
                                     await Notifications(users[i].user.devicetoken, emailTemplate.subject, 'You have assigned new survey')
+                                    let notificationInfo = {
+                                        userId: users[i].userId,
+                                        message: `You have assigned ${survey.name} survey`,
+                                        type: 'survey',
+                                        id: survey.id
+                                    }
+                                    await notificationCreate(notificationInfo)
                                 }
                             }
                                 await AssignSurveys.bulkCreate(assignedSurvey)
@@ -224,6 +231,7 @@ const triggerSurveyEmail = async (id) => {
         console.log('error---->', err)
     }
 }
+
 
 const monkeyCron = async (id, surveyId) => {
     let config = {
