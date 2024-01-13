@@ -104,4 +104,9 @@ module.exports= function(app) {
 		'/api/v1/auth/user/respondentProfileOverview/:id',
 		usersController.respondentProfileOverview,
 	);
+
+	app.get(
+		'/api/v1/auth/user/userNotifications/:userId',
+		usersController.userNotifications,
+	);
 };

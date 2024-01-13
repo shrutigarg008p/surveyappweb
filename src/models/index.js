@@ -48,6 +48,8 @@ db.surveyTemplates = require('./SurveyTemplates.model')(sequelize, Sequelize);
 db.surveyEmailSchedule = require('./surveyEmailSchedule.model')(sequelize, Sequelize);
 db.asssignSurveys = require('./AssignSurveys.model')(sequelize, Sequelize);
 db.profileUserResponse = require('./ProfileUserResponse.model')(sequelize, Sequelize);
+db.notifications = require('./Notifications.model')(sequelize, Sequelize);
+
 
 
 

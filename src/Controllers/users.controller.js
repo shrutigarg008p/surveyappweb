@@ -5,6 +5,7 @@ const Questions = db.questions;
 const Profiles = db.profiles;
 const Referrals = db.referrals;
 const Rewards = db.rewards;
+const NotificationsDb = db.notifications;
 const ProfileUserResponse = db.profileUserResponse;
 const apiResponses = require('../Components/apiresponse');
 const {createToken} = require('../Middlewares/userAuthentications');
@@ -1055,6 +1056,15 @@ module.exports.respondentProfileOverview = async (req, res) => {
 	}
 };
 
+
+module.exports.userNotifications = async (req, res) => {
+	try {
+		const notificationsList = await NotificationsDb.findAll({ where: { userId: req.params.userId } })
+		return apiResponses.successResponseWithData(res, 'Success', notificationsList);
+	} catch (err) {
+		return apiResponses.errorResponse(res, err);
+	}
+};
 
 
 // async function test() {
