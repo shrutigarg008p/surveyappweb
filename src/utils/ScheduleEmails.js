@@ -203,8 +203,8 @@ const triggerSurveyEmail = async (id) => {
                                 }
                                 assignedSurvey.push(insertRecord)
                                 await surveyInvite(emailTemplate.subject, users[i].user.email, processedHtml)
-                                if(users[i].user.devicetoken) {
-                                    await Notifications(users[i].user.devicetoken, emailTemplate.subject, 'You have assigned new survey')
+                                if(users[i].user.devicetoken && assignedSurvey.length > 0) {
+                                    await Notifications(users[i].user.devicetoken, emailTemplate.subject, 'New survey has been assigned to you')
                                     let notificationInfo = {
                                         userId: users[i].userId,
                                         message: `You have assigned ${survey.name} survey`,
