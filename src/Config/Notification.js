@@ -22,7 +22,7 @@ module.exports = {
               updatedAt: new Date().valueOf(),
           }
           console.log('body--->', body)
-          await NotificationsDb.create(body);
+          return await NotificationsDb.create(body);
       } catch (err) {
           console.log('error------>', err)
       }
@@ -44,9 +44,11 @@ module.exports = {
     admin.messaging().send(payload)
         .then((response) => {
           console.log('Successfully sent message:', response);
+          return true
         })
         .catch((error) => {
           console.error('Error sending message:', error);
+          return true
         });
   },
 };
