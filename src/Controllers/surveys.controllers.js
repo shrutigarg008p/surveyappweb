@@ -379,7 +379,7 @@ module.exports.GetUserAllAssignedSurvey = async (req, res) => {
                     {
                         model: Surveys,
                         required: false,
-                        attributes: ['name', 'description', 'ceggPoints', 'expiryDate', "description_one", "description_two", "description_three", "description_four", "colorcode"]
+                        attributes: ['name', 'description', 'surveyLength', 'ceggPoints', 'expiryDate', "description_one", "description_two", "description_three", "description_four", "colorcode"]
                     },
                 ],
                 limit: 100000,
