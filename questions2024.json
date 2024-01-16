@@ -1,0 +1,2196 @@
+[
+  {
+    "questionId": 1,
+    "profileId": "b6e9d661-bd50-492c-a2ab-a4551607d9be",
+    "text": "Are you chief wage earner of your household ?",
+    "hint": "Chief wage earner is the one who contributes the maximum income towards the household expenses",
+    "displayOrder": 2,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 5
+  },
+  {
+    "questionId": 2,
+    "profileId": "b6e9d661-bd50-492c-a2ab-a4551607d9be",
+    "text": "Out of the following options of education, which is the one that applies to the Chief Wage Earner of your household?",
+    "hint": "",
+    "displayOrder": 3,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 3,
+    "profileId": "b6e9d661-bd50-492c-a2ab-a4551607d9be",
+    "text": "Out of the following options of occupation, which is the one that applies to the Chief Wage Earner of your household?",
+    "hint": "",
+    "displayOrder": 4,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 4,
+    "profileId": "b6e9d661-bd50-492c-a2ab-a4551607d9be",
+    "text": "What is your native country?",
+    "hint": "",
+    "displayOrder": 5,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 5,
+    "profileId": "b6e9d661-bd50-492c-a2ab-a4551607d9be",
+    "text": "What is your current location (country)?",
+    "hint": "",
+    "displayOrder": 6,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 6,
+    "profileId": "b6e9d661-bd50-492c-a2ab-a4551607d9be",
+    "text": "For the current year, which of the following ranges includes your total annual household income?",
+    "hint": "",
+    "displayOrder": 7,
+    "isactive": 1,
+    "displayType": 2,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 7,
+    "profileId": "b6e9d661-bd50-492c-a2ab-a4551607d9be",
+    "text": "What is your gender",
+    "hint": "",
+    "displayOrder": 8,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 5
+
+
+  },
+  {
+    "questionId": 8,
+    "profileId": "b6e9d661-bd50-492c-a2ab-a4551607d9be",
+    "text": "How many people, including yourself, currently live in your household?",
+    "hint": "",
+    "displayOrder": 9,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 1
+
+
+  },
+  {
+    "questionId": 9,
+    "profileId": "b6e9d661-bd50-492c-a2ab-a4551607d9be",
+    "text": "How did you hear about the INDIAPOLLS Online Panel?",
+    "hint": "",
+    "displayOrder": 11,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 10,
+    "profileId": "b6e9d661-bd50-492c-a2ab-a4551607d9be",
+    "text": "What is your Marital Status?",
+    "hint": "",
+    "displayOrder": 12,
+    "isactive": 1,
+    "displayType": 2,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 11,
+    "profileId": "b6e9d661-bd50-492c-a2ab-a4551607d9be",
+    "text": "Which of the following languages do you speak fluently? Select all that apply",
+    "hint": "",
+    "displayOrder": 13,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 12,
+    "profileId": "b6e9d661-bd50-492c-a2ab-a4551607d9be",
+    "text": "What is the highest level of education you have completed?",
+    "hint": "",
+    "displayOrder": 14,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 13,
+    "profileId": "b6e9d661-bd50-492c-a2ab-a4551607d9be",
+    "text": "What type of home do you live in?",
+    "hint": "",
+    "displayOrder": 15,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 14,
+    "profileId": "b6e9d661-bd50-492c-a2ab-a4551607d9be",
+    "text": "What is your current employment status?",
+    "hint": "",
+    "displayOrder": 16,
+    "isactive": 1,
+    "displayType": 2,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 15,
+    "profileId": "b6e9d661-bd50-492c-a2ab-a4551607d9be",
+    "text": "Concerning your place of residence, do you:",
+    "hint": "",
+    "displayOrder": 17,
+    "isactive": 1,
+    "displayType": 2,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 16,
+    "profileId": "b6e9d661-bd50-492c-a2ab-a4551607d9be",
+    "text": "What type of connection do you use to access the Internet most often?",
+    "hint": "",
+    "displayOrder": 18,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 17,
+    "profileId": "b6e9d661-bd50-492c-a2ab-a4551607d9be",
+    "text": "For which of the following, if any, would you consider yourself the PRIMARY SHOPPER OR DECISION MAKER for your household (doing at least half of the shopping or decision making)? (Select all that apply)",
+    "hint": "",
+    "displayOrder": 19,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 18,
+    "profileId": "b6e9d661-bd50-492c-a2ab-a4551607d9be",
+    "text": "On average, how many hours do you typically spend on the Internet, excluding email, in a normal week?",
+    "hint": "",
+    "displayOrder": 20,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 19,
+    "profileId": "b6e9d661-bd50-492c-a2ab-a4551607d9be",
+    "text": "Please select the following that applies to you.",
+    "hint": "",
+    "displayOrder": 21,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 243,
+    "profileId": "b6e9d661-bd50-492c-a2ab-a4551607d9be",
+    "text": "Please take a look at the list of consumer durables below. Could you tell me which of these do you or your family own, in working condition? Select as many as you own. If you don稚 own any of these, please click on the blue arrow to move onto the next question.",
+    "hint": "",
+    "displayOrder": 1,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 2
+
+
+  },
+  {
+    "questionId": 20,
+    "profileId": "bafbf42a-38b2-439d-895f-96ae267a6b28",
+    "text": "Which of the following financial institutions do you use for banking?",
+    "hint": "",
+    "displayOrder": 21,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 21,
+    "profileId": "bafbf42a-38b2-439d-895f-96ae267a6b28",
+    "text": "Which of the following services do you use through your financial institution(s)?",
+    "hint": "",
+    "displayOrder": 22,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 22,
+    "profileId": "bafbf42a-38b2-439d-895f-96ae267a6b28",
+    "text": "Which of the following types of accounts/loans do you have?",
+    "hint": "",
+    "displayOrder": 23,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 23,
+    "profileId": "bafbf42a-38b2-439d-895f-96ae267a6b28",
+    "text": "Which credit cards do you or anyone in your household own or use?",
+    "hint": "",
+    "displayOrder": 24,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 24,
+    "profileId": "bafbf42a-38b2-439d-895f-96ae267a6b28",
+    "text": "On average, how many online bill pay transactions do you make per month (using money in your checking or savings account)?",
+    "hint": "",
+    "displayOrder": 25,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 25,
+    "profileId": "bafbf42a-38b2-439d-895f-96ae267a6b28",
+    "text": "How often do you use a debit/Credit card?",
+    "hint": "",
+    "displayOrder": 26,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 26,
+    "profileId": "bafbf42a-38b2-439d-895f-96ae267a6b28",
+    "text": "Do you currently have, or are you planning to get a loan?",
+    "hint": "",
+    "displayOrder": 27,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 27,
+    "profileId": "bafbf42a-38b2-439d-895f-96ae267a6b28",
+    "text": "Who do you depend on for financial/investment guidance or advice?",
+    "hint": "",
+    "displayOrder": 28,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 28,
+    "profileId": "bafbf42a-38b2-439d-895f-96ae267a6b28",
+    "text": "Please indicate how often you conduct business banking transactions through the channels listed below? Rarely / Never",
+    "hint": "",
+    "displayOrder": 29,
+    "isactive": 1,
+    "displayType": 2,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 29,
+    "profileId": "bafbf42a-38b2-439d-895f-96ae267a6b28",
+    "text": "Please indicate how often you conduct business banking transactions through the channels listed below? Once a year",
+    "hint": "",
+    "displayOrder": 30,
+    "isactive": 1,
+    "displayType": 2,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 30,
+    "profileId": "bafbf42a-38b2-439d-895f-96ae267a6b28",
+    "text": "Please indicate how often you conduct business banking transactions through the channels listed below? Once every few months",
+    "hint": "",
+    "displayOrder": 31,
+    "isactive": 1,
+    "displayType": 2,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 31,
+    "profileId": "bafbf42a-38b2-439d-895f-96ae267a6b28",
+    "text": "Please indicate how often you conduct business banking transactions through the channels listed below? Once a month",
+    "hint": "",
+    "displayOrder": 32,
+    "isactive": 1,
+    "displayType": 2,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 32,
+    "profileId": "bafbf42a-38b2-439d-895f-96ae267a6b28",
+    "text": "Please indicate how often you conduct business banking transactions through the channels listed below? Once every few weeks",
+    "hint": "",
+    "displayOrder": 33,
+    "isactive": 1,
+    "displayType": 2,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 33,
+    "profileId": "bafbf42a-38b2-439d-895f-96ae267a6b28",
+    "text": "Please indicate how often you conduct business banking transactions through the channels listed below? Once a week",
+    "hint": "",
+    "displayOrder": 34,
+    "isactive": 1,
+    "displayType": 2,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 34,
+    "profileId": "bafbf42a-38b2-439d-895f-96ae267a6b28",
+    "text": "Please indicate how often you conduct business banking transactions through the channels listed below? A few times a week",
+    "hint": "",
+    "displayOrder": 35,
+    "isactive": 1,
+    "displayType": 2,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 35,
+    "profileId": "bafbf42a-38b2-439d-895f-96ae267a6b28",
+    "text": "Please indicate how often you conduct business banking transactions through the channels listed below? Daily",
+    "hint": "",
+    "displayOrder": 36,
+    "isactive": 1,
+    "displayType": 2,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 36,
+    "profileId": "bafbf42a-38b2-439d-895f-96ae267a6b28",
+    "text": "Which of the following financial assets do you own?",
+    "hint": "",
+    "displayOrder": 37,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 37,
+    "profileId": "bafbf42a-38b2-439d-895f-96ae267a6b28",
+    "text": "What kind of insurance do you possess?",
+    "hint": "",
+    "displayOrder": 38,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 38,
+    "profileId": "bafbf42a-38b2-439d-895f-96ae267a6b28",
+    "text": "Which of the following financial assets do you intend to invest in within the next 12 months?",
+    "hint": "",
+    "displayOrder": 39,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 39,
+    "profileId": "bafbf42a-38b2-439d-895f-96ae267a6b28",
+    "text": "Do you have a Demat account?",
+    "hint": "",
+    "displayOrder": 40,
+    "isactive": 1,
+    "displayType": 2,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 40,
+    "profileId": "04789a48-98b0-40cb-ac56-a3bb6674dd71",
+    "text": "Which of the following items have you purchased in the past three months? (Select as many as apply.)",
+    "hint": "",
+    "displayOrder": 41,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 41,
+    "profileId": "04789a48-98b0-40cb-ac56-a3bb6674dd71",
+    "text": "Are you the primary grocery shopper for your household?",
+    "hint": "",
+    "displayOrder": 42,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 42,
+    "profileId": "04789a48-98b0-40cb-ac56-a3bb6674dd71",
+    "text": "Which of the following processed food items have you purchased in the past three months? (Select as many as apply.)",
+    "hint": "",
+    "displayOrder": 43,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 43,
+    "profileId": "04789a48-98b0-40cb-ac56-a3bb6674dd71",
+    "text": "Which of the following types of stores have you shopped at in the past 6 months for Domestic use?",
+    "hint": "",
+    "displayOrder": 44,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 44,
+    "profileId": "04789a48-98b0-40cb-ac56-a3bb6674dd71",
+    "text": "Which of the following personal care items have you purchased in the past three months? (Select as many as apply.)",
+    "hint": "",
+    "displayOrder": 45,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 45,
+    "profileId": "04789a48-98b0-40cb-ac56-a3bb6674dd71",
+    "text": "Which of the following health care items have you purchased in the past three months? (Select as many as apply.)",
+    "hint": "",
+    "displayOrder": 46,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 46,
+    "profileId": "04789a48-98b0-40cb-ac56-a3bb6674dd71",
+    "text": "For which of the following products are you the primary shopper or decision maker at home?",
+    "hint": "",
+    "displayOrder": 47,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 47,
+    "profileId": "01af1240-ecb4-4a32-bcf4-fdbba548d2e0",
+    "text": "How many International round trips by air did you take in the past 12 months? (For business trips)",
+    "hint": "",
+    "displayOrder": 48,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 48,
+    "profileId": "01af1240-ecb4-4a32-bcf4-fdbba548d2e0",
+    "text": "How many International round trips by air did you take in the past 12 months? (For personal/leisure trips)",
+    "hint": "",
+    "displayOrder": 49,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 49,
+    "profileId": "01af1240-ecb4-4a32-bcf4-fdbba548d2e0",
+    "text": "How many Domestic round trips by air did you take in the past 12 months? (For leisure/personal trips)",
+    "hint": "",
+    "displayOrder": 50,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 50,
+    "profileId": "01af1240-ecb4-4a32-bcf4-fdbba548d2e0",
+    "text": "How many Domestic round trips by air did you take in the past 12 months? (For business trips)",
+    "hint": "",
+    "displayOrder": 51,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 51,
+    "profileId": "01af1240-ecb4-4a32-bcf4-fdbba548d2e0",
+    "text": "What is your preferred method of booking air travel (For leisure/personal trips)?",
+    "hint": "",
+    "displayOrder": 52,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 52,
+    "profileId": "01af1240-ecb4-4a32-bcf4-fdbba548d2e0",
+    "text": "What is your preferred method of booking air travel (For business trips)?",
+    "hint": "",
+    "displayOrder": 53,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 53,
+    "profileId": "01af1240-ecb4-4a32-bcf4-fdbba548d2e0",
+    "text": "Do you belong to an airline reward/mileage program?",
+    "hint": "",
+    "displayOrder": 54,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 5
+
+
+  },
+  {
+    "questionId": 54,
+    "profileId": "01af1240-ecb4-4a32-bcf4-fdbba548d2e0",
+    "text": "How many nights in the past 12 months did you stay in a hotel? (For business trip)",
+    "hint": "",
+    "displayOrder": 55,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 55,
+    "profileId": "01af1240-ecb4-4a32-bcf4-fdbba548d2e0",
+    "text": "How many nights in the past 12 months did you stay in a hotel? (For leisure trip)",
+    "hint": "",
+    "displayOrder": 56,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 56,
+    "profileId": "01af1240-ecb4-4a32-bcf4-fdbba548d2e0",
+    "text": "What type of fare do you most frequently buy?",
+    "hint": "",
+    "displayOrder": 57,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 57,
+    "profileId": "01af1240-ecb4-4a32-bcf4-fdbba548d2e0",
+    "text": "Which of the following destinations have you traveled to in the past 12 months, or plan to visit in the next 12 months? Next 12 Months",
+    "hint": "",
+    "displayOrder": 58,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 58,
+    "profileId": "01af1240-ecb4-4a32-bcf4-fdbba548d2e0",
+    "text": "Which of the following destinations have you traveled to in the past 12 months, or plan to visit in the next 12 months? Past 12 Months",
+    "hint": "",
+    "displayOrder": 59,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 64,
+    "profileId": "5c7e2649-aee9-43e5-abeb-bc0fc3aa1dc3",
+    "text": "Areas of interests (your hobbies)",
+    "hint": "",
+    "displayOrder": 65,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 65,
+    "profileId": "5c7e2649-aee9-43e5-abeb-bc0fc3aa1dc3",
+    "text": "How often do you eat out on a monthly basis? Fine Dining (Laidback waters, 5-star restaurants, etc)",
+    "hint": "",
+    "displayOrder": 66,
+    "isactive": 1,
+    "displayType": 2,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 66,
+    "profileId": "5c7e2649-aee9-43e5-abeb-bc0fc3aa1dc3",
+    "text": "How often do you eat out on a monthly basis? Fast Food (McDonalds, Pizza Hut, etc)",
+    "hint": "",
+    "displayOrder": 67,
+    "isactive": 1,
+    "displayType": 2,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 70,
+    "profileId": "5c7e2649-aee9-43e5-abeb-bc0fc3aa1dc3",
+    "text": "Which of the following products do you currently consume on a regular basis?",
+    "hint": "",
+    "displayOrder": 71,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 71,
+    "profileId": "5c7e2649-aee9-43e5-abeb-bc0fc3aa1dc3",
+    "text": "Please indicate all of the following sporting activities in which you have participated in the last 12 months.",
+    "hint": "",
+    "displayOrder": 72,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 72,
+    "profileId": "a5187f72-dc4f-4207-a520-57d2714ce6e9",
+    "text": "How often do you generally read a newspaper (including both local and national publications)?",
+    "hint": "",
+    "displayOrder": 73,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 73,
+    "profileId": "a5187f72-dc4f-4207-a520-57d2714ce6e9",
+    "text": "Which of the following types of magazines do you typically read? (Select all that apply)",
+    "hint": "",
+    "displayOrder": 74,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 74,
+    "profileId": "a5187f72-dc4f-4207-a520-57d2714ce6e9",
+    "text": "You typically read magazine published in which of the following languages?",
+    "hint": "",
+    "displayOrder": 75,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 75,
+    "profileId": "a5187f72-dc4f-4207-a520-57d2714ce6e9",
+    "text": "Which TV channel you view in your day to day life? (Select all that apply). Family Channels",
+    "hint": "",
+    "displayOrder": 76,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 76,
+    "profileId": "a5187f72-dc4f-4207-a520-57d2714ce6e9",
+    "text": "Which TV channel you view in your day to day life? (Select all that apply). Discovery/Research Channels",
+    "hint": "",
+    "displayOrder": 77,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 77,
+    "profileId": "a5187f72-dc4f-4207-a520-57d2714ce6e9",
+    "text": "Which TV channel you view in your day to day life? (Select all that apply). Sports Channels",
+    "hint": "",
+    "displayOrder": 78,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 78,
+    "profileId": "a5187f72-dc4f-4207-a520-57d2714ce6e9",
+    "text": "Which TV channel you view in your day to day life? (Select all that apply). Movie Channels",
+    "hint": "",
+    "displayOrder": 79,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 79,
+    "profileId": "a5187f72-dc4f-4207-a520-57d2714ce6e9",
+    "text": "Which TV channel you view in your day to day life? (Select all that apply). Regional Channels",
+    "hint": "",
+    "displayOrder": 80,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 80,
+    "profileId": "a5187f72-dc4f-4207-a520-57d2714ce6e9",
+    "text": "Which TV channel you view in your day to day life? (Select all that apply). Music Channels",
+    "hint": "",
+    "displayOrder": 81,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 81,
+    "profileId": "a5187f72-dc4f-4207-a520-57d2714ce6e9",
+    "text": "Which TV channel you view in your day to day life? (Select all that apply). News Channels",
+    "hint": "",
+    "displayOrder": 82,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 82,
+    "profileId": "a5187f72-dc4f-4207-a520-57d2714ce6e9",
+    "text": "Which TV channel you view in your day to day life? (Select all that apply). Devotional Channels",
+    "hint": "",
+    "displayOrder": 83,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 83,
+    "profileId": "a5187f72-dc4f-4207-a520-57d2714ce6e9",
+    "text": "What kind of Movies do you see? (Select all that apply)",
+    "hint": "",
+    "displayOrder": 84,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 84,
+    "profileId": "a5187f72-dc4f-4207-a520-57d2714ce6e9",
+    "text": "Where do you go to watch movies? (Select all that apply)",
+    "hint": "",
+    "displayOrder": 85,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 85,
+    "profileId": "db66c69d-8137-45e6-8c22-5d1e81d78f13",
+    "text": "Please indicate the item(s) your household owns, or is planning to buy in the next 12 months.(Select the answer(s) that apply in each row). Already Own",
+    "hint": "",
+    "displayOrder": 86,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 86,
+    "profileId": "db66c69d-8137-45e6-8c22-5d1e81d78f13",
+    "text": "Please indicate the item(s) your household owns, or is planning to buy in the next 12 months.(Select the answer(s) that apply in each row). Plan to buy",
+    "hint": "",
+    "displayOrder": 87,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 106,
+    "profileId": "db66c69d-8137-45e6-8c22-5d1e81d78f13",
+    "text": "Please select your main internet service provider for home use?",
+    "hint": "",
+    "displayOrder": 107,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 107,
+    "profileId": "db66c69d-8137-45e6-8c22-5d1e81d78f13",
+    "text": "Where do you usually access the internet from? (Please check all that apply)",
+    "hint": "",
+    "displayOrder": 108,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 108,
+    "profileId": "db66c69d-8137-45e6-8c22-5d1e81d78f13",
+    "text": "Who is your mobile/cellular phone service provider?",
+    "hint": "",
+    "displayOrder": 109,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 109,
+    "profileId": "db66c69d-8137-45e6-8c22-5d1e81d78f13",
+    "text": "Which of the following provides your local telephone service?",
+    "hint": "",
+    "displayOrder": 110,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 110,
+    "profileId": "db66c69d-8137-45e6-8c22-5d1e81d78f13",
+    "text": "To which of the following TV services, if any, does your household subscribe?",
+    "hint": "",
+    "displayOrder": 111,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 111,
+    "profileId": "db66c69d-8137-45e6-8c22-5d1e81d78f13",
+    "text": "Which of the following have you done online in the past 12 months? (Select all that apply.)",
+    "hint": "",
+    "displayOrder": 112,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 112,
+    "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
+    "text": "Do you currently have health insurance coverage for yourself?",
+    "hint": "",
+    "displayOrder": 113,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 5
+
+
+  },
+  {
+    "questionId": 113,
+    "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
+    "text": "How would you describe your overall health?",
+    "hint": "",
+    "displayOrder": 114,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 114,
+    "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
+    "text": "Do you have a primary care physician? (family doctor, general practitioner, etc)",
+    "hint": "",
+    "displayOrder": 115,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 5
+
+
+  },
+  {
+    "questionId": 115,
+    "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
+    "text": "How important is your overall health to you?",
+    "hint": "",
+    "displayOrder": 116,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 116,
+    "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
+    "text": "Do you and/or anyone living in your household use any of the following? Self",
+    "hint": "",
+    "displayOrder": 117,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 117,
+    "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
+    "text": "Do you and/or anyone living in your household use any of the following? Household member",
+    "hint": "",
+    "displayOrder": 118,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 130,
+    "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
+    "text": "Please indicate any Over the Counter medications or treatments you and/or your household members have used in the past 12 months. Self",
+    "hint": "",
+    "displayOrder": 131,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 131,
+    "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
+    "text": "Please indicate any Over the Counter medications or treatments you and/or your household members have used in the past 12 months. Household member",
+    "hint": "",
+    "displayOrder": 132,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 152,
+    "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
+    "text": "Behavioral/Mental Health. ADD/ADHD",
+    "hint": "",
+    "displayOrder": 153,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 153,
+    "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
+    "text": "Behavioral/Mental Health. Alcoholism",
+    "hint": "",
+    "displayOrder": 154,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 154,
+    "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
+    "text": "Behavioral/Mental Health. Anxiety",
+    "hint": "",
+    "displayOrder": 155,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 155,
+    "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
+    "text": "Behavioral/Mental Health. Bi-Polar Disorder (Manic Depression)",
+    "hint": "",
+    "displayOrder": 156,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 156,
+    "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
+    "text": "Behavioral/Mental Health. Chemical Dependency (Narcotics, etc.)",
+    "hint": "",
+    "displayOrder": 157,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 157,
+    "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
+    "text": "Behavioral/Mental Health. Depression",
+    "hint": "",
+    "displayOrder": 158,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 158,
+    "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
+    "text": "Behavioral/Mental Health. Eating Disorders",
+    "hint": "",
+    "displayOrder": 159,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 159,
+    "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
+    "text": "Behavioral/Mental Health. Self Household Member",
+    "hint": "",
+    "displayOrder": 160,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 160,
+    "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
+    "text": "Behavioral/Mental Health. OCD (Obsessive Compulsive Disorder)",
+    "hint": "",
+    "displayOrder": 161,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 161,
+    "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
+    "text": "Behavioral/Mental Health. Schizophrenia",
+    "hint": "",
+    "displayOrder": 162,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 162,
+    "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
+    "text": "Please indicate the medical condition(s) that affect you and/or any members of your household. Suffered from blood related conditions like, Anemia?",
+    "hint": "",
+    "displayOrder": 163,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 163,
+    "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
+    "text": "Please indicate the medical condition(s) that affect you and/or any members of your household. Suffered from blood related conditions like, Iron Deficiency?",
+    "hint": "",
+    "displayOrder": 164,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 164,
+    "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
+    "text": "Have you visited an Allergist & Clinical Immunologist in past 12 months?",
+    "hint": "",
+    "displayOrder": 165,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 165,
+    "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
+    "text": "Have you visited a Cardiologist in past 12 months?",
+    "hint": "",
+    "displayOrder": 166,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 166,
+    "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
+    "text": "Have you visited a Dentist in past 12 months?",
+    "hint": "",
+    "displayOrder": 167,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 167,
+    "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
+    "text": "Have you visited a Dermatologist in past 12 months?",
+    "hint": "",
+    "displayOrder": 168,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 168,
+    "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
+    "text": "Have you visited an Endocrinologist in past 12 months?",
+    "hint": "",
+    "displayOrder": 169,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 169,
+    "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
+    "text": "Have you visited a Gastroenterologist in past 12 months?",
+    "hint": "",
+    "displayOrder": 170,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 170,
+    "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
+    "text": "Have you visited an Infectious Disease Specialist in past 12 months?",
+    "hint": "",
+    "displayOrder": 171,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 171,
+    "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
+    "text": "Have you taken any Internal Medicine in past 12 months?",
+    "hint": "",
+    "displayOrder": 172,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 172,
+    "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
+    "text": "Have you visited a Neurologist & Neurosurgeon in past 12 months?",
+    "hint": "",
+    "displayOrder": 173,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 173,
+    "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
+    "text": "Have you visited a Ob/Gyn & Women in past 12 months?",
+    "hint": "",
+    "displayOrder": 174,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 174,
+    "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
+    "text": "Have you visited a Pediatrician in past 12 months?",
+    "hint": "",
+    "displayOrder": 175,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 175,
+    "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
+    "text": "Have you visited a Rheumatologist in past 12 months?",
+    "hint": "",
+    "displayOrder": 176,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 176,
+    "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
+    "text": "Have you visited an Oncologist in past 12 months?",
+    "hint": "",
+    "displayOrder": 177,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 177,
+    "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
+    "text": "Have you visited an Ophthalmologist in past 12 months?",
+    "hint": "",
+    "displayOrder": 178,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 178,
+    "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
+    "text": "Infections. Ear Infection (Otitis Media)",
+    "hint": "",
+    "displayOrder": 179,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 179,
+    "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
+    "text": "Infections. Hepatitis B",
+    "hint": "",
+    "displayOrder": 180,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 180,
+    "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
+    "text": "Infections. Hepatitis C",
+    "hint": "",
+    "displayOrder": 181,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 181,
+    "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
+    "text": "Infections. Herpes",
+    "hint": "",
+    "displayOrder": 182,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 182,
+    "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
+    "text": "Infections. HIV/AIDS",
+    "hint": "",
+    "displayOrder": 183,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 183,
+    "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
+    "text": "Infections. Human Papilloma Virus (HPV)",
+    "hint": "",
+    "displayOrder": 184,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 184,
+    "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
+    "text": "Infections. Lyme Disease",
+    "hint": "",
+    "displayOrder": 185,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 185,
+    "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
+    "text": "Infections. Mononucleosis",
+    "hint": "",
+    "displayOrder": 186,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 186,
+    "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
+    "text": "Infections. Nail Fungus (Onychomycosis)",
+    "hint": "",
+    "displayOrder": 187,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 187,
+    "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
+    "text": "Infections. Pneumonia",
+    "hint": "",
+    "displayOrder": 188,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 188,
+    "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
+    "text": "Infections. Tuberculosis",
+    "hint": "",
+    "displayOrder": 189,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 189,
+    "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
+    "text": "Infections. Upper Respiratory Infection",
+    "hint": "",
+    "displayOrder": 190,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 190,
+    "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
+    "text": "Infections. Urinary Tract Infection",
+    "hint": "",
+    "displayOrder": 191,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 191,
+    "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
+    "text": "Sufferred or suffering from Cancer - Breast?",
+    "hint": "",
+    "displayOrder": 192,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 192,
+    "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
+    "text": "Sufferred or suffering from Cancer - Lung?",
+    "hint": "",
+    "displayOrder": 193,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 193,
+    "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
+    "text": "Sufferred or suffering from Cancer - Prostrate?",
+    "hint": "",
+    "displayOrder": 194,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 194,
+    "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
+    "text": "Sufferred or suffering from Cancer - Others?",
+    "hint": "",
+    "displayOrder": 195,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 195,
+    "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
+    "text": "Please indicate the following items you regularly participate in or use. (Select all that apply)",
+    "hint": "",
+    "displayOrder": 196,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 4
+
+
+  },
+  {
+    "questionId": 196,
+    "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
+    "text": "What is your height? Feet",
+    "hint": "",
+    "displayOrder": 197,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 1
+
+
+  },
+  {
+    "questionId": 197,
+    "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
+    "text": "What is your height? Inches",
+    "hint": "",
+    "displayOrder": 198,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 1
+
+
+  },
+  {
+    "questionId": 198,
+    "profileId": "b6e9d661-bd50-492c-a2ab-a4551607d9be",
+    "text": "Please enter your Date of Birth",
+    "hint": "",
+    "displayOrder": 10,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 2
+
+
+  },
+  {
+    "questionId": 199,
+    "profileId": "e6ace457-6fec-4b67-b3a1-f28f716c7679",
+    "text": "What is your current weight (in kg)?",
+    "hint": "",
+    "displayOrder": 199,
+    "isactive": 1,
+    "displayType": 5,
+    "dataType": 1
+
+
+  },
+  {
+    "questionId": 200,
+    "profileId": "2339588b-55cc-4d20-976c-ea83283caa83",
+    "text": "What is your current occupational status?",
+    "hint": "",
+    "displayOrder": 201,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 2
+
+
+  },
+  {
+    "questionId": 201,
+    "profileId": "2339588b-55cc-4d20-976c-ea83283caa83",
+    "text": "What is your occupation?",
+    "hint": "",
+    "displayOrder": 202,
+    "isactive": 1,
+    "displayType": 2,
+    "dataType": 2
+
+
+  },
+  {
+    "questionId": 202,
+    "profileId": "2339588b-55cc-4d20-976c-ea83283caa83",
+    "text": "Which of the following categories best describes your organisation's primary industry?",
+    "hint": "",
+    "displayOrder": 203,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 2
+
+
+  },
+  {
+    "questionId": 203,
+    "profileId": "2339588b-55cc-4d20-976c-ea83283caa83",
+    "text": "Approximately how many employees work at your organisation (all locations)?",
+    "hint": "",
+    "displayOrder": 204,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 2
+
+
+  },
+  {
+    "questionId": 204,
+    "profileId": "2339588b-55cc-4d20-976c-ea83283caa83",
+    "text": "Which department do you primarily work within at your organisation?",
+    "hint": "",
+    "displayOrder": 205,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 2
+
+
+  },
+  {
+    "questionId": 205,
+    "profileId": "2339588b-55cc-4d20-976c-ea83283caa83",
+    "text": "Please specify the occupation of the person who makes the biggest contribution to your household income?",
+    "hint": "",
+    "displayOrder": 206,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 2
+
+
+  },
+  {
+    "questionId": 206,
+    "profileId": "2339588b-55cc-4d20-976c-ea83283caa83",
+    "text": "What is your primary role in your organisation?",
+    "hint": "",
+    "displayOrder": 207,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 2
+
+
+  },
+  {
+    "questionId": 207,
+    "profileId": "2339588b-55cc-4d20-976c-ea83283caa83",
+    "text": "What is your professional position in the organisation you work for?",
+    "hint": "",
+    "displayOrder": 208,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 2
+
+
+  },
+  {
+    "questionId": 208,
+    "profileId": "2339588b-55cc-4d20-976c-ea83283caa83",
+    "text": "Please choose which departments/products you have influence or decision making authority on spending/purchasing.",
+    "hint": "",
+    "displayOrder": 209,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 2
+
+
+  },
+  {
+    "questionId": 209,
+    "profileId": "2339588b-55cc-4d20-976c-ea83283caa83",
+    "text": "Which mobile operator/network do you use for business purposes?",
+    "hint": "",
+    "displayOrder": 210,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 2
+
+
+  },
+  {
+    "questionId": 210,
+    "profileId": "2339588b-55cc-4d20-976c-ea83283caa83",
+    "text": "What is the occupation of the person who contributes the most to the running of your household? If this person is retired or unemployed,please answer as if he/she was still working full time.",
+    "hint": "",
+    "displayOrder": 211,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 2
+
+
+  },
+  {
+    "questionId": 211,
+    "profileId": "1ce0afed-01c9-46b0-b16c-35069d7236ca",
+    "text": "Which of the following electronic products do you own?",
+    "hint": "",
+    "displayOrder": 212,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 2
+
+
+  },
+  {
+    "questionId": 212,
+    "profileId": "1ce0afed-01c9-46b0-b16c-35069d7236ca",
+    "text": "Would you consider yourself to be an early adopter of new technology (the first to buy new gadgets/electronics/etc)?",
+    "hint": "",
+    "displayOrder": 213,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 2
+
+
+  },
+  {
+    "questionId": 213,
+    "profileId": "1ce0afed-01c9-46b0-b16c-35069d7236ca",
+    "text": "Are you the primary decision maker of the purchases of  electronic products in your household?",
+    "hint": "",
+    "displayOrder": 214,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 2
+
+
+  },
+  {
+    "questionId": 214,
+    "profileId": "1ce0afed-01c9-46b0-b16c-35069d7236ca",
+    "text": "Which of the following features do you use on your mobile phone?",
+    "hint": "",
+    "displayOrder": 215,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 2
+
+
+  },
+  {
+    "questionId": 215,
+    "profileId": "1ce0afed-01c9-46b0-b16c-35069d7236ca",
+    "text": "Which mobile operator/network do you use for personal purposes?",
+    "hint": "",
+    "displayOrder": 216,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 2
+
+
+  },
+  {
+    "questionId": 216,
+    "profileId": "1ce0afed-01c9-46b0-b16c-35069d7236ca",
+    "text": "Do you use a smartphone for personal purposes?",
+    "hint": "",
+    "displayOrder": 217,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 2
+
+
+  },
+  {
+    "questionId": 217,
+    "profileId": "1ce0afed-01c9-46b0-b16c-35069d7236ca",
+    "text": "Which of following smart speakers do you own?",
+    "hint": "",
+    "displayOrder": 218,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 2
+
+
+  },
+  {
+    "questionId": 218,
+    "profileId": "1ce0afed-01c9-46b0-b16c-35069d7236ca",
+    "text": "Which of the following electronic devices did you purchase within three years?",
+    "hint": "",
+    "displayOrder": 219,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 2
+
+
+  },
+  {
+    "questionId": 219,
+    "profileId": "9ce620cd-bd19-4cd4-9135-1bcdc167a802",
+    "text": "When was the last time you smoked a cigarette, even one or two puffs?",
+    "hint": "",
+    "displayOrder": 220,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 2
+
+
+  },
+  {
+    "questionId": 220,
+    "profileId": "9ce620cd-bd19-4cd4-9135-1bcdc167a802",
+    "text": "During the past 30 days, what brand of cigarettes did you usually smoke? (CHOOSE ONLY ONE ANSWER)",
+    "hint": "",
+    "displayOrder": 221,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 2
+
+
+  },
+  {
+    "questionId": 221,
+    "profileId": "9ce620cd-bd19-4cd4-9135-1bcdc167a802",
+    "text": "During the last 30 days, about how much money did you have each week to spend on cigarette?",
+    "hint": "",
+    "displayOrder": 222,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 2
+
+
+  },
+  {
+    "questionId": 222,
+    "profileId": "9ce620cd-bd19-4cd4-9135-1bcdc167a802",
+    "text": "During the past 30 days, on the days you smoked,how many cigarettes did you smoke per day?",
+    "hint": "",
+    "displayOrder": 223,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 2
+
+
+  },
+  {
+    "questionId": 223,
+    "profileId": "9ce620cd-bd19-4cd4-9135-1bcdc167a802",
+    "text": "Do you think that you will try a cigarette soon?",
+    "hint": "",
+    "displayOrder": 224,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 2
+
+
+  },
+  {
+    "questionId": 224,
+    "profileId": "9ce620cd-bd19-4cd4-9135-1bcdc167a802",
+    "text": "Menthol cigarettes are cigarettes that taste like mint. During the past 30 days, were the cigarettes that you usually smoked menthol?",
+    "hint": "",
+    "displayOrder": 225,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 2
+
+
+  },
+  {
+    "questionId": 225,
+    "profileId": "9ce620cd-bd19-4cd4-9135-1bcdc167a802",
+    "text": "During the past 30 days, on how many days did you smoke  cigarettes?",
+    "hint": "",
+    "displayOrder": 226,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 2
+
+
+  },
+  {
+    "questionId": 226,
+    "profileId": "d0c9cbee-b5b7-4e18-a872-9210bd4668df",
+    "text": "Are you the primary decision maker in your household for automotive-related purchases?",
+    "hint": "",
+    "displayOrder": 227,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 2
+
+
+  },
+  {
+    "questionId": 227,
+    "profileId": "d0c9cbee-b5b7-4e18-a872-9210bd4668df",
+    "text": "How many cars are there in your household (including leasing or company cars)?",
+    "hint": "",
+    "displayOrder": 228,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 2
+
+
+  },
+  {
+    "questionId": 228,
+    "profileId": "d0c9cbee-b5b7-4e18-a872-9210bd4668df",
+    "text": "If you own/lease a car(s) which brand are they?",
+    "hint": "",
+    "displayOrder": 229,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 2
+
+
+  },
+  {
+    "questionId": 229,
+    "profileId": "d0c9cbee-b5b7-4e18-a872-9210bd4668df",
+    "text": "How would you describe the car(s) you own/lease?",
+    "hint": "",
+    "displayOrder": 230,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 2
+
+
+  },
+  {
+    "questionId": 230,
+    "profileId": "d0c9cbee-b5b7-4e18-a872-9210bd4668df",
+    "text": "Do you own a motorcycle?",
+    "hint": "",
+    "displayOrder": 231,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 2
+
+
+  },
+  {
+    "questionId": 231,
+    "profileId": "d0c9cbee-b5b7-4e18-a872-9210bd4668df",
+    "text": "If you own a two wheeled vehicle which brand are they?",
+    "hint": "",
+    "displayOrder": 232,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 2
+
+
+  },
+  {
+    "questionId": 232,
+    "profileId": "d0c9cbee-b5b7-4e18-a872-9210bd4668df",
+    "text": "If you own a two wheeled vehicle what engine capacity does it have?",
+    "hint": "",
+    "displayOrder": 233,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 2
+
+
+  },
+  {
+    "questionId": 233,
+    "profileId": "d0c9cbee-b5b7-4e18-a872-9210bd4668df",
+    "text": "If you own a two wheeled vehicle how would you describe it?",
+    "hint": "",
+    "displayOrder": 234,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 2
+
+
+  },
+  {
+    "questionId": 234,
+    "profileId": "d0c9cbee-b5b7-4e18-a872-9210bd4668df",
+    "text": "If you own/lease a car(s) what fuel do they use?",
+    "hint": "",
+    "displayOrder": 235,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 2
+
+
+  },
+  {
+    "questionId": 235,
+    "profileId": "d0c9cbee-b5b7-4e18-a872-9210bd4668df",
+    "text": "Are you considering buying or leasing a new or used car within the next 2 years?",
+    "hint": "",
+    "displayOrder": 236,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 2
+
+
+  },
+  {
+    "questionId": 236,
+    "profileId": "d5219ed7-6855-4f68-89f3-27d748eece68",
+    "text": "Do you consider yourself the primary grocery shopper in your household?",
+    "hint": "",
+    "displayOrder": 237,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 2
+
+
+  },
+  {
+    "questionId": 237,
+    "profileId": "d5219ed7-6855-4f68-89f3-27d748eece68",
+    "text": "How often do you eat fast food (any quick service restaurant) in any given week (on average)?",
+    "hint": "",
+    "displayOrder": 238,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 2
+
+
+  },
+  {
+    "questionId": 238,
+    "profileId": "d5219ed7-6855-4f68-89f3-27d748eece68",
+    "text": "Which fast food (quick service) restaurants do you go to,if any?",
+    "hint": "",
+    "displayOrder": 239,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 2
+
+
+  },
+  {
+    "questionId": 239,
+    "profileId": "d5219ed7-6855-4f68-89f3-27d748eece68",
+    "text": "Which of the following beverages do you regularly consume?",
+    "hint": "",
+    "displayOrder": 240,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 2
+
+
+  },
+  {
+    "questionId": 240,
+    "profileId": "d5219ed7-6855-4f68-89f3-27d748eece68",
+    "text": "Do you consume any of the following?",
+    "hint": "",
+    "displayOrder": 241,
+    "isactive": 1,
+    "displayType": 4,
+    "dataType": 2
+
+
+  },
+  {
+    "questionId": 241,
+    "profileId": "d5219ed7-6855-4f68-89f3-27d748eece68",
+    "text": "Which fast food (quick service) delivery service you used,if any?",
+    "hint": "",
+    "displayOrder": 242,
+    "isactive": 1,
+    "displayType": 1,
+    "dataType": 2
+
+
+  }
+]

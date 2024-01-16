@@ -29,6 +29,16 @@ function replaceVariables(html, variables) {
     });
 }
 
+function appendParamsToUrl(baseUrl, userId, surveyId) {
+    const url = new URL(baseUrl);
+    if (url.search) {
+        url.search += `&userid=${userId}&surveyid=${surveyId}`;
+    } else {
+        url.search = `?userid=${userId}&surveyid=${surveyId}`;
+    }
+    return url.toString();
+}
+
 const triggerSurveyEmail = async (id) => {
     try {
         console.log('calling--->')
@@ -182,6 +192,7 @@ const triggerSurveyEmail = async (id) => {
                                     surveyLink: link
                                 };
                                 const processedHtml = replaceVariables(emailTemplate.body, data);
+                                const originalSurveyLink = appendParamsToUrl(survey.url, users[i].userId, sixDigitRandomNumber)
                                 let insertRecord = {
                                     surveyId: survey.id,
                                     userId: users[i].userId,
@@ -195,7 +206,7 @@ const triggerSurveyEmail = async (id) => {
                                     status: 'pending',
                                     pointsRewarded: 0,
                                     temporarySurveyLink: link,
-                                    originalSurveyLink: `${survey.url}?userid=${users[i].userId}&surveyid=${sixDigitRandomNumber}`,
+                                    originalSurveyLink: originalSurveyLink,
                                     temporarySurveyLinkId: sixDigitRandomNumber,
                                     expiryDate: survey.expiryDate,
                                     createdAt: new Date().valueOf(),

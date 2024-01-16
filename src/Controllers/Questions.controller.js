@@ -157,14 +157,14 @@ module.exports.delete = async (req, res) => {
 };
 
 
-const jsonFile = require('../../questions.json')
+const jsonFile = require('../../questions2024.json')
 async function questionsImport() {
     console.log(jsonFile)
     for(let i = 0; i < jsonFile.length; i++) {
         const isExist = await Questions.findOne({where: {text: jsonFile[i].text, deletedAt: null}})
         console.log(isExist)
         if (!isExist) {
-            console.log('llllll----->', i)
+            console.log('llllll----->', jsonFile[i])
             const Question = await Questions.create({
                 text: jsonFile[i].text,
                 profileId: jsonFile[i].profileId,
@@ -184,12 +184,12 @@ async function questionsImport() {
 
 // questionsImport()
 
-const jsonFileOption = require('../../options.json')
+const jsonFileOption = require('../../options2024.json')
 async function OptionsImport() {
     // console.log(jsonFileOption)
     for(let i = 0; i < jsonFileOption.length; i++) {
             const isExist = await Questions.findOne({where: {questionId: jsonFileOption[i].questionId}})
-            // console.log(isExist)
+            console.log(isExist)
             if (isExist) {
                 console.log('llllll----->', i)
                 const Question = await Options.create({
