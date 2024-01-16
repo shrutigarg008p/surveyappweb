@@ -204,21 +204,24 @@ const triggerSurveyEmail = async (id) => {
                                 assignedSurvey.push(insertRecord)
                                 await surveyInvite(emailTemplate.subject, users[i].user.email, processedHtml)
                                 if(users[i].user.devicetoken && assignedSurvey.length > 0) {
-                                    await Notifications(users[i].user.devicetoken, emailTemplate.subject, 'New survey has been assigned to you')
+                                    Notifications(users[i].user.devicetoken, emailTemplate.subject, 'New survey has been assigned to you')
                                     let notificationInfo = {
                                         userId: users[i].userId,
                                         message: `You have assigned ${survey.name} survey`,
                                         type: 'survey',
                                         id: survey.id
                                     }
-                                    await notificationCreate(notificationInfo)
+                                    notificationCreate(notificationInfo)
                                 }
                             }
                                 await AssignSurveys.bulkCreate(assignedSurvey)
-                                await SurveyEmailSchedules.update({
+                            console.log('calling----->', scheduleEmail.id)
+                                const info = await SurveyEmailSchedules.update({
                                     scheduleStatus: 'Sent',
                                     emailsCreatedAt: new Date().valueOf()
                                 }, { where: { id: scheduleEmail.id }})
+                            console.log('info----->', info)
+
                             }
 
                         }
