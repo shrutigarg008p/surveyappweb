@@ -18,6 +18,7 @@ const processScheduledEmails = async () => {
                 scheduleDate: {
                     [Op.lte]: currentDateTime,
                 },
+                deletedAt: null,
                 scheduleStatus: 'Pending'
             },
         });
