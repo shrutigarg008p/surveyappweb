@@ -40,4 +40,14 @@ module.exports= function(app) {
         '/api/v1/redemptionRequest/delete/:id',
         redemptionRequestController.deleteRedemption,
     );
+
+    app.post(
+        '/api/v1/redemptionRequest/approveRequest',
+        redemptionRequestController.ApproveRequest,
+    );
+
+    app.post(
+        '/api/v1/redemptionRequest/rejectRequest',
+        redemptionRequestController.RejectRequest,
+    );
 };
