@@ -438,7 +438,7 @@ module.exports.GetUserOneAssignedSurveyCallback = async (req, res) => {
                 {
                     model: Surveys,
                     required: false,
-                    attributes: ['name', 'description', 'ceggPoints', 'expiryDate', 'createdAt', 'disclaimer']
+                    attributes: ['name', 'description', 'ceggPoints', 'expiryDate', 'createdAt', 'disclaimer', 'country']
                 }
             ]
         })
