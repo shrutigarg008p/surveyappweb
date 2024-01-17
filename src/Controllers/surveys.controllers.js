@@ -12,12 +12,14 @@ const Users = db.user;
 const Cities = db.city;
 const Partners = db.partners;
 const Profiles = db.profiles;
+const PartnerUsers = db.partnerUsers
 const SurveyEmailSchedules = db.surveyEmailSchedule;
 const ProfileUserResponses = db.profileUserResponse;
 const SamplesQuestions = db.sampleQuestions;
 const apiResponses = require('../Components/apiresponse');
 const {DataTypes, Op, Sequelize} = require("sequelize");
 const {respondentSummary} = require("../utils/RespondentSummary");
+const {URL} = require("url");
 
 
 
@@ -26,6 +28,20 @@ function calculateBirthDate(age) {
     const birthYear = today.getFullYear() - age;
     return new Date(birthYear, today.getMonth(), today.getDate());
 }
+
+function appendParamsToUrl(baseUrl, userId, surveyId) {
+    console.log('baseUrl--->', baseUrl)
+    if (baseUrl) {
+        const url = new URL(baseUrl);
+        url.searchParams.append('userid', userId);
+        url.searchParams.append('surveyid', surveyId);
+        return url.toString();
+    } else {
+        console.error('Invalid baseUrl:', baseUrl);
+        return true
+    }
+}
+
 
 module.exports.create = async (req, res) => {
     try {
@@ -413,69 +429,98 @@ module.exports.GetUserOneAssignedSurvey = async (req, res) => {
     }
 };
 
+function appendPartnerUrl(url, userId, data) {
+    console.log('userId-->', userId, data)
+    data['userId'] = userId;
+    const baseUrl = url
+    const urlParams = new URLSearchParams(data);
+    const separator = baseUrl.includes("?") ? "&" : "?";
+    return `${baseUrl}${separator}${urlParams.toString()}`
+}
 
 module.exports.GetUserOneAssignedSurveyCallback = async (req, res) => {
     try {
         console.log('body--->', req.body)
         SurveyAssigned.belongsTo(Surveys, { foreignKey: 'surveyId' });
-        await SurveyAssigned.update({
-            status: req.body.status,
-            partnerid: req.body.partnerId,
-            updatedAt:  new Date().valueOf() },
-            {
-            where: {
-                temporarySurveyLinkId: req.body.surveyId,
-                userId: req.body.userId
-            }
-        })
-        const surveysDetails = await SurveyAssigned.findOne({
-            where: {
-                temporarySurveyLinkId: req.body.surveyId,
-                userId: req.body.userId
-            },
-            attributes: ['id', 'updatedAt', 'surveyId'],
-            include: [
-                {
-                    model: Surveys,
-                    required: false,
-                    attributes: ['name', 'description', 'ceggPoints', 'expiryDate', 'createdAt', 'disclaimer', 'country']
-                }
-            ]
-        })
-        const user = await BasicProfile.findOne({
-            where: { userId: req.body.userId },
-            attributes: ['firstName', 'lastName']})
-
-        if(req.body.status === 'Completed' && surveysDetails && surveysDetails.survey) {
-            const Reward = await Rewards.create({
-                points: surveysDetails.survey.ceggPoints,
-                rewardType: 'Survey',
-                surveyId: surveysDetails.surveyId,
-                rewardStatus: 'Pending',
-                userId: req.body.userId,
-                createdAt: new Date().valueOf(),
-                updatedAt: new Date().valueOf(),
-                rewardDate: new Date().valueOf(),
-            })
-        }
-        if(req.body.partnerId && req.body.partnerId !== 'NA') {
+        const partnerSurvey = await PartnerUsers.findOne({ where: { id: req.body.userId }, raw: true})
+        if(partnerSurvey) {
             let url = null
-            const partnerInfo = await Partners.findOne({ where: { id: req.body.partnerId }, raw: true})
-            if(partnerInfo && req.body.status === 'Completed') {
-                url = `${partnerInfo.successUrl}?userid=${req.body.userId}&surveyid=${req.body.surveyId}&partnerid=${req.body.partnerId}`;
+            const partnerInfo = await Partners.findOne({where: {id: partnerSurvey.partner_id}, raw: true})
+            if (partnerInfo && req.body.status === 'Completed') {
+                url = appendPartnerUrl(partnerInfo.successUrl, partnerSurvey.id, partnerSurvey.extra_string)
             }
-            if(partnerInfo && req.body.status === 'Over Quota') {
-                url = `${partnerInfo.overQuotaUrl}?userid=${req.body.userId}&surveyid=${req.body.surveyId}&partnerid=${req.body.partnerId}`;
+            if (partnerInfo && req.body.status === 'Over Quota') {
+                url = appendPartnerUrl(partnerInfo.overQuotaUrl, partnerSurvey.id, partnerSurvey.extra_string)
             }
-            if(partnerInfo && req.body.status === 'Quality Terminated') {
-                url = `${partnerInfo.badTerminatedUrl}?userid=${req.body.userId}&surveyid=${req.body.surveyId}&partnerid=${req.body.partnerId}`;
+            if (partnerInfo && req.body.status === 'Quality Terminated') {
+                url = appendPartnerUrl(partnerInfo.badTerminatedUrl, partnerSurvey.id, partnerSurvey.extra_string)
             }
-            if(partnerInfo && req.body.status === 'Terminated') {
-                url = `${partnerInfo.disqualifiedUrl}?userid=${req.body.userId}&surveyid=${req.body.surveyId}&partnerid=${req.body.partnerId}`;
+            if (partnerInfo && req.body.status === 'Terminated') {
+                url = appendPartnerUrl(partnerInfo.disqualifiedUrl, partnerSurvey.id, partnerSurvey.extra_string)
             }
-            return apiResponses.successResponseWithData(res, 'Success', {surveysDetails, user, url});
+            return apiResponses.successResponseWithData(res, 'Success', {surveysDetails: null, user: null, url});
         } else {
-            return apiResponses.successResponseWithData(res, 'Success', {surveysDetails, user, url: ''});
+            await SurveyAssigned.update({
+                    status: req.body.status,
+                    partnerid: req.body.partnerId,
+                    updatedAt: new Date().valueOf()
+                },
+                {
+                    where: {
+                        temporarySurveyLinkId: req.body.surveyId,
+                        userId: req.body.userId
+                    }
+                })
+            const surveysDetails = await SurveyAssigned.findOne({
+                where: {
+                    temporarySurveyLinkId: req.body.surveyId,
+                    userId: req.body.userId
+                },
+                attributes: ['id', 'updatedAt', 'surveyId'],
+                include: [
+                    {
+                        model: Surveys,
+                        required: false,
+                        attributes: ['name', 'description', 'ceggPoints', 'expiryDate', 'createdAt', 'disclaimer', 'country']
+                    }
+                ]
+            })
+            const user = await BasicProfile.findOne({
+                where: {userId: req.body.userId},
+                attributes: ['firstName', 'lastName']
+            })
+
+            if (req.body.status === 'Completed' && surveysDetails && surveysDetails.survey) {
+                const Reward = await Rewards.create({
+                    points: surveysDetails.survey.ceggPoints,
+                    rewardType: 'Survey',
+                    surveyId: surveysDetails.surveyId,
+                    rewardStatus: 'Pending',
+                    userId: req.body.userId,
+                    createdAt: new Date().valueOf(),
+                    updatedAt: new Date().valueOf(),
+                    rewardDate: new Date().valueOf(),
+                })
+            }
+            if (req.body.partnerId && req.body.partnerId !== 'NA') {
+                let url = null
+                const partnerInfo = await Partners.findOne({where: {id: req.body.partnerId}, raw: true})
+                if (partnerInfo && req.body.status === 'Completed') {
+                    url = `${partnerInfo.successUrl}?userid=${req.body.userId}&surveyid=${req.body.surveyId}&partnerid=${req.body.partnerId}`;
+                }
+                if (partnerInfo && req.body.status === 'Over Quota') {
+                    url = `${partnerInfo.overQuotaUrl}?userid=${req.body.userId}&surveyid=${req.body.surveyId}&partnerid=${req.body.partnerId}`;
+                }
+                if (partnerInfo && req.body.status === 'Quality Terminated') {
+                    url = `${partnerInfo.badTerminatedUrl}?userid=${req.body.userId}&surveyid=${req.body.surveyId}&partnerid=${req.body.partnerId}`;
+                }
+                if (partnerInfo && req.body.status === 'Terminated') {
+                    url = `${partnerInfo.disqualifiedUrl}?userid=${req.body.userId}&surveyid=${req.body.surveyId}&partnerid=${req.body.partnerId}`;
+                }
+                return apiResponses.successResponseWithData(res, 'Success', {surveysDetails, user, url});
+            } else {
+                return apiResponses.successResponseWithData(res, 'Success', {surveysDetails, user, url: ''});
+            }
         }
     } catch (err) {
         console.log('err-r-->', err)
@@ -806,4 +851,52 @@ const filterUserResponses = async (sampleQuestions) => {
             }
         });
     });
+};
+
+
+module.exports.createSurveyPartnerUser = async (req, res) => {
+    try {
+        const isSurveyExist = await Surveys.findOne({ where: { id: req.body.surveyId, deletedAt: null }})
+        const isExist = await PartnerUsers.findOne({ where: { ip: req.ip, rid: req.body.userId, survey_id: req.body.surveyId, partner_id: req.body.partnerId, deletedAt: null }})
+        console.log(isExist)
+        if(isSurveyExist) {
+            if (!isExist) {
+                const UserInfo = await PartnerUsers.create({
+                    ip: req.ip,
+                    rid: req.body.userId,
+                    status: 'active',
+                    extra_string: req.body.params,
+                    survey_id: req.body.surveyId,
+                    partner_id: req.body.partnerId,
+                    createdAt: new Date().valueOf(),
+                    updatedAt: new Date().valueOf(),
+                })
+
+                const surveyInfo = await Surveys.findOne({where: {id: req.body.surveyId, deletedAt: null }, raw: true})
+                const originalSurveyLink = appendParamsToUrl(surveyInfo.url, UserInfo.id, req.body.surveyId)
+                return apiResponses.successResponseWithData(
+                    res,
+                    'Success!',
+                    originalSurveyLink
+                );
+            } else {
+                const surveyInfo = await Surveys.findOne({where: {id: req.body.surveyId, deletedAt: null }, raw: true})
+                const originalSurveyLink = appendParamsToUrl(surveyInfo.url, isExist.id, req.body.surveyId)
+                return apiResponses.successResponseWithData(
+                    res,
+                    'Success!',
+                    originalSurveyLink
+                );
+            }
+        } else {
+            return apiResponses.validationErrorWithData(
+                res,
+                'Survey is not exist!',
+                null
+            );
+        }
+    } catch (err) {
+        console.log('erre--->', err)
+        return apiResponses.errorResponse(res, err);
+    }
 };

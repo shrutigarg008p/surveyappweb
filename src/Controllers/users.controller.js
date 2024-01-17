@@ -19,6 +19,7 @@ const {userRegistration} = require("../Config/Mails");
 const axios = require("axios");
 const Op = db.Sequelize.Op;
 
+
 module.exports.registration = async (req, res) => {
 	try {
 		console.log('body----->', req.body)
@@ -1061,6 +1062,24 @@ module.exports.userNotifications = async (req, res) => {
 	try {
 		const notificationsList = await NotificationsDb.findAll({ where: { userId: req.params.userId } })
 		return apiResponses.successResponseWithData(res, 'Success', notificationsList);
+	} catch (err) {
+		return apiResponses.errorResponse(res, err);
+	}
+};
+
+
+
+module.exports.uploadUserProfile = async (req, res) => {
+	try {
+		if (req.file && req.body.userId) {
+			const imagePath = '/Images/' + req.file.filename;
+			await BasicProfile.update({
+				imagePath: imagePath,
+			}, { where: { userId: req.body.userId }})
+			return apiResponses.successResponseWithData(res, 'Success', imagePath);
+		} else {
+			return apiResponses.validationErrorWithData(res, 'No file uploaded');
+		}
 	} catch (err) {
 		return apiResponses.errorResponse(res, err);
 	}
