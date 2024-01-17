@@ -157,7 +157,7 @@ module.exports.bulkCreateReferrals = async (req, res) => {
                     where: {
                         userId: userIds,
                     },
-                    attributes: ['userId', 'firstName', 'lastName'],
+                    attributes: ['userId', 'firstName', 'lastName', 'imagePath'],
                     raw: true, //To Remove Default data with proper json
                 });
 

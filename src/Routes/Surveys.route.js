@@ -108,4 +108,9 @@ module.exports= function(app) {
         '/api/v1/surveys/adminRespondentDashboardWeb',
         surveyControllers.adminRespondentDashboardWeb,
     );
+
+    app.post(
+        '/api/v1/surveys/createSurveyPartnerUser',
+        surveyControllers.createSurveyPartnerUser,
+    );
 };
