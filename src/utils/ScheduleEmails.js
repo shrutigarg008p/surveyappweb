@@ -5,6 +5,7 @@ const axios = require('axios');
 const {surveyInvite} = require("../Config/Mails");
 const apiResponses = require("../Components/apiresponse");
 const {Notifications, notificationCreate} = require("../Config/Notification");
+const {sendSurveyMessage} = require("../Config/Sms");
 const SurveyEmailSchedules = db.surveyEmailSchedule;
 const SurveyTemplates = db.surveyTemplates;
 const Surveys = db.surveys;
@@ -159,7 +160,7 @@ const triggerSurveyEmail = async (id) => {
                                 {
                                     model: Users,
                                     required: false,
-                                    attributes: ['email', 'role', 'devicetoken']
+                                    attributes: ['email', 'role', 'devicetoken', 'phoneNumber']
                                 },
                             ],
                         })
@@ -214,6 +215,7 @@ const triggerSurveyEmail = async (id) => {
                                 }
                                 assignedSurvey.push(insertRecord)
                                 await surveyInvite(emailTemplate.subject, users[i].user.email, processedHtml)
+                                sendSurveyMessage(`${users[i].firstName} ${users[i].lastName}`, link, users[i].user.phoneNumber)
                                 if(users[i].user.devicetoken && assignedSurvey.length > 0) {
                                     Notifications(users[i].user.devicetoken, emailTemplate.subject, 'New survey has been assigned to you')
                                     let notificationInfo = {

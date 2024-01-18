@@ -17,6 +17,7 @@ const {BOOLEAN, literal} = require("sequelize");
 const {bool} = require("twilio/lib/base/serialize");
 const {userRegistration} = require("../Config/Mails");
 const axios = require("axios");
+const {sendVerificationMessage, generateOTP} = require("../Config/Sms");
 const Op = db.Sequelize.Op;
 
 
@@ -24,6 +25,7 @@ module.exports.registration = async (req, res) => {
 	try {
 		console.log('body----->', req.body)
 		const token = createToken(req.body.email);
+		const OTP = generateOTP();
 		const user = await User.create({
 			email: req.body.email,
 			userName: req.body.email,
@@ -42,7 +44,8 @@ module.exports.registration = async (req, res) => {
 			lockoutEnabled: false,
 			accessFailedCount: 0,
 			securityStamp: token,
-			activeStatus: 0
+			activeStatus: 0,
+			otp: OTP
 		})
 		/* #swagger.responses[200] = {
                         description: "User registered successfully!",
@@ -93,6 +96,7 @@ module.exports.registration = async (req, res) => {
 				})
 			}
 		}
+		await sendVerificationMessage(OTP, req.body.phoneNumber, 'User')
 		return apiResponses.successResponseWithData(
 			res,
 			'User registered successfully!',
@@ -179,13 +183,46 @@ module.exports.verifyEmail = async (req, res) => {
 	}
 };
 
+
+module.exports.verifyPhone = async (req, res) => {
+	try {
+		console.log('re--->', req.query)
+		if(req.query.userId && req.query.otp) {
+			const user = await User.findOne({
+				where: {
+					id: req.query.userId,
+					otp: req.query.otp
+				},
+			})
+			if (user) {
+				await User.update({
+					otp: null,
+					phoneNumberConfirmed: true
+				}, {where: {id: user.id}})
+
+				return apiResponses.successResponseWithData(
+					res,
+					'Success!',
+				);
+			} else {
+				return apiResponses.validationErrorWithData(
+					res,
+					'OTP must be valid!',
+				);
+			}
+		} else {
+			return apiResponses.validationErrorWithData(
+				res,
+				'Otp must be specified!',
+			);
+		}
+	} catch (err) {
+		console.log('err---->', err)
+		return apiResponses.errorResponse(res, err);
+	}
+};
+
 module.exports.userLogin = async (req, res) => {
-	// #swagger.tags = ['UserAuth']
-	/*  #swagger.parameters['obj'] = {
-            in: 'body',
-            description: "User details for login - email, registerType and password",
-            schema: { $email: "", $registerType:"", $password: ""}
-    } */
 	try {
 		if (req.body.registerType === 'password') {
 			const user = await User.findOne({
@@ -195,11 +232,6 @@ module.exports.userLogin = async (req, res) => {
 				},
 			})
 			if (!user) {
-				/* #swagger.responses[404] = {
-                       description: "User Not found.",
-                       schema: { $statusCode: "404",  $status: false, $message: "User Not found.",  $data: {}}
-                   } */
-				// return res.status(404).send({ message: "User Not found." });
 				return apiResponses.notFoundResponse(res, 'User Not found.', {});
 			}
 
@@ -209,14 +241,6 @@ module.exports.userLogin = async (req, res) => {
 			);
 
 			if (!passwordIsValid) {
-				/* #swagger.responses[401] = {
-                        description: "Invalid Password!",
-                        schema: { $accessToken: "", $message: "Invalid Password!" }
-                    } */
-				// return res.status(401).send({
-				//   accessToken: null,
-				//   message: "Invalid Password!"
-				// });
 				return apiResponses.unauthorizedResponse(
 					res,
 					'Invalid Password!',
@@ -224,14 +248,6 @@ module.exports.userLogin = async (req, res) => {
 				);
 			}
 			if (user.deletedAt || user.deleteConfirmDate) {
-				/* #swagger.responses[401] = {
-                        description: "Your email is not verified, please verify before logging in.",
-                        schema: { $accessToken: "", $message: "Your email is not verified, please verify before logging in." }
-                    } */
-				// return res.status(401).send({
-				//   accessToken: null,
-				//   message: "User not available."
-				// });
 				return apiResponses.unauthorizedResponse(
 					res,
 					'User not available',
@@ -239,20 +255,16 @@ module.exports.userLogin = async (req, res) => {
 				);
 			}
 
-			const token = createToken(user.id, user.email, user.role);
-			/* #swagger.responses[500] = {
-                        description: "User logged in!",
-                        schema: { $id: "user id", $email: "user email",  $accessToken: "user token"}
-                    } */
-			// return res.status(200).send({
-			//   id: user.id,
-			//   email: user.email,
-			//   accessToken: token
-			// });
-			const ip = await axios.get("https://ipapi.co/json/")
-			console.log('IP---->', ip, req.ip)
-			await User.update({signupIp: req.ip}, {where: {id: user.id}})
+
 			const isExist = await BasicProfile.findOne({where: {userId: user.id}})
+			const OTP = generateOTP();
+			if(user.phoneNumberConfirmed === false) {
+				await sendVerificationMessage(OTP, req.body.phoneNumber, 'User')
+				await User.update({signupIp: req.ip, otp: OTP}, {where: {id: user.id}})
+			} else {
+				await User.update({signupIp: req.ip}, {where: {id: user.id}})
+			}
+			const token = createToken(user.id, user.email, user.role);
 			const obj = {
 				id: user.id,
 				email: user.email,
@@ -260,6 +272,7 @@ module.exports.userLogin = async (req, res) => {
 				registerType: user.registerType,
 				role: user.role,
 				emailConfirmed: user.emailConfirmed,
+				phoneNumberConfirmed: user.phoneNumberConfirmed,
 				token: token,
 				basicProfile: isExist
 			};

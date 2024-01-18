@@ -170,7 +170,20 @@ module.exports.update = async (req, res) => {
 module.exports.getAll = async (req, res) => {
     try {
         const limit = req.params.limit;
-        const data = await Surveys.findAll({ where: { deletedAt: null }, limit: limit, order: [['createdAt', 'DESC']]})
+        Surveys.hasMany(SurveyAssigned, { foreignKey: 'surveyId' });
+        const data = await Surveys.findAll({
+            where: {
+                deletedAt: null
+            },
+            include: [
+                {
+                    model: SurveyAssigned,
+                    order: [['createdAt', 'DESC']]
+                }
+                ],
+            limit: limit,
+            order: [['createdAt', 'DESC']]
+        })
         return apiResponses.successResponseWithData(res, 'success!', data);
     } catch (err) {
         return apiResponses.errorResponse(res, err);
@@ -440,7 +453,6 @@ function appendPartnerUrl(url, userId, data) {
 
 module.exports.GetUserOneAssignedSurveyCallback = async (req, res) => {
     try {
-        console.log('body--->', req.body)
         SurveyAssigned.belongsTo(Surveys, { foreignKey: 'surveyId' });
         const partnerSurvey = await PartnerUsers.findOne({ where: { id: req.body.userId }, raw: true})
         if(partnerSurvey) {
@@ -458,6 +470,15 @@ module.exports.GetUserOneAssignedSurveyCallback = async (req, res) => {
             if (partnerInfo && req.body.status === 'Terminated') {
                 url = appendPartnerUrl(partnerInfo.disqualifiedUrl, partnerSurvey.id, partnerSurvey.extra_string)
             }
+            await PartnerUsers.update({
+                    status: req.body.status,
+                    updatedAt: new Date().valueOf()
+                },
+                {
+                    where: {
+                        userId: req.body.userId
+                    }
+                })
             return apiResponses.successResponseWithData(res, 'Success', {surveysDetails: null, user: null, url});
         } else {
             await SurveyAssigned.update({
@@ -864,7 +885,7 @@ module.exports.createSurveyPartnerUser = async (req, res) => {
                 const UserInfo = await PartnerUsers.create({
                     ip: req.ip,
                     rid: req.body.userId,
-                    status: 'active',
+                    status: 'Pending',
                     extra_string: req.body.params,
                     survey_id: req.body.surveyId,
                     partner_id: req.body.partnerId,
@@ -898,5 +919,85 @@ module.exports.createSurveyPartnerUser = async (req, res) => {
     } catch (err) {
         console.log('erre--->', err)
         return apiResponses.errorResponse(res, err);
+    }
+};
+
+
+
+module.exports.getAllPartnerUsers = async (req, res) => {
+    try {
+        const limit = req.params.limit;
+        const data = await PartnerUsers.findAll({
+            where: {
+                deletedAt: null
+            },
+            attributes: {
+                exclude: ['extra_string'],
+            },
+            raw: true,
+            order: [['createdAt', 'DESC']],
+        })
+        const newArray = [];
+        for (const item of data) {
+            const partnerDetails = await getPartnerDetails(item.partner_id);
+            console.log('partnerDetails--->', partnerDetails)
+            if (partnerDetails) {
+                const enrichedItem = {
+                    ...item,
+                    partnerName: partnerDetails.name,
+                };
+
+                newArray.push(enrichedItem);
+            }
+        }
+
+        const final = [];
+        for (const item of newArray) {
+            const partnerDetails = await getSurveyDetails(item.survey_id);
+            console.log('partnerDetails--->', partnerDetails)
+            if (partnerDetails) {
+                const enrichedItem = {
+                    ...item,
+                    surveyName: partnerDetails.name,
+                    country: partnerDetails.country,
+                };
+
+                final.push(enrichedItem);
+            }
+        }
+        return apiResponses.successResponseWithData(res, 'success!', final);
+    } catch (err) {
+        return apiResponses.errorResponse(res, err);
+    }
+};
+
+
+const getPartnerDetails = async (partnerId) => {
+    try {
+        return await Partners.findOne({
+            where: {
+                id: partnerId,
+            },
+            raw: true,
+            attributes: ['name'],
+        });
+    } catch (error) {
+        console.error('Error fetching partner details:', error.message);
+        return null;
+    }
+};
+
+const getSurveyDetails = async (surveyId) => {
+    try {
+        return await Surveys.findOne({
+            where: {
+                id: surveyId,
+            },
+            raw: true,
+            attributes: ['name', 'country'],
+        });
+    } catch (error) {
+        console.error('Error fetching partner details:', error.message);
+        return null;
     }
 };

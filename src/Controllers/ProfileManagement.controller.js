@@ -62,7 +62,7 @@ module.exports.update = async (req, res) => {
 module.exports.getAll = async (req, res) => {
     try {
         const limit = req.params.limit;
-        const data = await Profiles.findAll({ where : { deletedAt: null }, limit: limit, order: [['createdAt', 'DESC']]})
+        const data = await Profiles.findAll({ where : { deletedAt: null }, limit: limit, order: [['displayOrder', 'ASC']]})
         return apiResponses.successResponseWithData(res, 'success!', data);
     } catch (err) {
         return apiResponses.errorResponse(res, err);
@@ -107,9 +107,10 @@ module.exports.getOneDetails = async (req, res) => {
                     {
                         model: Options,
                         required: false,
+                        order: [['displayOrder', 'ASC']]
                     },
-                ]
-
+                ],
+                order: [['displayOrder', 'ASC']]
             });
 
             let response = { data, questions, response: userResponse ? userResponse : {} }
