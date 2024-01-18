@@ -47,10 +47,6 @@ module.exports.registration = async (req, res) => {
 			activeStatus: 0,
 			otp: OTP
 		})
-		/* #swagger.responses[200] = {
-                        description: "User registered successfully!",
-                        schema: { $statusCode : 200 ,$status: true, $message: "User registered successfully!", $data : {}}
-                    } */
 		await Mails.userRegistration(user.email, token);
 		// return res.status(200).send({ status:'200', message: "User registered successfully!" , data: userData });
 		console.log('successResponseWithData---->', user.email)
@@ -327,6 +323,65 @@ module.exports.userLogin = async (req, res) => {
 						phoneNumber: user.phoneNumber,
 						registerType: user.registerType,
 						role: user.role,
+						token: token,
+						basicProfile: isExist
+					};
+					return apiResponses.successResponseWithData(
+						res,
+						'Successfully login',
+						obj,
+					);
+				}
+			});
+		} else if (req.body.registerType === 'gmail') {
+			User.findOne({
+				where: {
+					email: req.body.email,
+					registerType: req.body.registerType,
+				},
+			}).then(async (user) => {
+				if (!user) {
+					const token = createToken(req.body.email);
+					let OTP = null
+					if(req.body.phoneNumber){
+						OTP = generateOTP();
+					}
+					const user = await User.create({
+						email: req.body.email,
+						userName: req.body.email,
+						phoneNumber: req.body.phoneNumber,
+						registeredDate: new Date().valueOf(),
+						createdAt: new Date().valueOf(),
+						updatedAt: new Date().valueOf(),
+						signupIp: req.ip,
+						role: req.body.role || 'panelist',
+						registerType: req.body.registerType,
+						emailConfirmed: false,
+						phoneNumberConfirmed: false,
+						twoFactorEnabled: false,
+						lockoutEnabled: false,
+						accessFailedCount: 0,
+						securityStamp: token,
+						activeStatus: 0,
+						otp: OTP
+					})
+					await Mails.userRegistration(user.email, token);
+						return apiResponses.successResponseWithData(
+							res,
+							'Success!',
+							user.email,
+						);
+				} else {
+					const isExist = await BasicProfile.findOne({where: {userId: user.id}})
+					const token = createToken(user.id, user.email, user.role);
+					const obj = {
+						id: user.id,
+						email: user.email,
+						phoneNumber: user.phoneNumber,
+						registerType: user.registerType,
+						role: user.role,
+						emailConfirmed: user.emailConfirmed,
+						phoneNumberConfirmed: user.phoneNumberConfirmed,
 						token: token,
 						basicProfile: isExist
 					};
