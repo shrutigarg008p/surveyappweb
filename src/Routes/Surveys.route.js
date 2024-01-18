@@ -113,4 +113,9 @@ module.exports= function(app) {
         '/api/v1/surveys/createSurveyPartnerUser',
         surveyControllers.createSurveyPartnerUser,
     );
+
+    app.get(
+        '/api/v1/surveys/getAllPartnerUsers',
+        surveyControllers.getAllPartnerUsers,
+    );
 };

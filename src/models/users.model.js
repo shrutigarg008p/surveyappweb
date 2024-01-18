@@ -105,5 +105,8 @@ module.exports = (sequelize, Sequelize) => {
 		devicetoken: {
 			type: DataTypes.STRING
 		},
+		otp: {
+			type: DataTypes.STRING
+		},
 	});
 };

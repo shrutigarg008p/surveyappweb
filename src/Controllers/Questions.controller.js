@@ -111,7 +111,7 @@ module.exports.update = async (req, res) => {
 module.exports.getAll = async (req, res) => {
     try {
         const limit = req.params.limit;
-        const data = await Questions.findAll({where: {profileId: req.params.profileId, deletedAt: null}, limit: limit, order: [['createdAt', 'DESC']]})
+        const data = await Questions.findAll({where: {profileId: req.params.profileId, deletedAt: null}, limit: limit, order: [['displayOrder', 'ASC']]})
         return apiResponses.successResponseWithData(res, 'success!', data);
     } catch (err) {
         return apiResponses.errorResponse(res, err);
@@ -121,7 +121,7 @@ module.exports.getAll = async (req, res) => {
 module.exports.getOne = async (req, res) => {
     try {
         const data = await Questions.findOne({where: {id: req.params.id, deletedAt: null}})
-        const options = await Options.findAll({where: {questionId: data.id, deletedAt: null}})
+        const options = await Options.findAll({where: {questionId: data.id, deletedAt: null, order: [['displayOrder', 'ASC']]}})
         return apiResponses.successResponseWithData(res, 'success!', {...data, options});
     } catch (err) {
         return apiResponses.errorResponse(res, err);
@@ -131,7 +131,7 @@ module.exports.getOne = async (req, res) => {
 
 module.exports.getQuestionOptions = async (req, res) => {
     try {
-        const options = await Options.findAll({where: {questionId: req.params.id, deletedAt: null}})
+        const options = await Options.findAll({where: {questionId: req.params.id, deletedAt: null, order: [['displayOrder', 'ASC']]}})
         return apiResponses.successResponseWithData(res, 'success!', options);
     } catch (err) {
         return apiResponses.errorResponse(res, err);
