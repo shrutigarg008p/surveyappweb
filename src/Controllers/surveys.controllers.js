@@ -476,7 +476,7 @@ module.exports.GetUserOneAssignedSurveyCallback = async (req, res) => {
                 },
                 {
                     where: {
-                        userId: req.body.userId
+                        id: req.body.userId
                     }
                 })
             return apiResponses.successResponseWithData(res, 'Success', {surveysDetails: null, user: null, url});
