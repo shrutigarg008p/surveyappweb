@@ -70,11 +70,11 @@ const updateValidator = [
 	}];
 
 const logInValidator = [
-	body('email').isLength({min: 1})
-		.trim().withMessage('Email must be specified.')
-		.isEmail().withMessage('Email must be a valid email address.'),
-	body('password').isLength({min: 1})
-		.trim().withMessage('Password must be specified.'),
+	// body('email').isLength({min: 1})
+	// 	.trim().withMessage('Email must be specified.')
+	// 	.isEmail().withMessage('Email must be a valid email address.'),
+	// body('password').isLength({min: 1})
+	// 	.trim().withMessage('Password must be specified.'),
 	body('registerType').isLength({min: 1})
 		.trim().withMessage('registerType must be specified.'),
 	sanitizeBody('registerType').escape(),
