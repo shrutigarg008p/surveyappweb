@@ -48,6 +48,11 @@ module.exports= function(app) {
 		usersController.verifyEmail,
 	);
 
+	app.post(
+		'/api/v1/auth/user/verify-mobile',
+		usersController.verifyPhone,
+	);
+
 	app.get(
 		'/api/v1/auth/user/users/:limit',
 		usersController.users,

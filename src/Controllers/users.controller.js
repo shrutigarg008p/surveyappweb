@@ -135,7 +135,7 @@ module.exports.verifyEmail = async (req, res) => {
 			const user = await User.findOne({
 				where: {
 					email: req.query.email,
-					// securityStamp: req.query.token,
+					securityStamp: req.query.token,
 				},
 			})
 			if (user) {
@@ -183,11 +183,11 @@ module.exports.verifyEmail = async (req, res) => {
 module.exports.verifyPhone = async (req, res) => {
 	try {
 		console.log('re--->', req.query)
-		if(req.query.userId && req.query.otp) {
+		if(req.body.userId && req.body.otp) {
 			const user = await User.findOne({
 				where: {
-					id: req.query.userId,
-					otp: req.query.otp
+					id: req.body.userId,
+					otp: req.body.otp
 				},
 			})
 			if (user) {
@@ -196,9 +196,15 @@ module.exports.verifyPhone = async (req, res) => {
 					phoneNumberConfirmed: true
 				}, {where: {id: user.id}})
 
+				const obj = {
+					id: user.id,
+					emailConfirmed: user.emailConfirmed
+				};
 				return apiResponses.successResponseWithData(
 					res,
 					'Success!',
+					obj
+
 				);
 			} else {
 				return apiResponses.validationErrorWithData(
@@ -255,7 +261,7 @@ module.exports.userLogin = async (req, res) => {
 			const isExist = await BasicProfile.findOne({where: {userId: user.id}})
 			const OTP = generateOTP();
 			if(user.phoneNumberConfirmed === false) {
-				await sendVerificationMessage(OTP, req.body.phoneNumber, 'User')
+				await sendVerificationMessage(OTP, user.phoneNumber, 'User')
 				await User.update({signupIp: req.ip, otp: OTP}, {where: {id: user.id}})
 			} else {
 				await User.update({signupIp: req.ip}, {where: {id: user.id}})
