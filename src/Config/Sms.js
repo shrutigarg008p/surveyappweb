@@ -1,12 +1,12 @@
 const axios = require('axios');
 
-const sendSurveyMessage = async (fullName, surveyUrl, mobile) => {
+const sendSurveyMessage = async (fullName, surveyUrl, mobile, surveyName) => {
     try {
         const response = await axios.get('https://enterprise.smsgupshup.com/GatewayAPI/rest', {
             params: {
                 method: 'SendMessage',
                 send_to: `91${mobile}`,
-                msg: `Dear ${fullName}, Here is our latest Indiapolls survey on Survey Pacific Evening, especially for you. Please click here ${surveyUrl} to start your survey. Thank you!`,
+                msg: `Dear ${fullName}, Here is our latest Indiapolls survey on Survey ${surveyName}, especially for you. Please click here ${surveyUrl} to start your survey. Thank you!`,
                 msg_type: 'TEXT',
                 userid: '2000237056',
                 auth_scheme: 'plain',
