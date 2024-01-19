@@ -107,7 +107,8 @@ module.exports.getOneDetails = async (req, res) => {
                     {
                         model: Options,
                         required: false,
-                        order: [['displayOrder', 'ASC']]
+                        separate: true,
+                        order: [['displayOrder', 'ASC']],
                     },
                 ],
                 order: [['displayOrder', 'ASC']]
