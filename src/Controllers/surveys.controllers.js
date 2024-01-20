@@ -451,6 +451,17 @@ function appendPartnerUrl(url, userId, data) {
     return `${baseUrl}${separator}${urlParams.toString()}`
 }
 
+const appendValuesToUrl = (url, rid, sid) => {
+    const hasRid = url.includes('{svar_id}');
+    if (hasRid) {
+        url = url.replace('{respondent_id}', rid);
+        url = url.replace('{svar_id}', sid);
+        return url
+    } else {
+        return url.replace('{respondent_id}', rid);
+    }
+};
+
 module.exports.GetUserOneAssignedSurveyCallback = async (req, res) => {
     try {
         SurveyAssigned.belongsTo(Surveys, { foreignKey: 'surveyId' });
@@ -459,16 +470,16 @@ module.exports.GetUserOneAssignedSurveyCallback = async (req, res) => {
             let url = null
             const partnerInfo = await Partners.findOne({where: {id: partnerSurvey.partner_id}, raw: true})
             if (partnerInfo && req.body.status === 'Completed') {
-                url = appendPartnerUrl(partnerInfo.successUrl, partnerSurvey.id, partnerSurvey.extra_string)
+                url = appendValuesToUrl(partnerInfo.successUrl, partnerSurvey.rid, partnerSurvey.sid)
             }
             if (partnerInfo && req.body.status === 'Over Quota') {
-                url = appendPartnerUrl(partnerInfo.overQuotaUrl, partnerSurvey.id, partnerSurvey.extra_string)
+                url = appendValuesToUrl(partnerInfo.overQuotaUrl, partnerSurvey.rid, partnerSurvey.sid)
             }
             if (partnerInfo && req.body.status === 'Quality Terminated') {
-                url = appendPartnerUrl(partnerInfo.badTerminatedUrl, partnerSurvey.id, partnerSurvey.extra_string)
+                url = appendValuesToUrl(partnerInfo.badTerminatedUrl, partnerSurvey.rid, partnerSurvey.sid)
             }
             if (partnerInfo && req.body.status === 'Terminated') {
-                url = appendPartnerUrl(partnerInfo.disqualifiedUrl, partnerSurvey.id, partnerSurvey.extra_string)
+                url = appendValuesToUrl(partnerInfo.disqualifiedUrl, partnerSurvey.rid, partnerSurvey.sid)
             }
             await PartnerUsers.update({
                     status: req.body.status,
@@ -885,6 +896,7 @@ module.exports.createSurveyPartnerUser = async (req, res) => {
                 const UserInfo = await PartnerUsers.create({
                     ip: req.ip,
                     rid: req.body.userId,
+                    sid: req.body.sid,
                     status: 'Pending',
                     extra_string: req.body.params,
                     survey_id: req.body.surveyId,
@@ -929,7 +941,8 @@ module.exports.getAllPartnerUsers = async (req, res) => {
         const limit = req.params.limit;
         const data = await PartnerUsers.findAll({
             where: {
-                deletedAt: null
+                deletedAt: null,
+                partner_id: req.params.id
             },
             attributes: {
                 exclude: ['extra_string'],

@@ -17,6 +17,9 @@ module.exports = (sequelize, Sequelize) => {
         rid: {
             type: DataTypes.STRING
         },
+        sid: {
+            type: DataTypes.STRING
+        },
         createdAt: {
             type: DataTypes.DATE,
             allowNull: false
