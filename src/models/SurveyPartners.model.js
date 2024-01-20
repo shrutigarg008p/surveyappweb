@@ -15,6 +15,9 @@ module.exports = (sequelize, Sequelize) => {
             type: DataTypes.UUID,
             allowNull: false
         },
+        includesid: {
+            type: DataTypes.BOOLEAN
+        },
         createdAt: {
             type: DataTypes.DATE,
             allowNull: false

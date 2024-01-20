@@ -371,11 +371,23 @@ module.exports.userLogin = async (req, res) => {
 						activeStatus: 0,
 						otp: OTP
 					})
-					await Mails.userRegistration(user.email, token);
+					// await Mails.userRegistration(user.email, token);
+					const isExist = await BasicProfile.findOne({where: {userId: user.id}})
+					const obj = {
+						id: user.id,
+						email: user.email,
+						phoneNumber: user.phoneNumber,
+						registerType: user.registerType,
+						role: user.role,
+						emailConfirmed: user.emailConfirmed,
+						phoneNumberConfirmed: user.phoneNumberConfirmed,
+						token: token,
+						basicProfile: isExist
+					};
 						return apiResponses.successResponseWithData(
 							res,
 							'Success!',
-							user.email,
+							obj
 						);
 				} else {
 					const isExist = await BasicProfile.findOne({where: {userId: user.id}})
