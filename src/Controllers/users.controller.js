@@ -96,7 +96,7 @@ module.exports.registration = async (req, res) => {
 		return apiResponses.successResponseWithData(
 			res,
 			'User registered successfully!',
-			user.email
+			{email: user.email, userId: user.id}
 
 		);
 	} catch (err) {
