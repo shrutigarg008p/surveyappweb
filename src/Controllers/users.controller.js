@@ -1090,9 +1090,10 @@ module.exports.respondentProfileOverview = async (req, res) => {
 		db.questions.belongsTo(db.profiles, { foreignKey: 'profileId' });
 		db.profiles.hasMany(ProfileUserResponse, { foreignKey: 'profileId' });
 		const profilesWithQuestionsCount = await Profiles.findAll({
+			where: { deletedAt: null },
 			attributes: {
 				include: [
-					[Sequelize.literal('(SELECT COUNT(*) FROM questions WHERE questions."profileId" = profiles.id)'), 'questionCount']
+					[Sequelize.literal('(SELECT COUNT(*) FROM questions WHERE questions."profileId" = profiles.id AND questions."deletedAt" IS NULL)'), 'questionCount']
 				]
 			},
 			include: [
