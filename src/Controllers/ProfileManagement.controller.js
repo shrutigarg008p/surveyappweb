@@ -102,11 +102,13 @@ module.exports.getOneDetails = async (req, res) => {
                 where: {
                     profileId: req.params.id,
                     deletedAt: null,
+                    isActive: true
                 },
                 include: [
                     {
                         model: Options,
                         required: false,
+                        where: { isActive: true },
                         separate: true,
                         order: [['displayOrder', 'ASC']],
                     },

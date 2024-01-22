@@ -133,4 +133,9 @@ module.exports= function(app) {
 		upload.single('image'),
 		usersController.uploadUserProfile,
 	);
+
+	app.post(
+		'/api/v1/auth/user/resendOtp',
+		usersController.resendMobileOtp,
+	);
 };
