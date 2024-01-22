@@ -128,6 +128,33 @@ module.exports.resendEmailVerifyMail = async (req, res) => {
 };
 
 
+module.exports.resendMobileOtp = async (req, res) => {
+	try {
+		const OTP = generateOTP();
+		const info = await User.update({
+			otp: OTP,
+		}, { where: { id: req.body.userId, phoneNumber: req.body.phoneNumber }})
+
+		console.log('ip---->', info[0] === 1)
+		if(info[0] === 1) {
+			await sendVerificationMessage(OTP, req.body.phoneNumber, 'User')
+			return apiResponses.successResponseWithData(
+				res,
+				'Success!',
+			);
+		} else {
+			return apiResponses.validationErrorWithData(
+				res,
+				'User Not Found!',
+			);
+		}
+	} catch (err) {
+		console.log('err---->', err)
+		return apiResponses.errorResponse(res, err);
+	}
+};
+
+
 module.exports.verifyEmail = async (req, res) => {
 	try {
 		console.log('re--->', req.query)
@@ -976,7 +1003,7 @@ module.exports.allPanelists = async (req, res) => {
 						"firstName": matchingPanelist ? matchingPanelist.firstName : user.basic_profile ? user.basic_profile.firstName : '',
 						"lastName": matchingPanelist ? matchingPanelist.lastName : user.basic_profile ? user.basic_profile.lastName : '',
 						"gender": matchingPanelist ? matchingPanelist.gender : user.basic_profile ? user.basic_profile.gender : '',
-						"mobile": user.phoneNumber || matchingPanelist.mobile || '',
+						"mobile": user.phoneNumber,
 						"email": user.email || matchingPanelist.email || '',
 						"dateOfBirth": matchingPanelist ? matchingPanelist.dateOfBirth : user.basic_profile ? user.basic_profile.dateOfBirth : '',
 						"city": matchingPanelist ? matchingPanelist.city : user.basic_profile ? user.basic_profile.city : '',
@@ -1093,7 +1120,7 @@ module.exports.respondentProfileOverview = async (req, res) => {
 			where: { deletedAt: null },
 			attributes: {
 				include: [
-					[Sequelize.literal('(SELECT COUNT(*) FROM questions WHERE questions."profileId" = profiles.id AND questions."deletedAt" IS NULL)'), 'questionCount']
+					[Sequelize.literal('(SELECT COUNT(*) FROM questions WHERE questions."profileId" = profiles.id AND questions."deletedAt" IS NULL AND questions."isActive" = true)'), 'questionCount']
 				]
 			},
 			include: [
