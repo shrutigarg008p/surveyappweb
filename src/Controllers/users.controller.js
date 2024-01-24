@@ -23,6 +23,7 @@ const Op = db.Sequelize.Op;
 
 module.exports.registration = async (req, res) => {
 	try {
+
 		console.log('body----->', req.body)
 		const token = createToken(req.body.email);
 		const OTP = generateOTP();
@@ -34,7 +35,6 @@ module.exports.registration = async (req, res) => {
 			registeredDate: new Date().valueOf(),
 			createdAt: new Date().valueOf(),
 			updatedAt: new Date().valueOf(),
-			isActive: req.body.isActive,
 			signupIp: req.ip,
 			role: req.body.role || 'panelist',
 			registerType: 'password',
@@ -96,9 +96,110 @@ module.exports.registration = async (req, res) => {
 		return apiResponses.successResponseWithData(
 			res,
 			'User registered successfully!',
-			{email: user.email, userId: user.id}
+			{email: user.email, userId: user.id, phoneNumber: user.phoneNumber}
 
 		);
+	} catch (err) {
+		console.log('err---->', err)
+		return apiResponses.errorResponse(res, err);
+	}
+};
+
+
+module.exports.continueWithMobile = async (req, res) => {
+	try {
+		console.log('body----->', req.body)
+		const user = await User.findOne({
+			where: {
+				phoneNumber: req.body.phoneNumber,
+				registerType: req.body.registerType
+			},
+		})
+		if (!user) {
+			const token = createToken(req.body.phoneNumber);
+			const OTP = generateOTP();
+			const user = await User.create({
+				email: req.body.email,
+				userName: req.body.email,
+				phoneNumber: req.body.phoneNumber,
+				registeredDate: new Date().valueOf(),
+				createdAt: new Date().valueOf(),
+				updatedAt: new Date().valueOf(),
+				isActive: req.body.isActive,
+				signupIp: req.ip,
+				role: req.body.role || 'panelist',
+				registerType: 'mobile',
+				emailConfirmed: true,
+				phoneNumberConfirmed: false,
+				twoFactorEnabled: false,
+				lockoutEnabled: false,
+				accessFailedCount: 0,
+				securityStamp: token,
+				activeStatus: 0,
+				otp: OTP
+			})
+			if (req.body.referralId) {
+				const isExist = await Referrals.findOne({where: {email: user.email, userId: req.body.referralId}})
+				if (isExist) {
+					await Referrals.update(
+						{referredUserId: user.id, referralStatus: "Accepted"},
+						{where: {email: user.email, userId: req.body.referralId}}
+					)
+					await Rewards.create({
+						points: 200,
+						rewardType: 'Referral',
+						referralId: user.id,
+						rewardStatus: 'Accepted',
+						userId: req.body.referralId,
+						createdAt: new Date().valueOf(),
+						updatedAt: new Date().valueOf(),
+						rewardDate: new Date().valueOf(),
+					})
+				} else {
+					await Referrals.create({
+						name: 'Unknown',
+						email: req.body.email,
+						phoneNumber: req.body.phoneNumber,
+						referralStatus: "Accepted",
+						referralMethod: "Link",
+						userId: req.body.referralId,
+						referredUserId: user.id,
+						createdAt: new Date().valueOf(),
+						updatedAt: new Date().valueOf(),
+						rewardDate: new Date().valueOf(),
+					})
+					await Rewards.create({
+						points: 200,
+						rewardType: 'Referral',
+						referralId: user.id,
+						rewardStatus: 'Accepted',
+						userId: req.body.referralId,
+						createdAt: new Date().valueOf(),
+						updatedAt: new Date().valueOf(),
+						rewardDate: new Date().valueOf(),
+					})
+				}
+			}
+			await sendVerificationMessage(OTP, req.body.phoneNumber, 'User')
+			return apiResponses.successResponseWithData(
+				res,
+				'User registered successfully!',
+				{email: user.email, userId: user.id, phoneNumber: user.phoneNumber, token: token}
+			);
+		} else {
+			const token = createToken(user.id);
+			const OTP = generateOTP();
+			await User.update({
+				otp: OTP,
+				token: token,
+			}, {where: {id: user.id}})
+			await sendVerificationMessage(OTP, req.body.phoneNumber, 'User')
+			return apiResponses.successResponseWithData(
+				res,
+				'User registered successfully!',
+				{email: user.email, userId: user.id, phoneNumber: user.phoneNumber, token}
+			);
+		}
 	} catch (err) {
 		console.log('err---->', err)
 		return apiResponses.errorResponse(res, err);
@@ -111,12 +212,7 @@ module.exports.resendEmailVerifyMail = async (req, res) => {
 		await User.updateOne({
 			securityStamp: token,
 		}, { where: { email: req.body.email }})
-		/* #swagger.responses[200] = {
-                        description: "Mail Resend successfully!",
-                        schema: { $statusCode : 200 ,$status: true, $message: "Mail Resend successfully!", $data : {}}
-                    } */
 		await Mails.userRegistration(req.body.email, token);
-		// return res.status(200).send({ status:'200', message: "Mail Resend successfully!" , data: userData });
 		return apiResponses.successResponseWithData(
 			res,
 			'Success!',
@@ -135,7 +231,6 @@ module.exports.resendMobileOtp = async (req, res) => {
 			otp: OTP,
 		}, { where: { id: req.body.userId, phoneNumber: req.body.phoneNumber }})
 
-		console.log('ip---->', info[0] === 1)
 		if(info[0] === 1) {
 			await sendVerificationMessage(OTP, req.body.phoneNumber, 'User')
 			return apiResponses.successResponseWithData(
@@ -170,10 +265,6 @@ module.exports.verifyEmail = async (req, res) => {
 					securityStamp: '',
 					emailConfirmed: true
 				}, {where: {id: user.id}})
-				/* #swagger.responses[200] = {
-                                description: "Mail Resend successfully!",
-                                schema: { $statusCode : 200 ,$status: true, $message: "Mail Resend successfully!", $data : {}}
-                            } */
 				const token = createToken(user.id, user.email, user.role);
 				const obj = {
 					id: user.id,
@@ -223,9 +314,19 @@ module.exports.verifyPhone = async (req, res) => {
 					phoneNumberConfirmed: true
 				}, {where: {id: user.id}})
 
+				const verifyUser = await User.findOne({
+					where: {
+						id: req.body.userId
+					},
+				})
+				const isExist = await BasicProfile.findOne({where: {userId: user.id}})
 				const obj = {
 					id: user.id,
-					emailConfirmed: user.emailConfirmed
+					emailConfirmed: user.emailConfirmed,
+					basicProfile: isExist,
+					role: user.role,
+					phoneNumberConfirmed: verifyUser.phoneNumberConfirmed,
+					phoneNumber: verifyUser.phoneNumber
 				};
 				return apiResponses.successResponseWithData(
 					res,

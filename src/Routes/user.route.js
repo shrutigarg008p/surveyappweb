@@ -32,6 +32,11 @@ module.exports= function(app) {
 	);
 
 	app.post(
+		'/api/v1/auth/user/continueWithMobile',
+		usersController.continueWithMobile,
+	);
+
+	app.post(
 		'/api/v1/auth/user/login',
 		UserAuth.logInValidator,
 		usersController.userLogin,

@@ -115,7 +115,7 @@ module.exports= function(app) {
     );
 
     app.get(
-        '/api/v1/surveys/getAllPartnerUsers/:id',
+        '/api/v1/surveys/getAllPartnerUsers/:id/:surveyId',
         surveyControllers.getAllPartnerUsers,
     );
 };

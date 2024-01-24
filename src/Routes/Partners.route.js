@@ -26,6 +26,11 @@ module.exports= function(app) {
     );
 
     app.get(
+        '/api/v1/partners/getAllPartnerSurveys/:partnerId',
+        partnersControllers.getAllPartnerSurveys,
+    );
+
+    app.get(
         '/api/v1/partners/getOne/:id',
         partnersControllers.getOne,
     );
