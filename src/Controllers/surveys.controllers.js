@@ -77,7 +77,7 @@ module.exports.create = async (req, res) => {
                 description_three: req.body.description_three,
                 description_four: req.body.description_four,
                 country: req.body.country,
-                colorcode: req.body.colorcode,
+                colorcode: req.body.colorcode || '#FFA500',
                 createdAt: new Date().valueOf(),
                 updatedAt: new Date().valueOf(),
             })
@@ -942,7 +942,8 @@ module.exports.getAllPartnerUsers = async (req, res) => {
         const data = await PartnerUsers.findAll({
             where: {
                 deletedAt: null,
-                partner_id: req.params.id
+                partner_id: req.params.id,
+                survey_id: req.params.surveyId
             },
             attributes: {
                 exclude: ['extra_string'],

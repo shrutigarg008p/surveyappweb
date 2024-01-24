@@ -96,7 +96,7 @@ module.exports = {
         </div><p>
             Hi ${name}
         </p><p>
-            I am registered with a great service called <span class="il">IndiaPolls</span> - the website is <a href="https://indiapolls.com" target="_blank"><span class="il">IndiaPolls</span>.com</a> where I
+            I am registered with a great service called <span class="il">IndiaPolls</span> - the website is <a href="https://test.indiapolls.com" target="_blank"><span class="il">IndiaPolls</span>.com</a> where I
         spend a few minutes filling in surveys on interesting topics, and they pay me for doing this! <br> It is very
             simple - all you need to do is register, fill in your profile and then fill in the surveys that they will send
             out to you from time to time. And that gives you a chance to earn rewards from Rs 20 to Rs 2000 and

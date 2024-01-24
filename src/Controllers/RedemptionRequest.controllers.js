@@ -2,6 +2,7 @@ const db = require('../models');
 const axios = require('axios');
 const RedemptionRequests = db.redemptionRequest;
 const Users = db.user;
+const BasicProfile = db.basicProfile;
 const Surveys = db.surveys;
 const Rewards = db.rewards;
 const RedemptionRequestTransactions = db.redemptionRequestTransactions;
@@ -68,6 +69,7 @@ module.exports.getAll = async (req, res) => {
     try {
         const limit = req.params.limit;
         RedemptionRequests.belongsTo(Users, { foreignKey: 'userId' });
+        RedemptionRequests.belongsTo(BasicProfile, { foreignKey: 'userId' });
         const data = await RedemptionRequests.findAll({
             where: { deletedAt: null },
             include: [
@@ -75,12 +77,41 @@ module.exports.getAll = async (req, res) => {
                     model: Users,
                     required: false,
                     attributes: ['email', "phoneNumber"]
+                },
+                {
+                    model: BasicProfile,
+                    required: false,
+                    attributes: ['lastName', "firstName"]
                 }
             ],
             limit: limit,
             order: [['createdAt', 'DESC']]
         });
-        return apiResponses.successResponseWithData(res, 'success!', data);
+        const transformedRedemptionData = data.map(item => ({
+            id: item.id,
+            userId: item.userId,
+            redemptionModeId: item.redemptionModeId,
+            redemptionModeTitle: item.redemptionModeTitle,
+            requestDate: item.requestDate,
+            pointsRequested: item.pointsRequested,
+            pointsRedeemed: item.pointsRedeemed,
+            redemptionRequestStatus: item.redemptionRequestStatus,
+            notes: item.notes,
+            redemptionDate: item.redemptionDate,
+            cancellationDate: item.cancellationDate,
+            IndiaPollsNotes: item.IndiaPollsNotes,
+            approvedById: item.approvedById,
+            cancelledById: item.cancelledById,
+            createdAt: item.createdAt,
+            updatedAt: item.updatedAt,
+            deletedAt: item.deletedAt,
+            fullName: `${item.basic_profile.firstName} ${item.basic_profile.lastName}`,
+            user: {
+                email: item.user.email,
+                phoneNumber: item.user.phoneNumber
+            }
+        }))
+        return apiResponses.successResponseWithData(res, 'success!', transformedRedemptionData);
     } catch (err) {
         return apiResponses.errorResponse(res, err);
     }

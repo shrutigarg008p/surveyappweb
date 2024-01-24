@@ -1,5 +1,7 @@
 const db = require('../models');
 const Partners = db.partners;
+const Surveys = db.surveys;
+const SurveysPartners = db.surveyPartners;
 const apiResponses = require('../Components/apiresponse');
 
 module.exports.create = async (req, res) => {
@@ -67,6 +69,29 @@ module.exports.getAll = async (req, res) => {
         const data = await Partners.findAll({ deletedAt: null, limit: limit, order: [['createdAt', 'DESC']]})
         return apiResponses.successResponseWithData(res, 'success!', data);
     } catch (err) {
+        return apiResponses.errorResponse(res, err);
+    }
+};
+
+module.exports.getAllPartnerSurveys = async (req, res) => {
+    try {
+        console.log('calling----->')
+        const partnerId = req.params.partnerId;
+        SurveysPartners.belongsTo(Surveys, { foreignKey: 'surveyId' });
+        const data = await SurveysPartners.findAll({ where: {
+                partnerId: partnerId,
+            },
+                include: [
+                    {
+                        model: Surveys,
+                        required: false,
+                        attributes: ['name', 'id']
+                    },
+                ]
+            })
+        return apiResponses.successResponseWithData(res, 'success!', data);
+    } catch (err) {
+        console.log('err--->', err)
         return apiResponses.errorResponse(res, err);
     }
 };
