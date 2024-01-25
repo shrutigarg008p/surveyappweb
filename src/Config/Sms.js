@@ -48,6 +48,29 @@ const sendVerificationMessage = async (otp, mobile, name) => {
     }
 };
 
+const sendVerificationMessageHindi = async (otp, mobile, name) => {
+    try {
+        const response = await axios.get('https://enterprise.smsgupshup.com/GatewayAPI/rest', {
+            params: {
+                method: 'SendMessage',
+                send_to: `91${mobile}`,
+                msg: `प्रिय ${name}, कृपया इंडियापोल्स पर अपने खाते के सत्यापन के लिए ${otp} का उपयोग करें। धन्यवाद !`,
+                msg_type: 'Unicode_text',
+                userid: '2000237056',
+                auth_scheme: 'plain',
+                password: 'AK9m4gQH',
+                v: '1.1',
+                format: 'text',
+            },
+        });
+        console.log('Response Hindi:', response);
+        return true
+    } catch (error) {
+        console.error('Error sending message:', error.message);
+        return true
+    }
+};
+
 
 function generateOTP() {
     const otp = Math.floor(1000 + Math.random() * 9000);
@@ -57,5 +80,6 @@ function generateOTP() {
 module.exports = {
     sendSurveyMessage,
     sendVerificationMessage,
-    generateOTP
+    generateOTP,
+    sendVerificationMessageHindi
 }

@@ -19,6 +19,9 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING(512),
             allowNull: true,
         },
+        hindi: {
+            type: DataTypes.STRING
+        },
         displayOrder: {
             type: DataTypes.INTEGER,
             allowNull: false,

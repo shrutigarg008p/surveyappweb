@@ -185,125 +185,239 @@ module.exports.ApproveRequest = async (req, res) => {
         const requestData = await RedemptionRequests.findOne({ where: { id: req.body.id, "redemptionRequestStatus": 'New' }, raw: true })
         console.log('requestData--->', requestData)
         if(requestData) {
-            let config = {
-                method: 'post',
-                maxBodyLength: Infinity,
-                url: 'https://egv-sandbox.flipkart.net/gcms/api/1.0/transaction',
-                headers: {
-                    'medium': 'inline',
-                    'format': 'JSON',
-                    'Flipkart-Gifting-Client-Id': 'vis8897905',
-                    'Flipkart-Gifting-Client-Token': 'L1hmA1nglATLxAgdztOH'
-                }
-            };
+            if (requestData.redemptionModeTitle === 'Amazon Vouchers') {
+                let config = {
+                    method: 'post',
+                    maxBodyLength: Infinity,
+                    url: 'https://egv-sandbox.flipkart.net/gcms/api/1.0/transaction',
+                    headers: {
+                        'medium': 'inline',
+                        'format': 'JSON',
+                        'Flipkart-Gifting-Client-Id': 'vis8897905',
+                        'Flipkart-Gifting-Client-Token': 'L1hmA1nglATLxAgdztOH'
+                    }
+                };
 
-            axios.request(config)
-                .then(async (response) => {
-                    console.log('MIDDLE---->' + JSON.stringify(response.data));
-                    const user = await Users.findOne({where: {id: requestData.userId}})
-                    if (response) {
-                        if (response.data.statusCode === 'SUCCESS') {
-                            let data = JSON.stringify({
-                                "transactionId": response.data.transactionId,
-                                "denomination": 1 || requestData.pointsRequested,
-                                "recipient": {
-                                    "medium": "EMAIL",
-                                    "format": "HTML",
-                                    "email": user.email,
-                                    "imageURL": "https://test.indiapolls.com/assets/img/logo-black.png"
-                                }
-                            });
+                axios.request(config)
+                    .then(async (response) => {
+                        console.log('MIDDLE---->' + JSON.stringify(response.data));
+                        const user = await Users.findOne({where: {id: requestData.userId}})
+                        if (response) {
+                            if (response.data.statusCode === 'SUCCESS') {
+                                let data = JSON.stringify({
+                                    "transactionId": response.data.transactionId,
+                                    "denomination": 1 || requestData.pointsRequested,
+                                    "recipient": {
+                                        "medium": "EMAIL",
+                                        "format": "HTML",
+                                        "email": user.email,
+                                        "imageURL": "https://test.indiapolls.com/assets/img/logo-black.png"
+                                    }
+                                });
 
-                            let config = {
-                                method: 'post',
-                                maxBodyLength: Infinity,
-                                url: 'https://egv-sandbox.flipkart.net/gcms/api/1.0/egv/v2?Flipkart-Gifting-Client-Id=vis8897905&Flipkart-Gifting-Client-Token=L1hmA1nglATLxAgdztOH',
-                                headers: {
-                                    'Flipkart-Gifting-Client-Id': 'vis8897905',
-                                    'Flipkart-Gifting-Client-Token': 'L1hmA1nglATLxAgdztOH',
-                                    'Content-Type': 'application/json'
-                                },
-                                data: data
-                            };
+                                let config = {
+                                    method: 'post',
+                                    maxBodyLength: Infinity,
+                                    url: 'https://egv-sandbox.flipkart.net/gcms/api/1.0/egv/v2?Flipkart-Gifting-Client-Id=vis8897905&Flipkart-Gifting-Client-Token=L1hmA1nglATLxAgdztOH',
+                                    headers: {
+                                        'Flipkart-Gifting-Client-Id': 'vis8897905',
+                                        'Flipkart-Gifting-Client-Token': 'L1hmA1nglATLxAgdztOH',
+                                        'Content-Type': 'application/json'
+                                    },
+                                    data: data
+                                };
 
-                            axios.request(config)
-                                .then(async (response) => {
-                                    console.log('FINAL------>' + JSON.stringify(response.data));
-                                    if(response) {
-                                        if (response.data.statusCode === 'CREATION_SUCCESSFUL') {
-                                            const RedemptionRequest = await RedemptionRequestTransactions.create({
-                                                requestId: req.body.id,
-                                                status: response.data.statusCode,
-                                                response: response.data,
-                                                createdAt: new Date().valueOf(),
-                                                updatedAt: new Date().valueOf(),
-                                            })
-
-                                            const user = await RedemptionRequests.update({
-                                                redemptionRequestStatus: 'Redeemed',
-                                                redemptionDate: new Date().valueOf(),
-                                                pointsRedeemed: requestData.pointsRequested,
-                                                userId: requestData.userId,
-                                                approvedById: req.body.approvedById,
-                                                createdAt: new Date().valueOf(),
-                                                updatedAt: new Date().valueOf(),
-                                                requestDate: new Date().valueOf()
-                                                },
-                                                { where: { id: req.body.id } }
-                                            )
-                                            return apiResponses.successResponseWithData(
-                                                res,
-                                                'Success!',
-                                                response.data
-                                            );
-                                        } else {
-                                            const RedemptionRequest = await RedemptionRequestTransactions.create({
-                                                requestId: req.body.requestId,
-                                                status: response.data.statusCode,
-                                                response: response.data,
-                                                createdAt: new Date().valueOf(),
-                                                updatedAt: new Date().valueOf(),
-                                            })
-
-                                            const user = await RedemptionRequests.update({
-                                                    redemptionRequestStatus: 'Failed',
-                                                    approvedById: req.body.approvedById,
+                                axios.request(config)
+                                    .then(async (response) => {
+                                        console.log('FINAL------>' + JSON.stringify(response.data));
+                                        if (response) {
+                                            if (response.data.statusCode === 'CREATION_SUCCESSFUL') {
+                                                const RedemptionRequest = await RedemptionRequestTransactions.create({
+                                                    requestId: req.body.id,
+                                                    status: response.data.statusCode,
+                                                    response: response.data,
                                                     createdAt: new Date().valueOf(),
                                                     updatedAt: new Date().valueOf(),
-                                                    requestDate: new Date().valueOf()
-                                                },
-                                                { where: { id: req.body.id } }
-                                            )
-                                            return apiResponses.successResponseWithData(
-                                                res,
-                                                'Success!',
-                                                null
-                                            );
+                                                })
+
+                                                const user = await RedemptionRequests.update({
+                                                        redemptionRequestStatus: 'Redeemed',
+                                                        redemptionDate: new Date().valueOf(),
+                                                        pointsRedeemed: requestData.pointsRequested,
+                                                        userId: requestData.userId,
+                                                        approvedById: req.body.approvedById,
+                                                        createdAt: new Date().valueOf(),
+                                                        updatedAt: new Date().valueOf(),
+                                                        requestDate: new Date().valueOf()
+                                                    },
+                                                    {where: {id: req.body.id}}
+                                                )
+                                                return apiResponses.successResponseWithData(
+                                                    res,
+                                                    'Success!',
+                                                    response.data
+                                                );
+                                            } else {
+                                                const RedemptionRequest = await RedemptionRequestTransactions.create({
+                                                    requestId: req.body.requestId,
+                                                    status: response.data.statusCode,
+                                                    response: response.data,
+                                                    createdAt: new Date().valueOf(),
+                                                    updatedAt: new Date().valueOf(),
+                                                })
+
+                                                const user = await RedemptionRequests.update({
+                                                        redemptionRequestStatus: 'Failed',
+                                                        approvedById: req.body.approvedById,
+                                                        createdAt: new Date().valueOf(),
+                                                        updatedAt: new Date().valueOf(),
+                                                        requestDate: new Date().valueOf()
+                                                    },
+                                                    {where: {id: req.body.id}}
+                                                )
+                                                return apiResponses.successResponseWithData(
+                                                    res,
+                                                    'Success!',
+                                                    null
+                                                );
+                                            }
                                         }
-                                    }
-                                })
-                                .catch((error) => {
-                                    console.log(error);
-                                    return apiResponses.errorResponse(
-                                        res,
-                                        'Something went wrong!'
-                                    );
-                                });
-                        } else {
-                            return apiResponses.errorResponse(
-                                res,
-                                'Something went wrong!'
-                            );
+                                    })
+                                    .catch((error) => {
+                                        console.log(error);
+                                        return apiResponses.errorResponse(
+                                            res,
+                                            'Something went wrong!'
+                                        );
+                                    });
+                            } else {
+                                return apiResponses.errorResponse(
+                                    res,
+                                    'Something went wrong!'
+                                );
+                            }
+                        }
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                        return apiResponses.errorResponse(
+                            res,
+                            'Something went wrong!'
+                        );
+                    });
+            } else {
+                let productId = ''
+                if(requestData.redemptionModeTitle === 'PhonePe eGift voucher') {
+                    productId = 49609
+                }
+
+                if(requestData.redemptionModeTitle === 'Google Play Gift Code') {
+                    productId = 48801
+                }
+
+                if(requestData.redemptionModeTitle === 'Croma') {
+                    productId = 14383
+                }
+
+                if(requestData.redemptionModeTitle === 'Flipkart E-Gift Voucher') {
+                    productId = 22722
+                }
+
+                const user = await Users.findOne({where: {id: requestData.userId}})
+                let data = JSON.stringify({
+                    "query": "plumProAPI.mutation.placeOrder",
+                    "tag": "plumProAPI",
+                    "variables": {
+                        "data": {
+                            "productId": productId,
+                            "quantity": "1",
+                            "denomination": requestData.pointsRequested,
+                            "email": user.email,
+                            "contact": `+91-${user.phoneNumber}`,
+                            "tag": "",
+                            "poNumber": requestData.id,
+                            "notifyReceiverEmail": 1
                         }
                     }
-                })
-                .catch((error) => {
-                    console.log(error);
-                    return apiResponses.errorResponse(
-                        res,
-                        'Something went wrong!'
-                    );
                 });
+
+                let config = {
+                    method: 'post',
+                    maxBodyLength: Infinity,
+                    url: 'https://stagingaccount.xoxoday.com/chef/v1/oauth/api',
+                    headers: {
+                        'Authorization': 'Bearer eyJ0b2tlbkNvbnRlbnQiOnsiaXNzdWVkRm9yIjoidGVzdCIsInNjb3BlIjoiIiwiaXNzdWVkQXQiOjE3MDYwODQ2MzQ2MTQsImV4cGlyZXNBdCI6IjIwMjQtMDItMDhUMDg6MjM6NTQuNjE0WiIsInRva2VuX3R5cGUiOiJVU0VSIn0sImFfdCI6ImV5SmxibU1pT2lKQk1USTRRMEpETFVoVE1qVTJJaXdpWVd4bklqb2lSVU5FU0MxRlV5SXNJbXRwWkNJNkltVnVZeUlzSW1Wd2F5STZleUpyZEhraU9pSkZReUlzSW1OeWRpSTZJbEF0TWpVMklpd2llQ0k2SWtScGFuY3dTR3AyUzNkSVUxUXdVbEJYVGpWemJHdFpjSGsyVDAxbVZsRkJSRVJWTjNSM09FcDFTMk1pTENKNUlqb2lRM1V6TWtsblRFSlpiWGRQV1VFdGNHSjZYM1ZGVldadVVtZ3lNa3g1TTNkYVltZG1XazlhVmxvNVVTSjlmUS4uYVFBWUVlZnY3QldSRlgyWnp3dkdGQS5Zd195WkZfdlpkQ3FlemNYaHBmWXVKUGxyeUtjSGNOOFZPOUM0RDJDcGJTenl2eGk2Ri1IZkYyYjUtdHJ6cEY1cjR0aHRHS2xjVzFqMzd3M2x2c2dyaGEzZXNhNU5TTFpYMEtPc2UtdlF0eFNyWlU1dldZY2hwNkQzNnBhSjZETjNsWlg0eUt2bmxzckgtTE84MEl6a3V5MEU0Y2hTelVjU2ZzMUJvNWFZaVFBbWZJZnNqY09yVS1NcmlDRmlZVm9ZYm5mV01nOExhR0pDUnZsVWFWZF80R2dKV1FKaFVjaVZNMHlkMDRoX0dGODRpTWtPbjJsRWRsOFFxUlZ1aUpONlg1ZkZsS00wU2VJcXZrbkJLenFFVjVSR3g2bm9BZzMxamZvdWxkV2pLWFFCRERPQlhqOWcxT0tMQ25iTm03SXA0SUE2VUlBYlo5RlR0ZFNzdno4NjBEbjJ1dkF6c0Roc1ZZYTNmOGxqbEJvcjFBQ0NKcWppV2NyY0lfang5ay12QzNUYzU5R2xpaFQ2WjhjT2h5WXFQTFhOZVFPLU83X3F5RkNLN1pqZlo5Q3BrMFZCSUNzX1VycXc2Y2RRaUt4RUx0QVJvQ2phSE1jc3NCYXc4NzFjRm11NFR2WnFRTGZFQ01OLTdwNGNKOFpFNUhtMnIyNnRGUVR4T1NhQTg1S29hRjQ3eW5xVUlrRWNxLWF5dnR5dXpDdlpSSFlRYkZMYzN2QmJZZ2t0T1JvN19Cc2RMbE91dUpqYkdmY1ZYMnpNWVVhYmJnNGdDd184dVdaMlNUMmd0UHZZN2tyZ3d6VllSSXVYWGdzbklkaUMwMXlSaGtuT09rbkl3U05STXdzUENnd050ankxWWJKcVVLYzhXa1dEdFM2c2VnNDhFU2Vxb05lcUxKM2NXRkJIZ0lJUWRENE9xUDJaUDJ6Ui1abkNwQjFySFJyTnlaMTBkRHNnQ19IdE5QOUwtNDFRVmdpZVQxRDNDZ2Q2NGw3SndISjhOb1NIZmU3WUVJdG5OM2pZUHFQNVFFMHBfWFZ5Z0E2MXpLeUtReWtXTFBuVmRNV3FRSnFKZ0ZXRjVmMk5JMG1Ra3UzdVNySldVaS0xT1l4SER2VG14aHFwSnlYYWlZZmtXRVBDWk9YczY2bHRrdlkzZ25OcWxic0h2OC5WRnhMRGFSMS02RDJFakRINVBwazZRIn0==',
+                        'Content-Type': 'application/json',
+                        'Cookie': '__cf_bm=HUVN4tkMTW8KtIHKqzFTz3fROutLhihBCbEdox5iC8g-1706087320-1-AZ2QBFOh5IbAmku1wdIbWaWkJnAbRNpN6CKTwSTlAcy4RZggXunq4Qe8UTAmkPTqdpj1CviE1siSg+lRKNGNaOg=; _cfuvid=fS5l5NEZIWVwugVKZ5qbR.IsipPPJXgrVLSLrBeUdhg-1706084905801-0-604800000'
+                    },
+                    data : data
+                };
+
+                axios.request(config)
+                    .then(async (response) => {
+                        console.log('FINAL------>' + JSON.stringify(response.data));
+                        if (response) {
+                            if (response.data.data.placeOrder.status === 1) {
+                                const RedemptionRequest = await RedemptionRequestTransactions.create({
+                                    requestId: req.body.id,
+                                    status: response.data.data.placeOrder.status,
+                                    response: response.data,
+                                    createdAt: new Date().valueOf(),
+                                    updatedAt: new Date().valueOf(),
+                                })
+
+                                const user = await RedemptionRequests.update({
+                                        redemptionRequestStatus: 'Redeemed',
+                                        redemptionDate: new Date().valueOf(),
+                                        pointsRedeemed: requestData.pointsRequested,
+                                        userId: requestData.userId,
+                                        approvedById: req.body.approvedById,
+                                        createdAt: new Date().valueOf(),
+                                        updatedAt: new Date().valueOf(),
+                                        requestDate: new Date().valueOf()
+                                    },
+                                    {where: {id: req.body.id}}
+                                )
+                                return apiResponses.successResponseWithData(
+                                    res,
+                                    'Success!',
+                                    response.data
+                                );
+                            } else {
+                                const RedemptionRequest = await RedemptionRequestTransactions.create({
+                                    requestId: req.body.requestId,
+                                    status: response.data.data.placeOrder.status,
+                                    response: response.data,
+                                    createdAt: new Date().valueOf(),
+                                    updatedAt: new Date().valueOf(),
+                                })
+
+                                const user = await RedemptionRequests.update({
+                                        redemptionRequestStatus: 'Failed',
+                                        approvedById: req.body.approvedById,
+                                        createdAt: new Date().valueOf(),
+                                        updatedAt: new Date().valueOf(),
+                                        requestDate: new Date().valueOf()
+                                    },
+                                    {where: {id: req.body.id}}
+                                )
+                                return apiResponses.successResponseWithData(
+                                    res,
+                                    'Success!',
+                                    null
+                                );
+                            }
+                        }
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                        return apiResponses.errorResponse(
+                            res,
+                            'Something went wrong!'
+                        );
+                    });
+
+            }
         } else {
             return apiResponses.validationErrorWithData(
                 res,

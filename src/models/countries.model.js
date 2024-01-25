@@ -10,6 +10,9 @@ module.exports = (sequelize, Sequelize) => {
         name: {
             type: DataTypes.STRING,
         },
+        hindi: {
+            type: DataTypes.STRING
+        },
         createdAt: {
             type: DataTypes.DATE,
             allowNull: false,

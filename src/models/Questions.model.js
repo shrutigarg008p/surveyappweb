@@ -15,6 +15,9 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING(512),
             allowNull: true,
         },
+        hindi: {
+            type: DataTypes.STRING
+        },
         hint: {
             type: Sequelize.STRING(512),
             allowNull: true,
