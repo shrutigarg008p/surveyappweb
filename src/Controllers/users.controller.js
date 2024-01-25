@@ -616,7 +616,7 @@ module.exports.userUpdate = async (req, res) => {
 				obj, { where: { userId: req.params.userId } }
 			)
 			await User.update(
-				{ phoneNumber: req.body.mobile }, { where: { id: req.params.userId } }
+				{ phoneNumber: req.body.mobile, email: req.body.email }, { where: { id: req.params.userId } }
 			)
 			User.hasOne(BasicProfile, {
 				foreignKey: 'userId',
@@ -1304,8 +1304,6 @@ module.exports.userNotifications = async (req, res) => {
 	}
 };
 
-
-
 module.exports.uploadUserProfile = async (req, res) => {
 	try {
 		if (req.file && req.body.userId) {
@@ -1324,7 +1322,11 @@ module.exports.uploadUserProfile = async (req, res) => {
 
 
 // async function test() {
-// 	await Mails.userRegistration('lsksl@g.com', '');
+// 	// await Mails.userRegistration('lsksl@g.com', '');
+// 	await User.update({
+// 		phoneNumberConfirmed: true,
+// 		emailConfirmed: true
+// 	},{ where: { "accessFailedCount": 0 } })
 // }
 //
 // test()
