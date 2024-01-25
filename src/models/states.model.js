@@ -15,6 +15,10 @@ module.exports = (sequelize, Sequelize) => {
             type: DataTypes.STRING,
             allowNull: true
         },
+        hindi: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
         createdAt: {
             type: DataTypes.DATE,
             allowNull: false
