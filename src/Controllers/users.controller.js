@@ -17,7 +17,7 @@ const {BOOLEAN, literal} = require("sequelize");
 const {bool} = require("twilio/lib/base/serialize");
 const {userRegistration} = require("../Config/Mails");
 const axios = require("axios");
-const {sendVerificationMessage, generateOTP} = require("../Config/Sms");
+const {sendVerificationMessage, generateOTP, sendVerificationMessageHindi} = require("../Config/Sms");
 const Op = db.Sequelize.Op;
 
 
@@ -92,7 +92,11 @@ module.exports.registration = async (req, res) => {
 				})
 			}
 		}
-		await sendVerificationMessage(OTP, req.body.phoneNumber, 'User')
+		if(req.body.language === 'hi') {
+			await sendVerificationMessageHindi(OTP, req.body.phoneNumber, 'उपयोगकर्ता')
+		} else {
+			await sendVerificationMessage(OTP, req.body.phoneNumber, 'User')
+		}
 		return apiResponses.successResponseWithData(
 			res,
 			'User registered successfully!',
@@ -111,8 +115,7 @@ module.exports.continueWithMobile = async (req, res) => {
 		console.log('body----->', req.body)
 		const user = await User.findOne({
 			where: {
-				phoneNumber: req.body.phoneNumber,
-				registerType: req.body.registerType
+				phoneNumber: req.body.phoneNumber
 			},
 		})
 		if (!user) {
@@ -180,7 +183,11 @@ module.exports.continueWithMobile = async (req, res) => {
 					})
 				}
 			}
-			await sendVerificationMessage(OTP, req.body.phoneNumber, 'User')
+			if(req.body.language === 'hi') {
+				await sendVerificationMessageHindi(OTP, req.body.phoneNumber, 'उपयोगकर्ता')
+			} else {
+				await sendVerificationMessage(OTP, req.body.phoneNumber, 'User')
+			}
 			return apiResponses.successResponseWithData(
 				res,
 				'User registered successfully!',
@@ -193,7 +200,11 @@ module.exports.continueWithMobile = async (req, res) => {
 				otp: OTP,
 				token: token,
 			}, {where: {id: user.id}})
-			await sendVerificationMessage(OTP, req.body.phoneNumber, 'User')
+			if(req.body.language === 'hi') {
+				await sendVerificationMessageHindi(OTP, req.body.phoneNumber, 'उपयोगकर्ता')
+			} else {
+				await sendVerificationMessage(OTP, req.body.phoneNumber, 'User')
+			}
 			return apiResponses.successResponseWithData(
 				res,
 				'User registered successfully!',
@@ -232,7 +243,11 @@ module.exports.resendMobileOtp = async (req, res) => {
 		}, { where: { id: req.body.userId, phoneNumber: req.body.phoneNumber }})
 
 		if(info[0] === 1) {
-			await sendVerificationMessage(OTP, req.body.phoneNumber, 'User')
+			if(req.body.language === 'hi') {
+				await sendVerificationMessageHindi(OTP, req.body.phoneNumber, 'उपयोगकर्ता')
+			} else {
+				await sendVerificationMessage(OTP, req.body.phoneNumber, 'User')
+			}
 			return apiResponses.successResponseWithData(
 				res,
 				'Success!',
@@ -389,7 +404,11 @@ module.exports.userLogin = async (req, res) => {
 			const isExist = await BasicProfile.findOne({where: {userId: user.id}})
 			const OTP = generateOTP();
 			if(user.phoneNumberConfirmed === false) {
-				await sendVerificationMessage(OTP, user.phoneNumber, 'User')
+				if(req.body.language === 'hi') {
+					await sendVerificationMessageHindi(OTP, user.phoneNumber, 'उपयोगकर्ता')
+				} else {
+					await sendVerificationMessage(OTP, req.body.phoneNumber, 'User')
+				}
 				await User.update({signupIp: req.ip, otp: OTP}, {where: {id: user.id}})
 			} else {
 				await User.update({signupIp: req.ip}, {where: {id: user.id}})
@@ -595,6 +614,9 @@ module.exports.userUpdate = async (req, res) => {
 			delete obj.userId
 			const user = await BasicProfile.update(
 				obj, { where: { userId: req.params.userId } }
+			)
+			await User.update(
+				{ phoneNumber: req.body.mobile }, { where: { id: req.params.userId } }
 			)
 			User.hasOne(BasicProfile, {
 				foreignKey: 'userId',
