@@ -719,7 +719,7 @@ module.exports.adminRespondentDashboardWeb = async (req, res) => {
             const profilesWithQuestionsCount = await Profiles.findAll({
                 attributes: {
                     include: [
-                        [Sequelize.literal('(SELECT COUNT(*) FROM questions WHERE questions."profileId" = profiles.id)'), 'questionCount']
+                        [Sequelize.literal('(SELECT COUNT(*) FROM questions WHERE questions."profileId" = profiles.id AND questions."deletedAt" IS NULL AND questions."isActive" = true)'), 'questionCount']
                     ]
                 },
                 include: [

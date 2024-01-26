@@ -37,7 +37,7 @@ async function respondentSummary(userId) {
     const profilesWithQuestionsCount = await Profiles.findAll({
         attributes: {
             include: [
-                [Sequelize.literal('(SELECT COUNT(*) FROM questions WHERE questions."profileId" = profiles.id)'), 'questionCount']
+                [Sequelize.literal('(SELECT COUNT(*) FROM questions WHERE questions."profileId" = profiles.id AND questions."deletedAt" IS NULL AND questions."isActive" = true)'), 'questionCount']
             ]
         },
         include: [
@@ -79,7 +79,7 @@ async function respondentSummary(userId) {
     const overallTotalQuestions = result.reduce((total, section) => total + section.totalQuestions, 0);
     const overallAttemptedQuestions = result.reduce((total, section) => total + section.attemptedQuestions, 0);
     const overallAttemptedPercentage = Math.round((overallAttemptedQuestions / overallTotalQuestions) * 100);
-
+    console.log('looo----->', overallAttemptedPercentage)
     const totalRewardPoints = await Rewards.sum('points', {where: {userId: userId}});
     const totalReferralsPoints = await Rewards.sum('points', {
         where: {
