@@ -1287,6 +1287,21 @@ module.exports.respondentProfileOverview = async (req, res) => {
 		const overallTotalQuestions = result.reduce((total, section) => total + section.totalQuestions, 0);
 		const overallAttemptedQuestions = result.reduce((total, section) => total + section.attemptedQuestions, 0);
 		const overallAttemptedPercentage = Math.round((overallAttemptedQuestions / overallTotalQuestions) * 100);
+		if(overallAttemptedPercentage === 100) {
+			console.log('Yes')
+			const isExist = await Rewards.findOne({where: {userId: req.params.id, rewardType: 'Profile Completed'}})
+			if (!isExist) {
+				await Rewards.create({
+					points: 25,
+					rewardType: 'Profile Completed',
+					rewardStatus: 'Accepted',
+					userId: req.params.id,
+					createdAt: new Date().valueOf(),
+					updatedAt: new Date().valueOf(),
+					rewardDate: new Date().valueOf(),
+				})
+			}
+		}
 		return apiResponses.successResponseWithData(res, 'success!', {result, overallAttemptedPercentage, basicProfile, users});
 	} catch (err) {
 		console.log(err)
