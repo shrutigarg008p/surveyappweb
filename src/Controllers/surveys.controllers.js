@@ -641,47 +641,93 @@ module.exports.userRespondentDashboardWeb = async (req, res) => {
         } = await respondentSummary(req.params.userId);
 
 
-        let obj = {
-            totalSurveys: {
-                name: "Total Survey",
-                points: totalSurveys || 0
-            },
-            incompleteSurveys: {
-                name: "Incomplete Survey",
-                points: incompleteSurveys || 0
-            },
-            completeSurveys: {
-                name: "Complete Survey",
-                points: completeSurveys || 0
-            },
-            notStartedSurveys: {
-                name: "Survey Not Started",
-                points: notStartedSurveys || 0
-            },
-            overallAttemptedPercentage: {
-                name: "Profile Pending",
-                points: 100 - overallAttemptedPercentage || 0
-            },
-            totalRewardPoints: {
-                name: "Rewards Points",
-                points: totalRewardPoints || 0
-            },
-            totalReferralsPoints: {
-                name: "Referrals Points",
-                points: totalReferralsPoints || 0
-            },
-            totalReferralsStatistics: {
-                name: "Referrals Statistics",
-                points: 0
-            },
-            totalLeft: {
-                name: "Total Left Points",
-                points: totalLeft || 0
-            },
-            totalReferralsApproved: {
-                name: "Total Referrals Approved",
-                points: totalReferralsApproved || 0
-            },
+        let obj = {}
+        if(req.query.language === 'hi') {
+            obj = {
+                totalSurveys: {
+                    name: "कुल सर्वेक्षण",
+                    points: totalSurveys || 0
+                },
+                incompleteSurveys: {
+                    name: "अधूरा सर्वेक्षण",
+                    points: incompleteSurveys || 0
+                },
+                completeSurveys: {
+                    name: "पूर्ण सर्वेक्षण",
+                    points: completeSurveys || 0
+                },
+                notStartedSurveys: {
+                    name: "सर्वेक्षण शुरू नहीं हुआ",
+                    points: notStartedSurveys || 0
+                },
+                overallAttemptedPercentage: {
+                    name: "प्रोफ़ाइल लंबित",
+                    points: 100 - overallAttemptedPercentage || 0
+                },
+                totalRewardPoints: {
+                    name: "पुरस्कार अंक",
+                    points: totalRewardPoints || 0
+                },
+                totalReferralsPoints: {
+                    name: "रेफरल अंक",
+                    points: totalReferralsPoints || 0
+                },
+                totalReferralsStatistics: {
+                    name: "रेफरल सांख्यिकी",
+                    points: 0
+                },
+                totalLeft: {
+                    name: "कुल बचा हुआ",
+                    points: totalLeft || 0
+                },
+                totalReferralsApproved: {
+                    name: "कुल मंजूर किए गए रेफरल",
+                    points: totalReferralsApproved || 0
+                },
+            };
+        } else {
+            obj = {
+                totalSurveys: {
+                    name: "Total Survey",
+                    points: totalSurveys || 0
+                },
+                incompleteSurveys: {
+                    name: "Incomplete Survey",
+                    points: incompleteSurveys || 0
+                },
+                completeSurveys: {
+                    name: "Complete Survey",
+                    points: completeSurveys || 0
+                },
+                notStartedSurveys: {
+                    name: "Survey Not Started",
+                    points: notStartedSurveys || 0
+                },
+                overallAttemptedPercentage: {
+                    name: "Profile Pending",
+                    points: 100 - overallAttemptedPercentage || 0
+                },
+                totalRewardPoints: {
+                    name: "Rewards Points",
+                    points: totalRewardPoints || 0
+                },
+                totalReferralsPoints: {
+                    name: "Referrals Points",
+                    points: totalReferralsPoints || 0
+                },
+                totalReferralsStatistics: {
+                    name: "Referrals Statistics",
+                    points: 0
+                },
+                totalLeft: {
+                    name: "Total Left Points",
+                    points: totalLeft || 0
+                },
+                totalReferralsApproved: {
+                    name: "Total Referrals Approved",
+                    points: totalReferralsApproved || 0
+                },
+            }
         }
         return apiResponses.successResponseWithData(res, 'Success', obj);
     } catch (err) {
