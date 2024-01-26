@@ -1292,7 +1292,7 @@ module.exports.respondentProfileOverview = async (req, res) => {
 			const isExist = await Rewards.findOne({where: {userId: req.params.id, rewardType: 'Profile Completed'}})
 			if (!isExist) {
 				await Rewards.create({
-					points: 25,
+					points: 50,
 					rewardType: 'Profile Completed',
 					rewardStatus: 'Accepted',
 					userId: req.params.id,
