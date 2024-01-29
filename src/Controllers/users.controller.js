@@ -649,7 +649,11 @@ module.exports.userUpdate = async (req, res) => {
 								securityStamp: token,
 							}, { where: { id: req.params.userId } }
 						)
-						await Mails.userEmailChanged(req.body.email, token);
+						if(req.query.language === 'hi') {
+							await Mails.userEmailChangedHindi(req.body.email, token);
+						} else {
+							await Mails.userEmailChanged(req.body.email, token);
+						}
 					}
 				}
 
@@ -675,11 +679,11 @@ module.exports.userUpdate = async (req, res) => {
 									phoneNumberConfirmed: false,
 								}, { where: { id: req.params.userId } }
 							)
-							if(req.query.language === 'hi') {
-								await sendVerificationMessageHindi(OTP, req.body.mobile, 'उपयोगकर्ता')
-							} else {
-								await sendVerificationMessage(OTP, req.body.mobile, 'User')
-							}
+							// if(req.query.language === 'hi') {
+							// 	await sendVerificationMessageHindi(OTP, req.body.mobile, 'उपयोगकर्ता')
+							// } else {
+							// 	await sendVerificationMessage(OTP, req.body.mobile, 'User')
+							// }
 						}
 					}
 
@@ -707,7 +711,6 @@ module.exports.userUpdate = async (req, res) => {
 		return apiResponses.errorResponse(res, err);
 	}
 };
-
 
 
 module.exports.updateUserLanguage = async (req, res) => {
@@ -835,6 +838,7 @@ module.exports.getUser = async (req, res) => {
 
 module.exports.userPasswordReset = async (req, res) => {
 	try {
+		const language = req.headers['language'] || req.query.language || 'en';
 		User.findOne(
 			{where: {email: req.body.email},
 			})
@@ -861,7 +865,11 @@ module.exports.userPasswordReset = async (req, res) => {
 						}
 					});
 
-					await Mails.userPasswordReset(user.email, token);
+					if(language === 'hi'){
+						await Mails.userPasswordResetHindi(user.email, token);
+					} else {
+						await Mails.userPasswordReset(user.email, token);
+					}
 				});
 				return apiResponses.successResponseWithData(res, 'Link send to your email ');
 			});
@@ -1360,7 +1368,7 @@ module.exports.respondentProfileOverview = async (req, res) => {
 			raw: true
 		})
 		const basicProfile = await BasicProfile.findOne({ where: { userId: req.params.id }})
-		const users = await User.findOne({ where: { id: req.params.id }, attributes: ['unsubscribeDate', 'id', 'deleteRequestDate']})
+		const users = await User.findOne({ where: { id: req.params.id }, attributes: ['emailConfirmed', 'unsubscribeDate', 'id', 'deleteRequestDate', 'phoneNumber', "email", "phoneNumberConfirmed"]})
 		const result = profilesWithQuestionsCount.map(section => {
 			const totalQuestions = parseInt(section.questionCount);
 			const response = section['profileuserresponses.response'];
