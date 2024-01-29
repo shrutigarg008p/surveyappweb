@@ -577,47 +577,93 @@ module.exports.userRespondentDashboard = async (req, res) => {
             totalLeft
         } = await respondentSummary(req.params.userId);
 
-        let obj = [{
+        let obj = []
+        if(req.query.language === 'hi') {
+            obj = [
+                {
+                    name: "कुल सर्वेक्षण",
+                    points: totalSurveys || 0
+                },
+                {
+                    name: "अधूरा सर्वेक्षण",
+                    points: incompleteSurveys || 0
+                },
+                {
+                    name: "पूरा सर्वेक्षण",
+                    points: completeSurveys || 0
+                },
+                {
+                    name: "सर्वेक्षण शुरू नहीं हुआ",
+                    points: notStartedSurveys || 0
+                },
+                {
+                    name: "प्रोफाइल लंबित",
+                    points: 100 - overallAttemptedPercentage || 0
+                },
+                {
+                    name: "पुरस्कार अंक",
+                    points: totalRewardPoints || 0
+                },
+                {
+                    name: "संदर्भ अंक",
+                    points: totalReferralsPoints || 0
+                },
+                {
+                    name: "संदर्भ आंकड़ा",
+                    points: 0
+                },
+                {
+                    name: "कुल बचे हुए अंक",
+                    points: totalLeft || 0
+                },
+                {
+                    name: "कुल स्वीकृत संदर्भ",
+                    points: totalReferralsApproved || 0
+                }
+            ]
+        } else {
+            obj = [{
                 name: "Total Survey",
                 points: totalSurveys || 0
-            },
-            {
-                name: "Incomplete Survey",
-                points: incompleteSurveys || 0
-            },
-             {
-                name: "Complete Survey",
-                points: completeSurveys || 0
-            },
-             {
-                name: "Survey Not Started",
-                points: notStartedSurveys || 0
-            },
-            {
-                name: "Profile Pending",
-                points: 100 - overallAttemptedPercentage || 0
-            },
-            {
-                name: "Rewards Points",
-                points: totalRewardPoints || 0
-            },
-             {
-                name: "Referrals Points",
-                points: totalReferralsPoints || 0
-            },
-             {
-                name: "Referrals Statistics",
-                points: 0
-            },
-            {
-                name: "Total Left Points",
-                points: totalLeft || 0
-            },
-             {
-                name: "Total Referrals Approved",
-                points: totalReferralsApproved || 0
-            },
-        ]
+                },
+                {
+                    name: "Incomplete Survey",
+                    points: incompleteSurveys || 0
+                },
+                {
+                    name: "Complete Survey",
+                    points: completeSurveys || 0
+                },
+                {
+                    name: "Survey Not Started",
+                    points: notStartedSurveys || 0
+                },
+                {
+                    name: "Profile Pending",
+                    points: 100 - overallAttemptedPercentage || 0
+                },
+                {
+                    name: "Rewards Points",
+                    points: totalRewardPoints || 0
+                },
+                {
+                    name: "Referrals Points",
+                    points: totalReferralsPoints || 0
+                },
+                {
+                    name: "Referrals Statistics",
+                    points: 0
+                },
+                {
+                    name: "Total Left Points",
+                    points: totalLeft || 0
+                },
+                {
+                    name: "Total Referrals Approved",
+                    points: totalReferralsApproved || 0
+                },
+            ]
+        }
         return apiResponses.successResponseWithData(res, 'Success', obj);
     } catch (err) {
         console.log('err-r-->', err)

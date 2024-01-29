@@ -262,56 +262,21 @@ async function citiesImport() {
 }
 
 
+const citiesJsonNew = require('../citiesNew.json')
+async function citiesImportNew() {
+    const dataForBulkWrite = citiesJsonNew.map(obj => ({
+        createdAt: obj.createdAt,
+        updatedAt: obj.updatedAt,
+        region: obj.region,
+        stateId: obj.stateId,
+        name: obj.name,
+        segment: obj.segment,
+        zipCode: obj.zipCode,
+        tier: obj.tier,
+        hindi: obj.hindi,
+    }));
 
-const { v4: isUUID } = require('uuid');
-const {Op} = require("sequelize");
-function csvCitiesImport() {
-    const fs = require('fs');
-    const csvFilePath = './Controllers/cities_202401061813.csv';
-    const csvData = fs.readFileSync(csvFilePath, 'utf8');
-    const rows = csvData
-        .trim() // Remove leading/trailing whitespaces
-        .split('\n') // Split into rows
-        .map(row => row.split(',')); // Split each row into columns
-
-    // Process rows and handle "nan" values in the tier column
-    const dataArray = rows
-        .map(([id,stateId,zipCode,name,segment,region,createdAt,updatedAt,deletedAt,tier]) => {
-            // Handle "nan" values in the tier column
-            tier = tier.trim() !== '' && tier.trim() !== 'nan' ? parseInt(tier.trim(), 10) : 0;
-
-            // Check if zipCode, id, name, and stateId are not empty
-            if (zipCode.trim() !== '' && id.trim() !== '' && name.trim() !== '' && stateId.trim() !== '') {
-                // Check if id and stateId are valid UUIDs
-                if (isUUID(id.trim()) && isUUID(stateId.trim())) {
-                    return {
-                        createdAt: new Date().valueOf(),
-                        updatedAt: new Date().valueOf(),
-                        tier: tier,
-                        zipCode: zipCode.trim(),
-                        id: id.trim(),
-                        name: name.trim(),
-                        region: region.trim(),
-                        segment: segment.trim(),
-                        stateId: stateId.trim(),
-                    };
-                } else {
-                    console.error(`Invalid UUID format for id or stateId: ${id.trim()}, ${stateId.trim()}`);
-                    return null;
-                }
-            } else {
-                // If any of the required fields is empty, return null
-                return null;
-            }
-        })
-        .filter(Boolean);
-
-    console.log('dataArrayLength--->', dataArray.length);
-    console.log('dataArray--->', dataArray);
-
-
-    dataArray.shift();
-    Cities.bulkCreate(dataArray)
+    Cities.bulkCreate(dataForBulkWrite)
         .then(() => {
             console.log('Data import successful!');
         })
@@ -323,4 +288,77 @@ function csvCitiesImport() {
         });
 }
 
-// csvCitiesImport()
+// citiesImportNew()
+
+
+
+
+
+
+//Xlsx To Json
+const XLSX = require('xlsx');
+const fs = require("fs");
+
+function readXlsxFile(filePath, sheetName) {
+    try {
+        const workbook = XLSX.readFile(filePath);
+        const sheet = workbook.Sheets[sheetName];
+        return XLSX.utils.sheet_to_json(sheet, {header: 1});
+    } catch (error) {
+        console.error('Error reading xlsx file:', error.message);
+        return null;
+    }
+}
+
+const transformData = (dataArray) => {
+    const headers = dataArray[0];
+    const resultArray = [];
+
+    // Assuming dataArray.length > 1 to skip headers
+    for (let i = 1; i < dataArray.length; i++) {
+        const newObj = {
+            createdAt: new Date().valueOf(),
+            updatedAt: new Date().valueOf(),
+        };
+
+        for (let j = 0; j < headers.length; j++) {
+            const value = dataArray[i][j];
+
+            newObj[headers[j]] = typeof value === 'string' ? value.trim() : value;
+        }
+
+        newObj.tier = newObj.tier === 'nan' || newObj.tier === 'NaN' || newObj.tier === '' ? 0 : newObj.tier;
+
+        // Check if zipCode property exists and is a string before calling trim()
+        newObj.zipCode = newObj.zipCode && typeof newObj.zipCode === 'string' ? newObj.zipCode.trim() : newObj.zipCode;
+        newObj.name = newObj.name && typeof newObj.name === 'string' ? newObj.name.trim() : newObj.name;
+        newObj.hindi = newObj.hindi && typeof newObj.hindi === 'string' ? newObj.hindi.trim() : newObj.hindi;
+        newObj.region = newObj.region && typeof newObj.region === 'string' ? newObj.region.trim() : newObj.region;
+        newObj.segment = newObj.segment && typeof newObj.segment === 'string' ? newObj.segment.trim() : newObj.segment;
+        newObj.stateId = newObj.stateId && typeof newObj.stateId === 'string' ? newObj.stateId.trim() : newObj.stateId;
+
+        resultArray.push(newObj);
+    }
+
+    return resultArray;
+};
+
+
+function test() {
+    const filePath = './Controllers/city-data.xlsx';
+    const sheetName = 'Pin Code File';
+
+    const dataFromSheet = readXlsxFile(filePath, sheetName);
+
+    if (dataFromSheet) {
+        const transformedData = transformData(dataFromSheet);
+        const errorMessage = JSON.stringify(transformedData, null, 2);
+        const jsonFilePath = './citiesNew.json';
+        fs.writeFileSync(jsonFilePath, errorMessage);
+        console.log(`Data from sheet "${sheetName}":`, transformedData);
+    } else {
+        console.log('Failed to read data from the xlsx file.');
+    }
+}
+
+// test()

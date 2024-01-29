@@ -108,5 +108,8 @@ module.exports = (sequelize, Sequelize) => {
 		otp: {
 			type: DataTypes.STRING
 		},
+		language: {
+			type: DataTypes.STRING
+		},
 	});
 };
