@@ -48,6 +48,11 @@ module.exports= function(app) {
 		usersController.userUpdate,
 	);
 
+	app.put(
+		'/api/v1/auth/user/updateUserLanguage/:userId',
+		usersController.updateUserLanguage,
+	);
+
 	app.get(
 		'/api/v1/auth/user/verify-email',
 		usersController.verifyEmail,

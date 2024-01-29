@@ -44,6 +44,7 @@ module.exports.registration = async (req, res) => {
 			lockoutEnabled: false,
 			accessFailedCount: 0,
 			securityStamp: token,
+			language: req.body.language || 'en',
 			activeStatus: 0,
 			otp: OTP
 		})
@@ -138,6 +139,7 @@ module.exports.continueWithMobile = async (req, res) => {
 				lockoutEnabled: false,
 				accessFailedCount: 0,
 				securityStamp: token,
+				language: req.body.language || 'en',
 				activeStatus: 0,
 				otp: OTP
 			})
@@ -341,7 +343,8 @@ module.exports.verifyPhone = async (req, res) => {
 					basicProfile: isExist,
 					role: user.role,
 					phoneNumberConfirmed: verifyUser.phoneNumberConfirmed,
-					phoneNumber: verifyUser.phoneNumber
+					phoneNumber: verifyUser.phoneNumber,
+					language: verifyUser.language
 				};
 				return apiResponses.successResponseWithData(
 					res,
@@ -423,7 +426,8 @@ module.exports.userLogin = async (req, res) => {
 				emailConfirmed: user.emailConfirmed,
 				phoneNumberConfirmed: user.phoneNumberConfirmed,
 				token: token,
-				basicProfile: isExist
+				basicProfile: isExist,
+				language: user.language
 			};
 			return apiResponses.successResponseWithData(
 				res,
@@ -453,6 +457,7 @@ module.exports.userLogin = async (req, res) => {
 							city: user.city,
 							phoneNumber: user.phoneNumber,
 							registerType: user.registerType,
+							language: user.language,
 							role: user.role,
 							token: token,
 						};
@@ -477,6 +482,7 @@ module.exports.userLogin = async (req, res) => {
 						registerType: user.registerType,
 						role: user.role,
 						token: token,
+						language: user.language,
 						basicProfile: isExist
 					};
 					return apiResponses.successResponseWithData(
@@ -515,6 +521,7 @@ module.exports.userLogin = async (req, res) => {
 						lockoutEnabled: false,
 						accessFailedCount: 0,
 						securityStamp: token,
+						language: req.body.language || 'en',
 						activeStatus: 0,
 						otp: OTP
 					})
@@ -529,6 +536,7 @@ module.exports.userLogin = async (req, res) => {
 						emailConfirmed: user.emailConfirmed,
 						phoneNumberConfirmed: user.phoneNumberConfirmed,
 						token: token,
+						language: user.language,
 						basicProfile: isExist
 					};
 						return apiResponses.successResponseWithData(
@@ -548,6 +556,7 @@ module.exports.userLogin = async (req, res) => {
 						emailConfirmed: user.emailConfirmed,
 						phoneNumberConfirmed: user.phoneNumberConfirmed,
 						token: token,
+						language: user.language,
 						basicProfile: isExist
 					};
 					return apiResponses.successResponseWithData(
@@ -612,11 +621,105 @@ module.exports.userUpdate = async (req, res) => {
 			return apiResponses.successResponseWithData(res, 'Success Created', userInfo);
 		} else {
 			delete obj.userId
+			const existUser = await User.findOne({ where: { id: req.params.userId }})
+			obj.mobile = existUser.phoneNumber || isExist.mobile
+			obj.email = existUser.email || isExist.email
 			const user = await BasicProfile.update(
-				obj, { where: { userId: req.params.userId } }
+				obj, {where: {userId: req.params.userId}}
 			)
-			await User.update(
-				{ phoneNumber: req.body.mobile, email: req.body.email }, { where: { id: req.params.userId } }
+			if(req.body.email) {
+				if(existUser.email === req.body.email) {
+					const user = await BasicProfile.update(
+						{ email: req.body.email }, {where: {userId: req.params.userId}}
+					)
+					await User.update(
+						{email: req.body.email}, {where: {id: req.params.userId}}
+					)
+				} else {
+					const isMailExist = await User.findOne({ where: { email: req.body.email, registerType: existUser.registerType, deletedAt: null }})
+					if (!isMailExist) {
+						const token = createToken(req.body.email);
+						const user = await BasicProfile.update(
+							{ email: req.body.email }, { where: { userId: req.params.userId } }
+						)
+						await User.update(
+							{
+								email: req.body.email,
+								emailConfirmed: false,
+								securityStamp: token,
+							}, { where: { id: req.params.userId } }
+						)
+						await Mails.userEmailChanged(req.body.email, token);
+					}
+				}
+
+				if(req.body.mobile) {
+					if(existUser.phoneNumber === req.body.mobile) {
+						const user = await BasicProfile.update(
+							{ mobile: req.body.mobile }, {where: {userId: req.params.userId}}
+						)
+						await User.update(
+							{phoneNumber: req.body.mobile}, {where: {id: req.params.userId}}
+						)
+					} else {
+						const isMobileExist = await User.findOne({ where: { phoneNumber: req.body.mobile, registerType: existUser.registerType, deletedAt: null }})
+						if (!isMobileExist) {
+							const OTP = generateOTP();
+							const user = await BasicProfile.update(
+								{ mobile: req.body.mobile }, { where: { userId: req.params.userId } }
+							)
+							await User.update(
+								{
+									phoneNumber: req.body.mobile,
+									otp: OTP,
+									phoneNumberConfirmed: false,
+								}, { where: { id: req.params.userId } }
+							)
+							if(req.query.language === 'hi') {
+								await sendVerificationMessageHindi(OTP, req.body.mobile, 'उपयोगकर्ता')
+							} else {
+								await sendVerificationMessage(OTP, req.body.mobile, 'User')
+							}
+						}
+					}
+
+					User.hasOne(BasicProfile, {
+						foreignKey: 'userId',
+					});
+					const userInfo = await User.findOne({
+						where: {
+							id: req.params.userId
+						},
+						attributes: {
+							exclude: ['otp'],
+						},
+						include: [{
+							model: BasicProfile,
+							required: false,
+						}],
+					})
+					return apiResponses.successResponseWithData(res, 'Success Update', userInfo);
+				}
+
+			}
+		}
+	} catch (err) {
+		return apiResponses.errorResponse(res, err);
+	}
+};
+
+
+
+module.exports.updateUserLanguage = async (req, res) => {
+	try {
+		let obj = {
+			language: req.body.language || 'en',
+		}
+
+		const isExist = await User.findOne({ where: { id: req.params.userId } })
+		if(isExist) {
+			const user = await User.update(
+				obj, { where: { id: req.params.userId } }
 			)
 			User.hasOne(BasicProfile, {
 				foreignKey: 'userId',
