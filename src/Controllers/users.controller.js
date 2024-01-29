@@ -1230,7 +1230,7 @@ module.exports.allPanelists = async (req, res) => {
 						"lastName": matchingPanelist ? matchingPanelist.lastName : user.basic_profile ? user.basic_profile.lastName : '',
 						"gender": matchingPanelist ? matchingPanelist.gender : user.basic_profile ? user.basic_profile.gender : '',
 						"mobile": user.phoneNumber,
-						"email": user.email || matchingPanelist.email || '',
+						"email": user.email || '',
 						"dateOfBirth": matchingPanelist ? matchingPanelist.dateOfBirth : user.basic_profile ? user.basic_profile.dateOfBirth : '',
 						"city": matchingPanelist ? matchingPanelist.city : user.basic_profile ? user.basic_profile.city : '',
 					}
