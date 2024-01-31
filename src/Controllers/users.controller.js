@@ -865,6 +865,7 @@ module.exports.userPasswordReset = async (req, res) => {
 						}
 					});
 
+					console.log('eset-password--->', language)
 					if(language === 'hi'){
 						await Mails.userPasswordResetHindi(user.email, token);
 					} else {
