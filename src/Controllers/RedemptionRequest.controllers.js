@@ -211,7 +211,7 @@ module.exports.ApproveRequest = async (req, res) => {
                                         "medium": "EMAIL",
                                         "format": "HTML",
                                         "email": user.email,
-                                        "imageURL": "https://test.indiapolls.com/assets/img/logo-black.png"
+                                        "imageURL": "https://panel.indiapolls.com/assets/img/logo-black.png"
                                     }
                                 });
 

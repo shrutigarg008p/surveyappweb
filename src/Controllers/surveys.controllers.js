@@ -578,7 +578,9 @@ module.exports.userRespondentDashboard = async (req, res) => {
         } = await respondentSummary(req.params.userId);
 
         let obj = []
-        if(req.query.language === 'hi') {
+        const language = req.headers['language'] || req.query.language || 'en';
+        console.log('language---->', language)
+        if(language === 'hi') {
             obj = [
                 {
                     name: "कुल सर्वेक्षण",
