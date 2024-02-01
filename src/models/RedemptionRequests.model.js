@@ -55,6 +55,10 @@ module.exports = (sequelize, Sequelize) => {
             type: DataTypes.UUID,
             allowNull: true,
         },
+        coupon: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
         cancelledById: {
             type: DataTypes.UUID,
             allowNull: true,

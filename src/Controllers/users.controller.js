@@ -48,7 +48,11 @@ module.exports.registration = async (req, res) => {
 			activeStatus: 0,
 			otp: OTP
 		})
-		await Mails.userRegistration(user.email, token);
+		if(req.body.language === 'hi') {
+			await Mails.userRegistrationHindi(user.email, token);
+		} else {
+			await Mails.userRegistration(user.email, token);
+		}
 		// return res.status(200).send({ status:'200', message: "User registered successfully!" , data: userData });
 		console.log('successResponseWithData---->', user.email)
 		if(req.body.referralId) {
@@ -437,41 +441,56 @@ module.exports.userLogin = async (req, res) => {
 		} else if (req.body.registerType === 'facebook') {
 			User.findOne({
 				where: {
-					facebookToken: req.body.facebookToken,
+					facebooktoken: req.body.facebooktoken,
 					registerType: req.body.registerType,
 				},
 			}).then(async (user) => {
 				if (!user) {
-					User.create({
-						email: req.body.email,
+					const token = createToken(req.body.email, req.body.facebooktoken);
+					let OTP = null
+					if(req.body.phoneNumber){
+						OTP = generateOTP();
+					}
+					const user = await User.create({
+						email: req.body.email || null,
+						userName: req.body.email || null,
+						facebooktoken: req.body.facebooktoken,
+						phoneNumber: req.body.phoneNumber || null,
+						registeredDate: new Date().valueOf(),
+						createdAt: new Date().valueOf(),
+						updatedAt: new Date().valueOf(),
+						signupIp: req.ip,
+						role: req.body.role || 'panelist',
 						registerType: req.body.registerType,
-						phoneNumber: req.body.phoneNumber,
-						facebookToken: req.body.facebookToken,
-						isActive: req.body.isActive,
-					}).then(async (user) => {
-						const token = createToken(user.id, user.email, user.role);
-						const userData = {
-							id: user.id,
-							email: user.email,
-							country: user.country,
-							city: user.city,
-							phoneNumber: user.phoneNumber,
-							registerType: user.registerType,
-							language: user.language,
-							role: user.role,
-							token: token,
-						};
-						if (req.body.email) {
-							await Mails.userRegistration(user.email, 'Unknown');
-						}
-
-						// return res.status(200).send({ status:'200', message: "User registered successfully!" , data: userData });
-						return apiResponses.successResponseWithData(
-							res,
-							'Success!',
-							userData,
-						);
-					});
+						emailConfirmed: false,
+						phoneNumberConfirmed: false,
+						twoFactorEnabled: false,
+						lockoutEnabled: false,
+						accessFailedCount: 0,
+						securityStamp: token,
+						language: req.body.language || 'en',
+						activeStatus: 0,
+						otp: OTP
+					})
+					// await Mails.userRegistration(user.email, token);
+					const isExist = await BasicProfile.findOne({where: {userId: user.id}})
+					const obj = {
+						id: user.id,
+						email: user.email,
+						phoneNumber: user.phoneNumber,
+						registerType: user.registerType,
+						role: user.role,
+						emailConfirmed: user.emailConfirmed,
+						phoneNumberConfirmed: user.phoneNumberConfirmed,
+						token: token,
+						language: user.language,
+						basicProfile: isExist
+					};
+					return apiResponses.successResponseWithData(
+						res,
+						'Success!',
+						obj
+					);
 				} else {
 					const isExist = await BasicProfile.findOne({where: {userId: user.id}})
 					const token = createToken(user.id, user.email, user.role);
@@ -481,6 +500,8 @@ module.exports.userLogin = async (req, res) => {
 						phoneNumber: user.phoneNumber,
 						registerType: user.registerType,
 						role: user.role,
+						emailConfirmed: user.emailConfirmed,
+						phoneNumberConfirmed: user.phoneNumberConfirmed,
 						token: token,
 						language: user.language,
 						basicProfile: isExist

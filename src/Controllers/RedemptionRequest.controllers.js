@@ -8,9 +8,11 @@ const Rewards = db.rewards;
 const RedemptionRequestTransactions = db.redemptionRequestTransactions;
 const apiResponses = require('../Components/apiresponse');
 const {DataTypes} = require("sequelize");
+const {manualRedemptionRequest, manualRedemptionRequestHindi} = require("../Config/Mails");
 
 module.exports.createRedemptionRequest = async (req, res) => {
     try {
+        const language = req.headers['language'] || req.body.language || 'en';
         const RedemptionRequest = await RedemptionRequests.create({
             redemptionRequestStatus: req.body.redemptionRequestStatus,
             notes: req.body.notes,
@@ -24,6 +26,17 @@ module.exports.createRedemptionRequest = async (req, res) => {
             updatedAt: new Date().valueOf(),
             requestDate: new Date().valueOf(),
         })
+        console.log('language--->', language, req.body.redemptionModeTitle)
+        const Basic = await BasicProfile.findOne({ where : { userId: req.body.userId }})
+        const user = await Users.findOne({ where : { id: req.body.userId }})
+        if(req.body.redemptionModeTitle === 'Amazon e-Gift Card') {
+            if(language === 'hi') {
+                manualRedemptionRequestHindi(`${Basic.firstName} ${Basic.lastName}`, user.email)
+            } else {
+                manualRedemptionRequest(`${Basic.firstName} ${Basic.lastName}`, user.email)
+            }
+
+        }
         return apiResponses.successResponseWithData(
             res,
             'Success!',
@@ -185,7 +198,7 @@ module.exports.ApproveRequest = async (req, res) => {
         const requestData = await RedemptionRequests.findOne({ where: { id: req.body.id, "redemptionRequestStatus": 'New' }, raw: true })
         console.log('requestData--->', requestData)
         if(requestData) {
-            if (requestData.redemptionModeTitle === 'Amazon Vouchers') {
+            if (requestData.redemptionModeTitle === 'Amazon Vouchers Not Available Temporary') {
                 let config = {
                     method: 'post',
                     maxBodyLength: Infinity,
@@ -463,6 +476,41 @@ module.exports.RejectRequest = async (req, res) => {
                 'Redemption request not found!',
                 null
             );
+        }
+    } catch (err) {
+        return apiResponses.errorResponse(res, err);
+    }
+};
+
+
+module.exports.manualApprove = async (req, res) => {
+    try {
+        const requestData = await RedemptionRequests.findOne({ where: { id: req.body.id, "redemptionRequestStatus": 'New' }, raw: true })
+        console.log('requestData--->', requestData)
+        if(requestData) {
+            let obj = {
+                coupon: req.body.coupon,
+                redemptionRequestStatus: 'Redeemed',
+                redemptionDate: new Date().valueOf(),
+                pointsRedeemed: requestData.pointsRequested,
+                userId: requestData.userId,
+                approvedById: req.body.approvedById,
+                createdAt: new Date().valueOf(),
+                updatedAt: new Date().valueOf(),
+                requestDate: new Date().valueOf()
+            }
+
+            const isExist = await RedemptionRequests.findOne({where: {id: req.body.id, deletedAt: null}})
+            if (!isExist) {
+                return apiResponses.validationErrorWithData(res, 'Redemption mode not exist');
+            } else {
+                const user = await RedemptionRequests.update(
+                    obj, {where: {id: req.body.id}}
+                )
+                return apiResponses.successResponseWithData(res, 'Success Update', user);
+            }
+        } else {
+            return apiResponses.validationErrorWithData(res, 'Request not found', null);
         }
     } catch (err) {
         return apiResponses.errorResponse(res, err);

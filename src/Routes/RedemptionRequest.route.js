@@ -50,4 +50,9 @@ module.exports= function(app) {
         '/api/v1/redemptionRequest/rejectRequest',
         redemptionRequestController.RejectRequest,
     );
+
+    app.post(
+        '/api/v1/redemptionRequest/manualApprove',
+        redemptionRequestController.manualApprove,
+    );
 };

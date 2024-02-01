@@ -298,6 +298,7 @@ async function citiesImportNew() {
 //Xlsx To Json
 const XLSX = require('xlsx');
 const fs = require("fs");
+const {Op} = require("sequelize");
 
 function readXlsxFile(filePath, sheetName) {
     try {
