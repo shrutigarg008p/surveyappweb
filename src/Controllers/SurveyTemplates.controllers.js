@@ -100,7 +100,7 @@ module.exports.redirectToSurvey = async (req, res) => {
                     } } })
             res.redirect(assignedSurvey.originalSurveyLink);
         } else {
-            res.redirect('https://panel.indiapolls.com/');
+            res.redirect('https://panel.wwww.com/');
         }
     } catch (err) {
         return apiResponses.errorResponse(res, err);

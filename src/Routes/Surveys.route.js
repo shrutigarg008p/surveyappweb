@@ -74,7 +74,7 @@ module.exports= function(app) {
     );
 
     app.get(
-        '/surveys/:id/:userId',
+        '/surveys/redirect/:id/:userId',
         surveyTemplateControllers.redirectToSurvey,
     );
 

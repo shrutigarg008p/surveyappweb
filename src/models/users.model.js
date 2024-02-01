@@ -37,6 +37,9 @@ module.exports = (sequelize, Sequelize) => {
 		role: {
 			type: DataTypes.STRING
 		},
+		facebooktoken: {
+			type: DataTypes.STRING
+		},
 		phoneNumberConfirmed: {
 			type: DataTypes.BOOLEAN,
 			allowNull: false,

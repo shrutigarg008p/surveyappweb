@@ -2,6 +2,7 @@ const db = require('../models');
 const Rewards = db.rewards;
 const Users = db.user;
 const Surveys = db.surveys;
+const RedemptionRequests = db.redemptionRequest;
 const apiResponses = require('../Components/apiresponse');
 const {DataTypes} = require("sequelize");
 const Sequelize = db.Sequelize;
@@ -98,8 +99,14 @@ module.exports.getAllByUserId = async (req, res) => {
             order: [['createdAt', 'DESC']]
         });
 
+        const totalRedeemedData = await RedemptionRequests.findAll({
+            where: { userId: req.params.userId, deletedAt: null, redemptionRequestStatus: 'Redeemed' },
+        });
+        const totalRedeemed = totalRedeemedData.reduce((sum, reward) => sum + reward.pointsRedeemed, 0);
+
         const totalPoints = data.reduce((sum, reward) => sum + reward.points, 0);
-        return apiResponses.successResponseWithData(res, 'success!', {data, totalPoints});
+        const leftPoints = totalPoints - totalRedeemed
+        return apiResponses.successResponseWithData(res, 'success!', {data, totalPoints, totalRedeemed, leftPoints });
     } catch (err) {
         return apiResponses.errorResponse(res, err);
     }
