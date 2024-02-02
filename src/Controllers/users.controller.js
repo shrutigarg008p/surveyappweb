@@ -1462,7 +1462,7 @@ module.exports.respondentProfileOverview = async (req, res) => {
 
 		const result = resultIn.map(profile => ({
 			...profile,
-			title: language === 'hi' ? profile.hindi : profile.name,
+			name: language === 'hi' ? profile.hindi : profile.name,
 		}))
 		return apiResponses.successResponseWithData(res, 'success!', {result, overallAttemptedPercentage, basicProfile, users});
 	} catch (err) {

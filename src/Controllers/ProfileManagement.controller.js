@@ -126,14 +126,14 @@ module.exports.getOneDetails = async (req, res) => {
             let response = {
                 data: {
                     ...data.dataValues,
-                    title: title,
+                    name: title,
                 },
                 questions: questions.map(question => ({
                     ...question.dataValues,
-                    title: language === 'hi' ? question.hindi : question.text,
+                    name: language === 'hi' ? question.hindi : question.text,
                     options: question.options.map(option => ({
                         ...option.dataValues,
-                        title: language === 'hi' ? option.hindi : option.value,
+                        name: language === 'hi' ? option.hindi : option.value,
                     })),
                 })),
                 response: userResponse ? userResponse : {}
