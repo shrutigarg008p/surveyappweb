@@ -1392,6 +1392,7 @@ module.exports.panelistProfile = async (req, res) => {
 const Sequelize = db.Sequelize;
 module.exports.respondentProfileOverview = async (req, res) => {
 	try {
+		const language = req.headers['language'] || req.query.language || 'en';
 		db.profiles.hasMany(db.questions, { foreignKey: 'profileId' });
 		db.questions.belongsTo(db.profiles, { foreignKey: 'profileId' });
 		db.profiles.hasMany(ProfileUserResponse, { foreignKey: 'profileId' });
@@ -1414,7 +1415,7 @@ module.exports.respondentProfileOverview = async (req, res) => {
 		})
 		const basicProfile = await BasicProfile.findOne({ where: { userId: req.params.id }})
 		const users = await User.findOne({ where: { id: req.params.id }, attributes: ['emailConfirmed', 'unsubscribeDate', 'id', 'deleteRequestDate', 'phoneNumber', "email", "phoneNumberConfirmed"]})
-		const result = profilesWithQuestionsCount.map(section => {
+		let resultIn = profilesWithQuestionsCount.map(section => {
 			const totalQuestions = parseInt(section.questionCount);
 			const response = section['profileuserresponses.response'];
 			if (response && Object.keys(response).length > 0) {
@@ -1440,8 +1441,8 @@ module.exports.respondentProfileOverview = async (req, res) => {
 				};
 			}
 		});
-		const overallTotalQuestions = result.reduce((total, section) => total + section.totalQuestions, 0);
-		const overallAttemptedQuestions = result.reduce((total, section) => total + section.attemptedQuestions, 0);
+		const overallTotalQuestions = resultIn.reduce((total, section) => total + section.totalQuestions, 0);
+		const overallAttemptedQuestions = resultIn.reduce((total, section) => total + section.attemptedQuestions, 0);
 		const overallAttemptedPercentage = Math.round((overallAttemptedQuestions / overallTotalQuestions) * 100);
 		if(overallAttemptedPercentage === 100) {
 			console.log('Yes')
@@ -1458,6 +1459,11 @@ module.exports.respondentProfileOverview = async (req, res) => {
 				})
 			}
 		}
+
+		const result = resultIn.map(profile => ({
+			...profile,
+			title: language === 'hi' ? profile.hindi : profile.name,
+		}))
 		return apiResponses.successResponseWithData(res, 'success!', {result, overallAttemptedPercentage, basicProfile, users});
 	} catch (err) {
 		console.log(err)

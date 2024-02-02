@@ -74,10 +74,9 @@ module.exports= function(app) {
     );
 
     app.get(
-        '/surveys/redirect/:id/:userId',
+        '/surveys/:id/:userId',
         surveyTemplateControllers.redirectToSurvey,
     );
-
 
     app.get(
         '/api/v1/surveys/panelist-surveys/:userId',
