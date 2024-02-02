@@ -77,6 +77,7 @@ module.exports.getAll = async (req, res) => {
 
 module.exports.getAllByUserId = async (req, res) => {
     try {
+        const language = req.headers['language'] || req.body.language || 'en';
         Rewards.belongsTo(Surveys, { foreignKey: 'surveyId' });
         Rewards.belongsTo(Users, { foreignKey: 'userId' });
         // Rewards.belongsTo(Users, { foreignKey: 'referralId' });
@@ -106,7 +107,39 @@ module.exports.getAllByUserId = async (req, res) => {
 
         const totalPoints = data.reduce((sum, reward) => sum + reward.points, 0);
         const leftPoints = totalPoints - totalRedeemed
-        return apiResponses.successResponseWithData(res, 'success!', {data, totalPoints, totalRedeemed, leftPoints });
+        let totalPointsInfo = []
+        if (language === 'hi'){
+            totalPointsInfo = [
+                {
+                    name: "कुल अंक",
+                    value: totalPoints
+                },
+                {
+                    name: "कुल रीडीम",
+                    value: totalRedeemed
+                },
+                {
+                    name: "बचे हुए अंक",
+                    value: leftPoints
+                }
+            ];
+        } else {
+            totalPointsInfo = [
+                {
+                    name: "Total Points",
+                    value: totalPoints
+                },
+                {
+                    name: "Total Redeemed",
+                    value: totalRedeemed
+                },
+                {
+                    name: "Left Points",
+                    value: leftPoints
+                }
+            ];
+        }
+        return apiResponses.successResponseWithData(res, 'success!', {data, totalPoints, totalRedeemed, leftPoints, totalPointsInfo });
     } catch (err) {
         return apiResponses.errorResponse(res, err);
     }
