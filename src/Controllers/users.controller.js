@@ -642,93 +642,116 @@ module.exports.userUpdate = async (req, res) => {
 			return apiResponses.successResponseWithData(res, 'Success Created', userInfo);
 		} else {
 			delete obj.userId
-			const existUser = await User.findOne({ where: { id: req.params.userId }})
+			const existUser = await User.findOne({where: {id: req.params.userId}})
 			obj.mobile = existUser.phoneNumber || isExist.mobile
 			obj.email = existUser.email || isExist.email
 			const user = await BasicProfile.update(
 				obj, {where: {userId: req.params.userId}}
 			)
-			if(req.body.email) {
-				if(existUser.email === req.body.email) {
+			if (req.body.email) {
+				if (existUser.email === req.body.email) {
 					const user = await BasicProfile.update(
-						{ email: req.body.email }, {where: {userId: req.params.userId}}
+						{email: req.body.email}, {where: {userId: req.params.userId}}
 					)
 					await User.update(
 						{email: req.body.email}, {where: {id: req.params.userId}}
 					)
 				} else {
-					const isMailExist = await User.findOne({ where: { email: req.body.email, registerType: existUser.registerType, deletedAt: null }})
+					const isMailExist = await User.findOne({
+						where: {
+							email: req.body.email,
+							registerType: existUser.registerType,
+							deletedAt: null
+						}
+					})
 					if (!isMailExist) {
 						const token = createToken(req.body.email);
 						const user = await BasicProfile.update(
-							{ email: req.body.email }, { where: { userId: req.params.userId } }
+							{email: req.body.email}, {where: {userId: req.params.userId}}
 						)
 						await User.update(
 							{
 								email: req.body.email,
 								emailConfirmed: false,
 								securityStamp: token,
-							}, { where: { id: req.params.userId } }
+							}, {where: {id: req.params.userId}}
 						)
-						if(req.query.language === 'hi') {
+						if (req.query.language === 'hi') {
 							await Mails.userEmailChangedHindi(req.body.email, token);
 						} else {
 							await Mails.userEmailChanged(req.body.email, token);
 						}
 					}
 				}
+			}
 
-				if(req.body.mobile) {
-					if(existUser.phoneNumber === req.body.mobile) {
+			if (req.body.mobile) {
+				if (existUser.phoneNumber === req.body.mobile) {
+					const user = await BasicProfile.update(
+						{mobile: req.body.mobile}, {where: {userId: req.params.userId}}
+					)
+					await User.update(
+						{phoneNumber: req.body.mobile}, {where: {id: req.params.userId}}
+					)
+				} else {
+					const isMobileExist = await User.findOne({
+						where: {
+							phoneNumber: req.body.mobile,
+							registerType: existUser.registerType,
+							deletedAt: null
+						}
+					})
+					if (!isMobileExist) {
+						const OTP = generateOTP();
 						const user = await BasicProfile.update(
-							{ mobile: req.body.mobile }, {where: {userId: req.params.userId}}
+							{mobile: req.body.mobile}, {where: {userId: req.params.userId}}
 						)
 						await User.update(
-							{phoneNumber: req.body.mobile}, {where: {id: req.params.userId}}
+							{
+								phoneNumber: req.body.mobile,
+								otp: OTP,
+								phoneNumberConfirmed: false,
+							}, {where: {id: req.params.userId}}
 						)
-					} else {
-						const isMobileExist = await User.findOne({ where: { phoneNumber: req.body.mobile, registerType: existUser.registerType, deletedAt: null }})
-						if (!isMobileExist) {
-							const OTP = generateOTP();
-							const user = await BasicProfile.update(
-								{ mobile: req.body.mobile }, { where: { userId: req.params.userId } }
-							)
-							await User.update(
-								{
-									phoneNumber: req.body.mobile,
-									otp: OTP,
-									phoneNumberConfirmed: false,
-								}, { where: { id: req.params.userId } }
-							)
-							// if(req.query.language === 'hi') {
-							// 	await sendVerificationMessageHindi(OTP, req.body.mobile, 'उपयोगकर्ता')
-							// } else {
-							// 	await sendVerificationMessage(OTP, req.body.mobile, 'User')
-							// }
-						}
+						// if(req.query.language === 'hi') {
+						// 	await sendVerificationMessageHindi(OTP, req.body.mobile, 'उपयोगकर्ता')
+						// } else {
+						// 	await sendVerificationMessage(OTP, req.body.mobile, 'User')
+						// }
 					}
-
-					User.hasOne(BasicProfile, {
-						foreignKey: 'userId',
-					});
-					const userInfo = await User.findOne({
-						where: {
-							id: req.params.userId
-						},
-						attributes: {
-							exclude: ['otp'],
-						},
-						include: [{
-							model: BasicProfile,
-							required: false,
-						}],
-					})
-					return apiResponses.successResponseWithData(res, 'Success Update', userInfo);
 				}
 
+				User.hasOne(BasicProfile, {
+					foreignKey: 'userId',
+				});
+				const userInfo = await User.findOne({
+					where: {
+						id: req.params.userId
+					},
+					attributes: {
+						exclude: ['otp'],
+					},
+					include: [{
+						model: BasicProfile,
+						required: false,
+					}],
+				})
+				return apiResponses.successResponseWithData(res, 'Success Update', userInfo);
 			}
+
+			const userInfo = await User.findOne({
+				where: {
+					id: req.params.userId
+				},
+				include: [{
+					model: BasicProfile,
+					required: false,
+				}],
+			})
+			return apiResponses.successResponseWithData(res, 'Success Update', userInfo);
 		}
 	} catch (err) {
+		console.log('errrr----->', err)
 		return apiResponses.errorResponse(res, err);
 	}
 };
