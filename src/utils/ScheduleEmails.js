@@ -5,7 +5,7 @@ const axios = require('axios');
 const {surveyInvite} = require("../Config/Mails");
 const apiResponses = require("../Components/apiresponse");
 const {Notifications, notificationCreate} = require("../Config/Notification");
-const {sendSurveyMessage} = require("../Config/Sms");
+const {sendSurveyMessage, sendSurveyMessageHindi} = require("../Config/Sms");
 const SurveyEmailSchedules = db.surveyEmailSchedule;
 const SurveyTemplates = db.surveyTemplates;
 const Surveys = db.surveys;
@@ -441,12 +441,3 @@ module.exports = {
     monkeyCron,
     questionPro
 }
-
-
-// async function test() {
-//     const ip = await axios.get("https://ipapi.co/json/")
-//     console.log(ip)
-// }
-//
-// test()
-

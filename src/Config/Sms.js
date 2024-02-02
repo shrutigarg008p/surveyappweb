@@ -1,4 +1,7 @@
 const axios = require('axios');
+const {sendSurveyWhatsappMessage, sendMobileVerificationWhatsappMessage, sendMobileVerificationWhatsappMessageHindi,
+    sendSurveyWhatsappMessageHindi
+} = require("./WhatsappSms");
 
 const sendSurveyMessage = async (fullName, surveyUrl, mobile, surveyName) => {
     try {
@@ -17,6 +20,7 @@ const sendSurveyMessage = async (fullName, surveyUrl, mobile, surveyName) => {
         });
 
         console.log('Response:', response.data);
+        sendSurveyWhatsappMessage(fullName, surveyUrl, mobile, surveyName)
         return true
     } catch (error) {
         console.error('Error sending message:', error.message);
@@ -24,6 +28,30 @@ const sendSurveyMessage = async (fullName, surveyUrl, mobile, surveyName) => {
     }
 };
 
+const sendSurveyMessageHindi = async (fullName, surveyUrl, mobile, surveyName) => {
+    try {
+        const response = await axios.get('https://enterprise.smsgupshup.com/GatewayAPI/rest', {
+            params: {
+                method: 'SendMessage',
+                send_to: `91${mobile}`,
+                msg: `प्रिय ${fullName}, विशेष रूप से आपके लिए, यह ${surveyName} हमारा नवीनतम इंडियापोल्स सर्वेक्षण है । कृपया अपना सर्वेक्षण शुरू करने के लिए यहां ${surveyUrl} क्लिक करें। धन्यवाद !`,
+                msg_type: 'Unicode_text',
+                userid: '2000237056',
+                auth_scheme: 'plain',
+                password: 'AK9m4gQH',
+                v: '1.1',
+                format: 'text',
+            },
+        });
+
+        console.log('Response:', response.data);
+        sendSurveyWhatsappMessageHindi(fullName, surveyUrl, mobile, surveyName)
+        return true
+    } catch (error) {
+        console.error('Error sending message:', error.message);
+        return true
+    }
+};
 
 const sendVerificationMessage = async (otp, mobile, name) => {
     try {
@@ -41,6 +69,7 @@ const sendVerificationMessage = async (otp, mobile, name) => {
             },
         });
         console.log('Response:', response.data);
+        sendMobileVerificationWhatsappMessage(otp, mobile, name)
         return true
     } catch (error) {
         console.error('Error sending message:', error.message);
@@ -64,6 +93,7 @@ const sendVerificationMessageHindi = async (otp, mobile, name) => {
             },
         });
         console.log('Response Hindi:', response);
+        sendMobileVerificationWhatsappMessageHindi(otp, mobile, name)
         return true
     } catch (error) {
         console.error('Error sending message:', error.message);
@@ -81,5 +111,6 @@ module.exports = {
     sendSurveyMessage,
     sendVerificationMessage,
     generateOTP,
-    sendVerificationMessageHindi
+    sendVerificationMessageHindi,
+    sendSurveyMessageHindi
 }
