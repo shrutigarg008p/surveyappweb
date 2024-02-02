@@ -80,24 +80,30 @@ module.exports.getOne = async (req, res) => {
 
 module.exports.getOneDetails = async (req, res) => {
     try {
-        if(req.params.id && req.params.userId) {
+        const language = req.headers['language'] || req.query.language || 'en';
+        if (req.params.id && req.params.userId) {
             let data = await Profiles.findOne({
                 where: {
                     id: req.params.id,
                     deletedAt: null
                 }
-            })
+            });
+
+            const title = language === 'hi' ? data.hindi : data.name;
+
             let userResponse = await ProfileUserResponses.findOne({
                 where: {
                     profileId: req.params.id,
                     userId: req.params.userId,
                     deletedAt: null
                 }
-            })
+            });
+
             if (!data) {
                 return apiResponses.validationErrorWithData(res, 'Profile not found');
             }
-            Questions.hasMany(Options, {foreignKey: 'questionId'});
+
+            Questions.hasMany(Options, { foreignKey: 'questionId' });
             const questions = await Questions.findAll({
                 where: {
                     profileId: req.params.id,
@@ -116,7 +122,23 @@ module.exports.getOneDetails = async (req, res) => {
                 order: [['displayOrder', 'ASC']]
             });
 
-            let response = { data, questions, response: userResponse ? userResponse : {} }
+            // Modify the response to include the 'title' key for questions and options
+            let response = {
+                data: {
+                    ...data.dataValues,
+                    title: title,
+                },
+                questions: questions.map(question => ({
+                    ...question.dataValues,
+                    title: language === 'hi' ? question.hindi : question.text,
+                    options: question.options.map(option => ({
+                        ...option.dataValues,
+                        title: language === 'hi' ? option.hindi : option.value,
+                    })),
+                })),
+                response: userResponse ? userResponse : {}
+            };
+
             return apiResponses.successResponseWithData(res, 'success!', response);
         } else {
             return apiResponses.validationErrorWithData(res, 'UserId or Profile id not found');
@@ -125,6 +147,7 @@ module.exports.getOneDetails = async (req, res) => {
         return apiResponses.errorResponse(res, err);
     }
 };
+
 
 module.exports.delete = async (req, res) => {
     try {
