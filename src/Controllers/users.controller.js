@@ -446,12 +446,12 @@ module.exports.userLogin = async (req, res) => {
 				},
 			}).then(async (user) => {
 				if (!user) {
-					const token = createToken(req.body.email, req.body.facebooktoken);
 					let OTP = null
 					if(req.body.phoneNumber){
 						OTP = generateOTP();
 					}
-					const user = await User.create({
+					console.log('req---->', req.body)
+					const userInfo = await User.create({
 						email: req.body.email || null,
 						userName: req.body.email || null,
 						facebooktoken: req.body.facebooktoken,
@@ -467,23 +467,22 @@ module.exports.userLogin = async (req, res) => {
 						twoFactorEnabled: false,
 						lockoutEnabled: false,
 						accessFailedCount: 0,
-						securityStamp: token,
 						language: req.body.language || 'en',
 						activeStatus: 0,
 						otp: OTP
 					})
-					// await Mails.userRegistration(user.email, token);
-					const isExist = await BasicProfile.findOne({where: {userId: user.id}})
+					const token = createToken(userInfo.id);
+					const isExist = await BasicProfile.findOne({where: {userId: userInfo.id}})
 					const obj = {
-						id: user.id,
-						email: user.email,
-						phoneNumber: user.phoneNumber,
-						registerType: user.registerType,
-						role: user.role,
-						emailConfirmed: user.emailConfirmed,
-						phoneNumberConfirmed: user.phoneNumberConfirmed,
+						id: userInfo.id,
+						email: userInfo.email,
+						phoneNumber: userInfo.phoneNumber,
+						registerType: userInfo.registerType,
+						role: userInfo.role,
+						emailConfirmed: userInfo.emailConfirmed,
+						phoneNumberConfirmed: userInfo.phoneNumberConfirmed,
 						token: token,
-						language: user.language,
+						language: userInfo.language,
 						basicProfile: isExist
 					};
 					return apiResponses.successResponseWithData(
@@ -512,7 +511,11 @@ module.exports.userLogin = async (req, res) => {
 						obj,
 					);
 				}
-			});
+			}).catch((error) => {
+				console.error('Error:--->', error);
+				return apiResponses.errorResponse(res, 'An error occurred in the promise chain');
+
+			})
 		} else if (req.body.registerType === 'gmail') {
 			User.findOne({
 				where: {
@@ -586,10 +589,15 @@ module.exports.userLogin = async (req, res) => {
 						obj,
 					);
 				}
-			});
+			}).catch((error) => {
+				console.error('Error:--->', error);
+				return apiResponses.errorResponse(res, 'An error occurred in the promise chain');
+
+			})
 		}
 	} catch (err){
 		console.log('err--->', err)
+		return apiResponses.errorResponse(res, err);
 	}
 };
 

@@ -26,7 +26,6 @@ module.exports.createRedemptionRequest = async (req, res) => {
             updatedAt: new Date().valueOf(),
             requestDate: new Date().valueOf(),
         })
-        console.log('language--->', language, req.body.redemptionModeTitle)
         const Basic = await BasicProfile.findOne({ where : { userId: req.body.userId }})
         const user = await Users.findOne({ where : { id: req.body.userId }})
         if(req.body.redemptionModeTitle === 'Amazon e-Gift Card') {
@@ -83,6 +82,7 @@ module.exports.getAll = async (req, res) => {
         const limit = req.params.limit;
         RedemptionRequests.belongsTo(Users, { foreignKey: 'userId' });
         RedemptionRequests.belongsTo(BasicProfile, { foreignKey: 'userId' });
+        RedemptionRequests.hasOne(RedemptionRequestTransactions, { foreignKey: 'requestId' });
         const data = await RedemptionRequests.findAll({
             where: { deletedAt: null },
             include: [
@@ -95,6 +95,10 @@ module.exports.getAll = async (req, res) => {
                     model: BasicProfile,
                     required: false,
                     attributes: ['lastName', "firstName"]
+                },
+                {
+                    model: RedemptionRequestTransactions,
+                    required: false,
                 }
             ],
             limit: limit,
@@ -109,7 +113,9 @@ module.exports.getAll = async (req, res) => {
             pointsRequested: item.pointsRequested,
             pointsRedeemed: item.pointsRedeemed,
             redemptionRequestStatus: item.redemptionRequestStatus,
+            redemptionrequesttransaction: item.redemptionrequesttransaction,
             notes: item.notes,
+            coupon: item.coupon,
             redemptionDate: item.redemptionDate,
             cancellationDate: item.cancellationDate,
             IndiaPollsNotes: item.IndiaPollsNotes,
@@ -134,6 +140,7 @@ module.exports.getAllByUserId = async (req, res) => {
     try {
         const limit = req.params.limit;
         RedemptionRequests.belongsTo(Users, { foreignKey: 'userId' });
+        RedemptionRequests.hasOne(RedemptionRequestTransactions, { foreignKey: 'requestId' });
         const data = await RedemptionRequests.findAll({
             where: { userId: req.params.userId, deletedAt: null },
             include: [
@@ -141,6 +148,11 @@ module.exports.getAllByUserId = async (req, res) => {
                     model: Users,
                     required: false,
                     attributes: ['email', "phoneNumber"]
+                },
+                {
+                    model: RedemptionRequestTransactions,
+                    required: false,
+                    // attributes: ['response']
                 }
             ],
             limit: limit,
@@ -511,6 +523,43 @@ module.exports.manualApprove = async (req, res) => {
             }
         } else {
             return apiResponses.validationErrorWithData(res, 'Request not found', null);
+        }
+    } catch (err) {
+        return apiResponses.errorResponse(res, err);
+    }
+};
+
+
+module.exports.manualBulkApprove = async (req, res) => {
+    try {
+        if(req.body.bulkImportData.length > 0) {
+            const data = req.body.bulkImportData
+            for (let i = 0; i < data.length; i++) {
+                const requestData = await RedemptionRequests.findOne({ where: { id: data[i].id, "redemptionRequestStatus": 'New' }, raw: true })
+                if(requestData && data[i].coupon) {
+                    let obj = {
+                        coupon: data[i].coupon,
+                        redemptionRequestStatus: 'Redeemed',
+                        redemptionDate: new Date().valueOf(),
+                        pointsRedeemed: requestData.pointsRequested,
+                        userId: requestData.userId,
+                        approvedById: data[i].approvedById,
+                        createdAt: new Date().valueOf(),
+                        updatedAt: new Date().valueOf(),
+                        requestDate: new Date().valueOf()
+                    }
+
+                    const isExist = await RedemptionRequests.findOne({where: {id: data[i].id, deletedAt: null}})
+                    if (isExist) {
+                        const user = await RedemptionRequests.update(
+                            obj, {where: {id: data[i].id}}
+                        )
+                    }
+                }
+            }
+            return apiResponses.successResponseWithData(res, 'Successfully uploaded');
+        } else {
+            return apiResponses.validationErrorWithData(res, 'Sheet should not be empty', null);
         }
     } catch (err) {
         return apiResponses.errorResponse(res, err);
