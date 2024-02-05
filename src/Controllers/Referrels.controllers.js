@@ -4,7 +4,7 @@ const Users = db.user;
 const BasicProfile = db.basicProfile;
 const apiResponses = require('../Components/apiresponse');
 const {DataTypes} = require("sequelize");
-const {referralMail} = require("../Config/Mails");
+const {referralMail, referralMailHindi} = require("../Config/Mails");
 
 module.exports.createReferrals = async (req, res) => {
     try {
@@ -131,6 +131,7 @@ module.exports.deleteReferrals = async (req, res) => {
 
 module.exports.bulkCreateReferrals = async (req, res) => {
     try {
+        const language = req.headers['language'] || req.query.language || 'en';
         if (req.body.users.length > 0) {
             const userIds = req.body.users.map(user => user.userId);
             const existingReferrals = await Referrals.findAll({
@@ -164,7 +165,11 @@ module.exports.bulkCreateReferrals = async (req, res) => {
                 const bulkReferrals = referralsToCreate.map(user => {
                     const userInfo = userInfos.find(info => info.userId === user.userId);
                     const subject = `${userInfo.firstName} ${userInfo.lastName} has invited you to join IndiaPolls`;
-                    referralMail(user.email, user.userId, subject, user.name, `${userInfo.firstName} ${userInfo.lastName}`);
+                    if(language === 'hi'){
+                        referralMailHindi(user.email, user.userId, subject, user.name, `${userInfo.firstName} ${userInfo.lastName}`);
+                    } else {
+                        referralMail(user.email, user.userId, subject, user.name, `${userInfo.firstName} ${userInfo.lastName}`);
+                    }
                     return {
                         name: user.name,
                         email: user.email,
