@@ -8,12 +8,17 @@ const {referralMail, referralMailHindi} = require("../Config/Mails");
 
 module.exports.createReferrals = async (req, res) => {
     try {
+        const language = req.headers['language'] || req.query.language || 'en';
         const isExisting = await Referrals.findOne({ where: { userId: req.body.userId, email: req.body.email } })
         if(!isExisting) {
             const user = await BasicProfile.findOne({where: {userId: req.body.userId}})
             if (user) {
                 let subject = `${user.firstName} ${user.lastName} has invited you to join IndiaPolls`
-                await referralMail(req.body.email, req.body.userId, subject, req.body.name, `${user.firstName} ${user.lastName}`)
+                if(language === 'hi'){
+                    await referralMail(req.body.email, req.body.userId, subject, req.body.name, `${user.firstName} ${user.lastName}`)
+                } else {
+                    await referralMail(req.body.email, req.body.userId, subject, req.body.name, `${user.firstName} ${user.lastName}`)
+                }
                 const Referral = await Referrals.create({
                     name: req.body.name,
                     email: req.body.email,
