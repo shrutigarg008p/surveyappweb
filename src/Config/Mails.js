@@ -19,7 +19,7 @@ module.exports = {
 	userRegistration: (email, token) => {
 		console.log('logIn_Mail====>' + email);
 		const mailOptions = {
-			from: 'softpk@gmail.com',
+			from: 'panel@indiapolls.com',
 			to: email,
 			subject: 'IndiaPolls-Your Registration is Pending Approval',
 			text: 'IndiaPolls-Your Registration is Pending Approval',
@@ -47,7 +47,7 @@ module.exports = {
 	userRegistrationHindi: (email, token) => {
 		console.log('logIn_Mail====>' + email);
 		const mailOptions = {
-			from: 'softpk@gmail.com',
+			from: 'panel@indiapolls.com',
 			to: email,
 			subject: 'इंडियापोल्स-आपका पंजीकरण अनुमोदन के लिए लंबित है',
 			text: 'इंडियापोल्स-आपका पंजीकरण अनुमोदन के लिए लंबित है',
@@ -141,7 +141,7 @@ module.exports = {
 	userEmailChanged: (email, token) => {
 		console.log('logIn_Mail====>' + email);
 		const mailOptions = {
-			from: 'softpk@gmail.com',
+			from: 'panel@indiapolls.com',
 			to: email,
 			subject: 'IndiaPolls-Your Email Change Confirmation Pending',
 			text: 'IndiaPolls-Your Email Change Confirmation Pending',
@@ -168,7 +168,7 @@ module.exports = {
 	userEmailChangedHindi: (email, token) => {
 		console.log('logIn_Mail====>' + email);
 		const mailOptions = {
-			from: 'softpk@gmail.com',
+			from: 'panel@indiapolls.com',
 			to: email,
 			subject: 'इंडियापोल्स-आपका ईमेल परिवर्तन पुष्टिकरण लंबित है',
 			text: 'इंडियापोल्स-आपका ईमेल परिवर्तन पुष्टिकरण लंबित है',
@@ -260,7 +260,7 @@ module.exports = {
 	surveyInvite: (subject, email, template) => {
 		console.log('logIn_Mail====>' + email);
 		const mailOptions = {
-			from: 'softpk@gmail.com',
+			from: 'panel@indiapolls.com',
 			to: email,
 			subject: subject,
 			html: template
