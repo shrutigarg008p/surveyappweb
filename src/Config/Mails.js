@@ -191,39 +191,60 @@ module.exports = {
 			html: `<div id=":tc" class="a3s aiL "><div class="adM">
          </div><div><div class="adM">
         </div><p>
-            Hi ${name}
-        </p><p>
-            I am registered with a great service called <span class="il">IndiaPolls</span> - the website is <a href="https://panel.indiapolls.com" target="_blank"><span class="il">IndiaPolls</span>.com</a> where I
-        spend a few minutes filling in surveys on interesting topics, and they pay me for doing this! <br> It is very
-            simple - all you need to do is register, fill in your profile and then fill in the surveys that they will send
-            out to you from time to time. And that gives you a chance to earn rewards from Rs 20 to Rs 2000 and
-        get entered into a monthly sweepstakes.<br> And just by registering you get entered into a sweepstakes for
-            an iPod or vouchers for Rs. 2500. You can either REDEEM your points or donate them to a charitable
-        organisation of your choice.<br>
-        </p><p>
-            You also earn 20 <span class="il">IndiaPolls</span> points whenever a person referred by you becomes a member, which
-        means, you can win an iPod and I can get 20 points, if you become a member.<br>
-            All the surveys that we respond to are used by various companies to provide better products or services
-            to customers - so our opinion will count! Once you register do invite your friends too, and keep earning
-        those points.
-        <br>
-        </p><p>
-            To join <span class="il">IndiaPolls</span> and take paid surveys about the topics that matter to you, click on the link below:
-        </p><p>
-            <a href="https://panel.indiapolls.com/#/referrals/view/${userId}" target="_blank">https://test.<span class="il">indiaPolls</span>.com/<wbr>referrals/view/${userId}</a><br><br>
-                <img alt="logo" src="https://indiapolls.com:9000/Images/logo-black.png" class="CToWUd" data-bit="iit">
-        <br>
-            <br>
-        </p><p>
-        Please make sure you do register via this link so that my account gets updated.
-        <br>
-        </p><p>
-            Bye
-            <br>
-            ${senderName}
-        </p><div class="yj6qo"></div><div class="adL">
-    </div></div><div class="adL">
-</div></div>`
+        Hi ${name}
+        </p>
+		<p>I am registered with a great service called <span class="il">IndiaPolls</span> - the website is <a href="https://panel.indiapolls.com" target="_blank"><span class="il">IndiaPolls</span>.com</a> where I spend a few minutes filling in surveys on interesting topics, and they pay me for doing this!</p> 
+		<p>It is very simple - all you need to do is register, complete your profile and then take polls that they will send out to you from time to time via SMS/WhatsApp and Email. And that gives you a chance to earn rewards from INR 25 to INR 2500.</p>
+		<p><strong>You also earn 25 IndiaPolls, I-Points whenever a person referred by you becomes a member.</strong></p>
+		<p>You can either <strong>REDEEM</strong> your points or donate them to any charitable organization of your choice.</p>
+		<p>All the surveys that we respond to are used by various companies to provide better products and services to customers like us - so your valuable opinion will always count!</p>
+		<p>Once you register, do invite your friends too, and keep earning those I-Points.</p>
+		<p>To join IndiaPolls and take paid surveys about the topics that matter to you, click on the link below:<br>
+		<a href="https://panel.indiapolls.com/#/referrals/view/${userId}" target="_blank">https://test.<span class="il">indiaPolls</span>.com/<wbr>referrals/view/${userId}</a><br><br>
+		<img alt="logo" src="https://indiapolls.com:9000/Images/logo-black.png" class="CToWUd" data-bit="iit">
+		</p>
+		<p>Please make sure you do register via this link so that my account gets updated.</p>
+		<p>Thank you once again!<br>
+		Best Regards,<br>
+		${senderName}</p>`
+		};
+		transporter.sendMail(details, function(error, data) {
+			if (error) {
+				console.log('error=========>>>' + error);
+				return true;
+			} else {
+				console.log('data=========>>>' + JSON.stringify(data));
+				return true;
+			}
+		});
+	},
+
+	referralMailHindi: (email, userId, subject, name, senderName) => {
+		console.log('logIn_Mail====>' + email);
+		const url = `https://panel.indiapolls.com/referrals/view/${userId}`
+		const details = {
+			from: senderAddress, 
+			to: email, 
+			subject: subject, 
+			html: `<div id=":tc" class="a3s aiL "><div class="adM">
+			</div><div><div class="adM">
+			</div><p>
+			नमस्ते ${name}
+			</p>
+			<p>मैं <span class="il">IndiaPolls</span> नामक एक शानदार सेवा के साथ पंजीकृत हूँ - वेबसाइट है <a href="https://panel.indiapolls.com" target="_blank"><span class="il">IndiaPolls</span>.com</a> जहाँ मैं कुछ मिनट दिलचस्प विषयों पर सर्वेक्षण भरने में बिताता हूँ, और वे मुझे इसके लिए भुगतान करते हैं!</p> 
+			<p>यह बहुत सरल है - आपको केवल पंजीकरण करना है, अपनी प्रोफ़ाइल पूरी करनी है और फिर उन पोल्स में भाग लेना है जो वे समय-समय पर आपको SMS/WhatsApp और ईमेल के माध्यम से भेजेंगे। और इससे आपको INR 25 से INR 2500 तक के इनाम कमाने का मौका मिलता है।</p>
+			<p><strong>जब भी आपके द्वारा संदर्भित कोई व्यक्ति सदस्य बनता है, तो आप भी 25 IndiaPolls, I-Points कमाते हैं।</strong></p>
+			<p>आप अपने अंकों को या तो <strong>रिडीम</strong> कर सकते हैं या फिर अपनी पसंद की किसी भी धर्मार्थ संस्था को दान कर सकते हैं।</p>
+			<p>हमारे द्वारा दिए गए सभी सर्वेक्षणों का उपयोग विभिन्न कंपनियाँ हम जैसे ग्राहकों को बेहतर उत्पाद और सेवाएँ प्रदान करने के लिए करती हैं - इसलिए आपकी अमूल्य राय हमेशा मायने रखेगी!</p>
+			<p>एक बार जब आप पंजीकृत हो जाते हैं, तो अपने दोस्तों को भी आमंत्रित करें, और उन I-Points को कमाते रहें।</p>
+			<p>आपके लिए महत्वपूर्ण विषयों पर भुगतान किए गए सर्वेक्षणों में भाग लेने के लिए IndiaPolls में शामिल होने के लिए, नीचे दिए गए लिंक पर क्लिक करें:<br>
+			<a href="https://panel.indiapolls.com/#/referrals/view/${userId}" target="_blank">https://test.<span class="il">indiaPolls</span>.com/<wbr>referrals/view/${userId}</a><br><br>
+			<img alt="logo" src="https://indiapolls.com:9000/Images/logo-black.png" class="CToWUd" data-bit="iit">
+			</p>
+			<p>कृपया सुनिश्चित करें कि आप इस लिंक के माध्यम से पंजीकरण करें ताकि मेरा खाता अपडेट हो सके।</p>
+			<p>एक बार फिर धन्यवाद!<br>
+			सादर,<br>
+			${senderName}</p>`
 		};
 		transporter.sendMail(details, function(error, data) {
 			if (error) {
