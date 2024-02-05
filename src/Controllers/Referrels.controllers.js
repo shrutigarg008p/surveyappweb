@@ -15,7 +15,7 @@ module.exports.createReferrals = async (req, res) => {
             if (user) {
                 let subject = `${user.firstName} ${user.lastName} has invited you to join IndiaPolls`
                 if(language === 'hi'){
-                    await referralMail(req.body.email, req.body.userId, subject, req.body.name, `${user.firstName} ${user.lastName}`)
+                    await referralMailHindi(req.body.email, req.body.userId, subject, req.body.name, `${user.firstName} ${user.lastName}`)
                 } else {
                     await referralMail(req.body.email, req.body.userId, subject, req.body.name, `${user.firstName} ${user.lastName}`)
                 }
