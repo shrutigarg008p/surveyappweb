@@ -284,7 +284,7 @@ module.exports.ApproveRequest = async (req, res) => {
                                                 );
                                             } else {
                                                 const RedemptionRequest = await RedemptionRequestTransactions.create({
-                                                    requestId: req.body.requestId,
+                                                    requestId: req.body.id,
                                                     status: response.data.statusCode,
                                                     response: response.data,
                                                     createdAt: new Date().valueOf(),
@@ -416,7 +416,7 @@ module.exports.ApproveRequest = async (req, res) => {
                                 );
                             } else {
                                 const RedemptionRequest = await RedemptionRequestTransactions.create({
-                                    requestId: req.body.requestId,
+                                    requestId: req.body.id,
                                     status: response.data.data.placeOrder.status,
                                     response: response.data,
                                     createdAt: new Date().valueOf(),
@@ -555,6 +555,131 @@ module.exports.manualBulkApprove = async (req, res) => {
                             obj, {where: {id: data[i].id}}
                         )
                     }
+                }
+            }
+            return apiResponses.successResponseWithData(res, 'Successfully uploaded');
+        } else {
+            return apiResponses.validationErrorWithData(res, 'Sheet should not be empty', null);
+        }
+    } catch (err) {
+        return apiResponses.errorResponse(res, err);
+    }
+};
+
+
+module.exports.xoxoBulkApprove = async (req, res) => {
+    try {
+        if(req.body.bulkImportData.length > 0) {
+            const data = req.body.bulkImportData
+            for (let i = 0; i < data.length; i++) {
+                const requestData = await RedemptionRequests.findOne({
+                    where: {
+                        id: data[i].id,
+                        "redemptionRequestStatus": 'New'
+                    }, raw: true
+                })
+                if (requestData && data[i]) {
+                    let productId = ''
+                    if (requestData.redemptionModeTitle === 'PhonePe eGift voucher') {
+                        productId = 49609
+                    }
+
+                    if (requestData.redemptionModeTitle === 'Google Play Gift Code') {
+                        productId = 48801
+                    }
+
+                    if (requestData.redemptionModeTitle === 'Croma') {
+                        productId = 14383
+                    }
+
+                    if (requestData.redemptionModeTitle === 'Flipkart INR') {
+                        productId = 1007
+                    }
+
+                    if (requestData.redemptionModeTitle === 'AJIO E-Gift Card') {
+                        productId = 56170
+                    }
+
+                    const user = await Users.findOne({where: {id: requestData.userId}})
+                    let dataInfo = JSON.stringify({
+                        "query": "plumProAPI.mutation.placeOrder",
+                        "tag": "plumProAPI",
+                        "variables": {
+                            "data": {
+                                "productId": productId,
+                                "quantity": "1",
+                                "denomination": requestData.pointsRequested,
+                                "email": user.email,
+                                "contact": `+91-${user.phoneNumber}`,
+                                "tag": "",
+                                "poNumber": requestData.id+i,
+                                "notifyReceiverEmail": 1
+                            }
+                        }
+                    });
+
+                    let config = {
+                        method: 'post',
+                        maxBodyLength: Infinity,
+                        url: 'https://accounts.xoxoday.com/chef/v1/oauth/api',
+                        headers: {
+                            'Authorization': 'Bearer eyJ0b2tlbkNvbnRlbnQiOnsiaXNzdWVkRm9yIjoidGVzdCIsInNjb3BlIjoiIiwiaXNzdWVkQXQiOjE3MDY2MDQ3NDg3NzgsImV4cGlyZXNBdCI6IjIwMjQtMDItMTRUMDg6NTI6MjguNzc4WiIsInRva2VuX3R5cGUiOiJVU0VSIn0sImFfdCI6ImV5SmxibU1pT2lKQk1USTRRMEpETFVoVE1qVTJJaXdpWVd4bklqb2lSVU5FU0MxRlV5SXNJbXRwWkNJNkltVnVZeUlzSW1Wd2F5STZleUpyZEhraU9pSkZReUlzSW1OeWRpSTZJbEF0TWpVMklpd2llQ0k2SW5KU1psZFZjak00WkdkNmJVeE9SMFZ1TjBsamNIVnpVSGN6YXpadFVIbEpNQzFuYlV0dmNGOVhabWNpTENKNUlqb2lNMjB5TVdsUlltMTJjMVJhUjFSYVdqSXpTVVV0WWxCMlkwUjJPR1J1TWtwVVMyOVpaWHBxUkdsV2F5SjlmUS4uNU53WW9VWkE3cTBFWl9lYlg4a0k5Zy43ZEh2VXNZaGlJLVQxSDZOendoTENrZzlFZzBmY3dkMFpsUS1FZW5lQklkMmNOYlVpT0hmckUwXzk2SkV0dWh6V2pGM1VzRVJYR1k3MFNycUIwQTkybkZtVWFMZzhtaVlxa1VKR1dYUUpLS2xTdkR5REc1RERPeFlmbDBVTGZHYVdBSjBKNU5wcEZFNmlTYUkwb3VSZ21HeFNyV0Z6Y0czTjRQRkhleDdLWEd5M3VZY2FsLWd3d3VMbkIxbkFKOGtTT0NrdVQ3YUZKanVKMUV3clBmMFJXWEg5cXd1SXJxTGU0UlM4MmlXYi1scE1xaGMwSlRPeFd6UTFtU19mREYyUGpzcW94UHVjRmZ5c1VTUTgwWWFQUDRETDFkUHVSLXdPSzNmOWJKRk5rZHF1bkZTNFozcGJCOWtFSHV2YVBUSW5HVE01NUlzSFpTbWJOUlZOWW9CemY4R3ZySDNhQVVKYi14R3htOGN4aUpTSVdpYmFSLXNHbjJxWXczQ3htMURpN21SWjNIMXZnOWNXaWZZMUtQR19mYUh4Z0U0WE5iTWtZVDJuU0JHU3RzVFR2cGhOYVE0RG50QVJicGg0d2FvZjdWMFBYZXpUaXozWUZ6R1kxMjVidE9mSjVMa1JpS2NjQ3JqNjR3eGs5VE9mNm9YRmRaQVZLNHVORTREemwzU01jZ0xrbkhRUDlhUTljaXQ5dnRPVEtTbTZLajVsbXIwa2R0QUNRTDZJR2dBUS1LamJnLUlxamVLM1ctbWN4UnRmcHlCeGhCX0gtOWVZMUZ5anEwblhGcW9EVEI1NHo3UXp6UW4yQzg3Zmc1LTVwcjdGNXpWVUsxUmcwN3VjUG00QXJuZHd2ZngzdUNiLUNQSWR1ODdGLTlsQjJZTzhyVDV0NTZkd1IwempjSWF4X1NRYzZsVnhYS0sxMF9YcE1jXzBBNUxzU1FHc0ZBUHRRVnlnaFpxZGZOMEp3TEFscDNLMW5yWmhwSVZHYmxoSG83aTNGaVR3d294cTZ6Tlh6cmhSRXljek5CZmU5MXNrbEdPVWNacDJEcUVGeXh1eHVNakNYRElTZDM4bHc0ZExLb2htNFRHMkNLc0wxNFdBY0VJTENnbFRQN1V6b2JtaTNQc3R4VTFEUlJWQlJDLXhjMUlqV202bTNtdEhxSS55bHdOM2p4YV9VT2RCQVVwUlVyY2Z3In0=',
+                            'Content-Type': 'application/json',
+                            'Cookie': '__cf_bm=HUVN4tkMTW8KtIHKqzFTz3fROutLhihBCbEdox5iC8g-1706087320-1-AZ2QBFOh5IbAmku1wdIbWaWkJnAbRNpN6CKTwSTlAcy4RZggXunq4Qe8UTAmkPTqdpj1CviE1siSg+lRKNGNaOg=; _cfuvid=fS5l5NEZIWVwugVKZ5qbR.IsipPPJXgrVLSLrBeUdhg-1706084905801-0-604800000'
+                        },
+                        data: dataInfo
+                    };
+
+                    axios.request(config)
+                        .then(async (response) => {
+                            console.log('FINAL------>' + JSON.stringify(response.data));
+                            if (response) {
+                                if (response.data.data.placeOrder.status === 1) {
+                                    const RedemptionRequest = await RedemptionRequestTransactions.create({
+                                        requestId: data[i].id,
+                                        status: response.data.data.placeOrder.status,
+                                        response: response.data,
+                                        createdAt: new Date().valueOf(),
+                                        updatedAt: new Date().valueOf(),
+                                    })
+
+                                    const user = await RedemptionRequests.update({
+                                            redemptionRequestStatus: 'Redeemed',
+                                            redemptionDate: new Date().valueOf(),
+                                            pointsRedeemed: requestData.pointsRequested,
+                                            userId: requestData.userId,
+                                            approvedById: data[i].approvedById,
+                                            createdAt: new Date().valueOf(),
+                                            updatedAt: new Date().valueOf(),
+                                            requestDate: new Date().valueOf()
+                                        },
+                                        {where: {id: data[i].id}}
+                                    )
+                                } else {
+                                    const RedemptionRequest = await RedemptionRequestTransactions.create({
+                                        requestId: data[i].id,
+                                        status: response.data.data.placeOrder.status,
+                                        response: response.data,
+                                        createdAt: new Date().valueOf(),
+                                        updatedAt: new Date().valueOf(),
+                                    })
+
+                                    const user = await RedemptionRequests.update({
+                                            redemptionRequestStatus: 'Failed',
+                                            approvedById: data[i].approvedById,
+                                            createdAt: new Date().valueOf(),
+                                            updatedAt: new Date().valueOf(),
+                                            requestDate: new Date().valueOf()
+                                        },
+                                        {where: {id: data[i].id}}
+                                    )
+                                }
+                            }
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                            return true
+                        })
                 }
             }
             return apiResponses.successResponseWithData(res, 'Successfully uploaded');
