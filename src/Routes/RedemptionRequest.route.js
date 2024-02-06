@@ -60,4 +60,9 @@ module.exports= function(app) {
         '/api/v1/redemptionRequest/manualBulkApprove',
         redemptionRequestController.manualBulkApprove,
     );
+
+    app.post(
+        '/api/v1/redemptionRequest/xoxoBulkApprove',
+        redemptionRequestController.xoxoBulkApprove,
+    );
 };

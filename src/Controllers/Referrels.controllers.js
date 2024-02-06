@@ -15,7 +15,7 @@ module.exports.createReferrals = async (req, res) => {
             if (user) {
                 let subject = `${user.firstName} ${user.lastName} has invited you to join IndiaPolls`
                 if(language === 'hi'){
-                    await referralMailHindi(req.body.email, req.body.userId, subject, req.body.name, `${user.firstName} ${user.lastName}`)
+                    await referralMailHindi(req.body.email, req.body.userId, `${user.firstName} ${user.lastName} ने आपको इंडियापोल्स में शामिल होने के लिए आमंत्रित किया है`, req.body.name, `${user.firstName} ${user.lastName}`)
                 } else {
                     await referralMail(req.body.email, req.body.userId, subject, req.body.name, `${user.firstName} ${user.lastName}`)
                 }
@@ -171,7 +171,7 @@ module.exports.bulkCreateReferrals = async (req, res) => {
                     const userInfo = userInfos.find(info => info.userId === user.userId);
                     const subject = `${userInfo.firstName} ${userInfo.lastName} has invited you to join IndiaPolls`;
                     if(language === 'hi'){
-                        referralMailHindi(user.email, user.userId, subject, user.name, `${userInfo.firstName} ${userInfo.lastName}`);
+                        referralMailHindi(user.email, user.userId, `${userInfo.firstName} ${userInfo.lastName} ने आपको इंडियापोल्स में शामिल होने के लिए आमंत्रित किया है`, user.name, `${userInfo.firstName} ${userInfo.lastName}`);
                     } else {
                         referralMail(user.email, user.userId, subject, user.name, `${userInfo.firstName} ${userInfo.lastName}`);
                     }
@@ -200,4 +200,5 @@ module.exports.bulkCreateReferrals = async (req, res) => {
         return apiResponses.errorResponse(res, err);
     }
 };
+
 
