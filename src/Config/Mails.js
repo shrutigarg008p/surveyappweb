@@ -141,7 +141,7 @@ module.exports = {
 	userPasswordReset: (email, token) => {
 		console.log('logIn_Mail====>' + email);
 		const details = {
-			from: senderAddress, // sender address same as above
+			from: 'panel@indiapolls.com', // sender address same as above
 			to: email, // Receiver's email id
 			subject: 'Regarding Password reset on INDIA-POLLS!', // Subject of the mail.
 			html:
@@ -162,7 +162,7 @@ module.exports = {
 	userPasswordResetHindi: (email, token) => {
 		console.log('logIn_Mail====>' + email);
 		const details = {
-			from: senderAddress, // sender address same as above
+			from: 'panel@indiapolls.com', // sender address same as above
 			to: email, // Receiver's email id
 			subject: 'इंडियापोल्स पर पासवर्ड रीसेट के संबंध में!', // Subject of the mail.
 			html:
@@ -185,7 +185,7 @@ module.exports = {
 		console.log('logIn_Mail====>' + email);
 		const url = `https://panel.indiapolls.com/referrals/view/${userId}`
 		const details = {
-			from: senderAddress, // sender address same as above
+			from: 'panel@indiapolls.com', // sender address same as above
 			to: email, // Receiver's email id
 			subject: subject, // Subject of the mail.
 			html: `<div id=":tc" class="a3s aiL "><div class="adM">
@@ -223,9 +223,9 @@ module.exports = {
 		console.log('logIn_Mail====>' + email);
 		const url = `https://panel.indiapolls.com/referrals/view/${userId}`
 		const details = {
-			from: senderAddress, 
-			to: email, 
-			subject: subject, 
+			from: 'panel@indiapolls.com',
+			to: email,
+			subject: subject,
 			html: `<div id=":tc" class="a3s aiL "><div class="adM">
 			</div><div><div class="adM">
 			</div><p>
@@ -261,7 +261,7 @@ module.exports = {
 	manualRedemptionRequest: (name, email) => {
 		console.log('logIn_Mail====>' + email);
 		const details = {
-			from: senderAddress,
+			from: 'panel@indiapolls.com',
 			to: email, // Receiver's email id
 			subject: 'Amazon Gift Card Voucher Redemption Request',
 			html:
@@ -284,7 +284,7 @@ module.exports = {
 	manualRedemptionRequestHindi: (name, email) => {
 		console.log('logIn_Mail====>' + email);
 		const details = {
-			from: senderAddress,
+			from: 'panel@indiapolls.com',
 			to: email, // Receiver's email id
 			subject: 'अमेज़न उपहार कार्ड वाउचर मोचन अनुरोध',
 			html:
