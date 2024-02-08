@@ -145,6 +145,7 @@ module.exports.getAllStatesAndCitiesByZipCode = async (req, res) => {
             const data = { cities, state }
         return apiResponses.successResponseWithData(res, 'success!', data);
     } catch (err) {
+        console.log('errrror--->', err)
         return apiResponses.errorResponse(res, err);
     }
 };
@@ -226,7 +227,7 @@ module.exports.getAllCities = async (req, res) => {
 };
 
 
-
+//Import States Only
 const jsonFile = require('../../States.json')
 async function statesImport() {
     for(let i = 0; i < jsonFile.length; i++) {
@@ -243,6 +244,7 @@ async function statesImport() {
 
 
 
+//Import Cities Only
 const citiesJson = require('../../Cities.json')
 async function citiesImport() {
     for(let i = 0; i < citiesJson.length; i++) {
@@ -262,6 +264,7 @@ async function citiesImport() {
 }
 
 
+//Import Cities with xlsx Only
 const citiesJsonNew = require('../citiesNew.json')
 async function citiesImportNew() {
     const dataForBulkWrite = citiesJsonNew.map(obj => ({
@@ -289,10 +292,6 @@ async function citiesImportNew() {
 }
 
 // citiesImportNew()
-
-
-
-
 
 
 //Xlsx To Json
@@ -338,6 +337,9 @@ const transformData = (dataArray) => {
         newObj.segment = newObj.segment && typeof newObj.segment === 'string' ? newObj.segment.trim() : newObj.segment;
         newObj.stateId = newObj.stateId && typeof newObj.stateId === 'string' ? newObj.stateId.trim() : newObj.stateId;
 
+        if(!newObj.stateId) {
+            console.log('newObj---->', newObj)
+        }
         resultArray.push(newObj);
     }
 
@@ -346,7 +348,7 @@ const transformData = (dataArray) => {
 
 
 function test() {
-    const filePath = './Controllers/city-data.xlsx';
+    const filePath = './Controllers/latestCities.xlsx';
     const sheetName = 'Pin Code File';
 
     const dataFromSheet = readXlsxFile(filePath, sheetName);
