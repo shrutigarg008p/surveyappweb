@@ -2,6 +2,7 @@ const db = require('../models');
 const NewsLetters = db.newsletters;
 const NewsLettersSamples = db.newslettersSamples;
 const apiResponses = require('../Components/apiresponse');
+const {newsLetterMail} = require("../Config/Mails");
 
 module.exports.create = async (req, res) => {
     try {
@@ -16,6 +17,9 @@ module.exports.create = async (req, res) => {
                 createdAt: new Date().valueOf(),
                 updatedAt: new Date().valueOf(),
             })
+            const labelsArray = req.body.emails.map(item => item.label)
+            await newsLetterMail(req.body.body, labelsArray, req.body.subject)
+
             return apiResponses.successResponseWithData(
                 res,
                 'Success!',
