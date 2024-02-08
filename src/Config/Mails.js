@@ -322,6 +322,56 @@ module.exports = {
 			}
 		});
 	},
+
+	manualApproveEmail: (email, coupon, pin, validity) => {
+		console.log('logIn_Mail====>' + email);
+		const details = {
+			from: 'panel@indiapolls.com',
+			to: email,
+			subject: 'Your IndiaPolls Redemption request closure !',
+			html: `<p>Dear User<user></p>
+					<p>Your Amazon Gift Card is issued. Here are the details:</p>
+					<p> Voucher Number: ${coupon} PIN: ${pin} Expires On: ${validity}</p>
+					<p> Best Regards,</p>
+					<p></p>
+					<p>Kumar,</p>
+					<p>IndiaPolls - Panel Manager</p>`
+		};
+		transporter.sendMail(details, function(error, data) {
+			if (error) {
+				console.log('error=========>>>' + error);
+				return true;
+			} else {
+				console.log('data=========>>>' + JSON.stringify(data));
+				return true;
+			}
+		});
+	},
+
+	manualApproveEmailHindi: (email, coupon, pin, validity) => {
+		console.log('logIn_Mail====>' + email);
+		const details = {
+			from: 'panel@indiapolls.com',
+			to: email,
+			subject: 'आपकी इंडियापोल्स रिडेम्प्शन अनुरोध समाप्ति!',
+			html: `<p>प्रिय उपयोगकर्ता,</p>
+					<p>आपका अमेज़न गिफ़्ट कार्ड जारी किया गया है। यहां विवरण हैं:</p>
+					<p>वाउचर नंबर: ${coupon} पिन: ${pin} समय सीमा: ${validity}</p>
+					<p>सर्वोत्तम शुभकामनाएँ,</p>
+					<p>कुमार,</p>
+					<p>इंडियापोल्स - पैनल प्रबंधक</p>`
+		};
+
+		transporter.sendMail(details, function(error, data) {
+			if (error) {
+				console.log('error=========>>>' + error);
+				return true;
+			} else {
+				console.log('data=========>>>' + JSON.stringify(data));
+				return true;
+			}
+		});
+	},
 }
 
 
