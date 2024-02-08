@@ -8,7 +8,7 @@ const Rewards = db.rewards;
 const RedemptionRequestTransactions = db.redemptionRequestTransactions;
 const apiResponses = require('../Components/apiresponse');
 const {DataTypes} = require("sequelize");
-const {manualRedemptionRequest, manualRedemptionRequestHindi} = require("../Config/Mails");
+const {manualRedemptionRequest, manualRedemptionRequestHindi, manualApproveEmail, manualApproveEmailHindi} = require("../Config/Mails");
 
 module.exports.createRedemptionRequest = async (req, res) => {
     try {
@@ -116,6 +116,8 @@ module.exports.getAll = async (req, res) => {
             redemptionrequesttransaction: item.redemptionrequesttransaction,
             notes: item.notes,
             coupon: item.coupon,
+            pin: item.pin,
+            validity: item.validity,
             redemptionDate: item.redemptionDate,
             cancellationDate: item.cancellationDate,
             IndiaPollsNotes: item.IndiaPollsNotes,
@@ -497,8 +499,8 @@ module.exports.RejectRequest = async (req, res) => {
 
 module.exports.manualApprove = async (req, res) => {
     try {
+        const language = req.headers['language'] || req.body.language || req.query.language || 'en';
         const requestData = await RedemptionRequests.findOne({ where: { id: req.body.id, "redemptionRequestStatus": 'New' }, raw: true })
-        console.log('requestData--->', requestData)
         if(requestData) {
             let obj = {
                 coupon: req.body.coupon,
@@ -507,6 +509,8 @@ module.exports.manualApprove = async (req, res) => {
                 pointsRedeemed: requestData.pointsRequested,
                 userId: requestData.userId,
                 approvedById: req.body.approvedById,
+                pin: req.body.pin,
+                validity: req.body.validity,
                 createdAt: new Date().valueOf(),
                 updatedAt: new Date().valueOf(),
                 requestDate: new Date().valueOf()
@@ -516,10 +520,16 @@ module.exports.manualApprove = async (req, res) => {
             if (!isExist) {
                 return apiResponses.validationErrorWithData(res, 'Redemption mode not exist');
             } else {
-                const user = await RedemptionRequests.update(
+                const userRequest = await RedemptionRequests.update(
                     obj, {where: {id: req.body.id}}
                 )
-                return apiResponses.successResponseWithData(res, 'Success Update', user);
+                const user = await Users.findOne({ where: { id: requestData.userId }})
+                if(language === 'hi') {
+                    await manualApproveEmailHindi(user.email, req.body.coupon, req.body.pin, req.body.validity)
+                } else {
+                    await manualApproveEmail(user.email, req.body.coupon, req.body.pin, req.body.validity)
+                }
+                return apiResponses.successResponseWithData(res, 'Success Update', userRequest);
             }
         } else {
             return apiResponses.validationErrorWithData(res, 'Request not found', null);
@@ -532,6 +542,7 @@ module.exports.manualApprove = async (req, res) => {
 
 module.exports.manualBulkApprove = async (req, res) => {
     try {
+        const language = req.headers['language'] || req.body.language || req.query.language || 'en';
         if(req.body.bulkImportData.length > 0) {
             const data = req.body.bulkImportData
             for (let i = 0; i < data.length; i++) {
@@ -544,11 +555,19 @@ module.exports.manualBulkApprove = async (req, res) => {
                         pointsRedeemed: requestData.pointsRequested,
                         userId: requestData.userId,
                         approvedById: data[i].approvedById,
+                        pin: data[i].pin,
+                        validity: data[i].validity,
                         createdAt: new Date().valueOf(),
                         updatedAt: new Date().valueOf(),
                         requestDate: new Date().valueOf()
                     }
 
+                    const user = await Users.findOne({ where: { id: requestData.userId }})
+                    if(language === 'hi') {
+                        await manualApproveEmailHindi(user.email, data[i].coupon, data[i].pin, data[i].validity)
+                    } else {
+                        await manualApproveEmail(user.email, data[i].coupon, data[i].pin, data[i].validity)
+                    }
                     const isExist = await RedemptionRequests.findOne({where: {id: data[i].id, deletedAt: null}})
                     if (isExist) {
                         const user = await RedemptionRequests.update(

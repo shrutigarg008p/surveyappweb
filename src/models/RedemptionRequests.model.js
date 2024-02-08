@@ -59,6 +59,14 @@ module.exports = (sequelize, Sequelize) => {
             type: DataTypes.STRING,
             allowNull: true,
         },
+        pin: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+        validity: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
         cancelledById: {
             type: DataTypes.UUID,
             allowNull: true,
