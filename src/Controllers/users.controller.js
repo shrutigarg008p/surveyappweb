@@ -23,7 +23,7 @@ const Op = db.Sequelize.Op;
 
 module.exports.registration = async (req, res) => {
 	try {
-
+		const language = req.headers['language'] || req.body.language || req.query.language || 'en';
 		console.log('body----->', req.body)
 		const token = createToken(req.body.email);
 		const OTP = generateOTP();
@@ -48,7 +48,7 @@ module.exports.registration = async (req, res) => {
 			activeStatus: 0,
 			otp: OTP
 		})
-		if(req.body.language === 'hi') {
+		if(language === 'hi') {
 			await Mails.userRegistrationHindi(user.email, token);
 		} else {
 			await Mails.userRegistration(user.email, token);
@@ -97,7 +97,7 @@ module.exports.registration = async (req, res) => {
 				})
 			}
 		}
-		if(req.body.language === 'hi') {
+		if(language === 'hi') {
 			await sendVerificationMessageHindi(OTP, req.body.phoneNumber, 'उपयोगकर्ता')
 		} else {
 			await sendVerificationMessage(OTP, req.body.phoneNumber, 'User')
@@ -123,6 +123,7 @@ module.exports.continueWithMobile = async (req, res) => {
 				phoneNumber: req.body.phoneNumber
 			},
 		})
+		const language = req.headers['language'] || req.body.language || req.query.language || 'en';
 		if (!user) {
 			const token = createToken(req.body.phoneNumber);
 			const OTP = generateOTP();
@@ -189,7 +190,7 @@ module.exports.continueWithMobile = async (req, res) => {
 					})
 				}
 			}
-			if(req.body.language === 'hi') {
+			if(language === 'hi') {
 				await sendVerificationMessageHindi(OTP, req.body.phoneNumber, 'उपयोगकर्ता')
 			} else {
 				await sendVerificationMessage(OTP, req.body.phoneNumber, 'User')
@@ -206,7 +207,7 @@ module.exports.continueWithMobile = async (req, res) => {
 				otp: OTP,
 				token: token,
 			}, {where: {id: user.id}})
-			if(req.body.language === 'hi') {
+			if(language === 'hi') {
 				await sendVerificationMessageHindi(OTP, req.body.phoneNumber, 'उपयोगकर्ता')
 			} else {
 				await sendVerificationMessage(OTP, req.body.phoneNumber, 'User')
@@ -243,13 +244,14 @@ module.exports.resendEmailVerifyMail = async (req, res) => {
 
 module.exports.resendMobileOtp = async (req, res) => {
 	try {
+		const language = req.headers['language'] || req.body.language || req.query.language || 'en';
 		const OTP = generateOTP();
 		const info = await User.update({
 			otp: OTP,
 		}, { where: { id: req.body.userId, phoneNumber: req.body.phoneNumber }})
 
 		if(info[0] === 1) {
-			if(req.body.language === 'hi') {
+			if(language === 'hi') {
 				await sendVerificationMessageHindi(OTP, req.body.phoneNumber, 'उपयोगकर्ता')
 			} else {
 				await sendVerificationMessage(OTP, req.body.phoneNumber, 'User')
@@ -376,6 +378,7 @@ module.exports.verifyPhone = async (req, res) => {
 
 module.exports.userLogin = async (req, res) => {
 	try {
+		const language = req.headers['language'] || req.body.language || req.query.language || 'en';
 		if (req.body.registerType === 'password') {
 			const user = await User.findOne({
 				where: {
@@ -411,7 +414,7 @@ module.exports.userLogin = async (req, res) => {
 			const isExist = await BasicProfile.findOne({where: {userId: user.id}})
 			const OTP = generateOTP();
 			if(user.phoneNumberConfirmed === false) {
-				if(req.body.language === 'hi') {
+				if(language === 'hi') {
 					await sendVerificationMessageHindi(OTP, user.phoneNumber, 'उपयोगकर्ता')
 				} else {
 					await sendVerificationMessage(OTP, req.body.phoneNumber, 'User')
@@ -603,6 +606,7 @@ module.exports.userLogin = async (req, res) => {
 
 module.exports.userUpdate = async (req, res) => {
 	try {
+		const language = req.headers['language'] || req.body.language || req.query.language || 'en';
 		let obj = {
 			userId: req.params.userId,
 			firstName: req.body.firstName,
@@ -684,7 +688,7 @@ module.exports.userUpdate = async (req, res) => {
 								securityStamp: token,
 							}, {where: {id: req.params.userId}}
 						)
-						if (req.query.language === 'hi') {
+						if (language === 'hi') {
 							await Mails.userEmailChangedHindi(req.body.email, token);
 						} else {
 							await Mails.userEmailChanged(req.body.email, token);
