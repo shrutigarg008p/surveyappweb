@@ -55,8 +55,16 @@ module.exports.update = async (req, res) => {
 
 module.exports.getAll = async (req, res) => {
     try {
+        const language = req.headers['language'] || req.query.language || 'en';
         const limit = req.params.limit;
-        const data = await Countries.findAll({ deletedAt: null, order: [['createdAt', 'DESC']]})
+        const dataIn = await Countries.findAll({ deletedAt: null, order: [['createdAt', 'DESC']]})
+
+       let data = dataIn.map(question => ({
+            ...question.dataValues,
+            name: language === 'hi' ? question.hindi : question.name,
+            title:  question.name
+        }))
+
         return apiResponses.successResponseWithData(res, 'success!', data);
     } catch (err) {
         return apiResponses.errorResponse(res, err);
@@ -131,17 +139,32 @@ module.exports.getAllStatesByCountryId = async (req, res) => {
 
 module.exports.getAllStatesAndCitiesByZipCode = async (req, res) => {
     try {
+        const language = req.headers['language'] || req.query.language || 'en';
         const limit = 10000 || req.params.limit;
-        const cities = await Cities.findAll({ where: { zipCode: req.params.zipCode, deletedAt: null }, raw: true, order: [['createdAt', 'ASC']]})
-        let state = []
-        if(cities.length > 0) {
-            state = await States.findAll({
-                where: { id: cities[0].stateId, deletedAt: null},
+        let citiesIn = []
+        citiesIn = await Cities.findAll({ where: { zipCode: req.params.zipCode, deletedAt: null }, raw: true, order: [['createdAt', 'ASC']]})
+        let stateIn = []
+        if(citiesIn.length > 0) {
+            stateIn = await States.findAll({
+                where: { id: citiesIn[0].stateId, deletedAt: null},
                 limit: limit,
                 raw: true,
                 order: [['createdAt', 'ASC']]
             })
         }
+
+        let cities = citiesIn.map(question => ({
+            ...question,
+            name: language === 'hi' ? question.hindi : question.name,
+            title:  question.name
+        }))
+
+        let state = stateIn.map(option => ({
+            ...option,
+            name: language === 'hi' ? option.hindi : option.name,
+            title: option.name
+        }))
+
             const data = { cities, state }
         return apiResponses.successResponseWithData(res, 'success!', data);
     } catch (err) {
