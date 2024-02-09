@@ -104,12 +104,44 @@ module.exports.getAllByUserId = async (req, res) => {
             where: { userId: req.params.userId, deletedAt: null, redemptionRequestStatus: 'Redeemed' },
         });
         const totalRedeemed = totalRedeemedData.reduce((sum, reward) => sum + reward.pointsRedeemed, 0);
+        const totalProfilePoints = data.reduce((total, item) => {
+            if (item.rewardType === 'Profile Completed') {
+                return total + item.points;
+            }
+            return total;
+        }, 0);
+
+        const surveyPoints = data.reduce((total, item) => {
+            if (item.rewardType === 'Survey') {
+                return total + item.points;
+            }
+            return total;
+        }, 0);
+
+        const referralsPoints = data.reduce((total, item) => {
+            if (item.rewardType === 'Referral') {
+                return total + item.points;
+            }
+            return total;
+        }, 0);
 
         const totalPoints = data.reduce((sum, reward) => sum + reward.points, 0);
         const leftPoints = totalPoints - totalRedeemed
         let totalPointsInfo = []
         if (language === 'hi'){
             totalPointsInfo = [
+                {
+                    name: "प्रोफाइल पूरा किया",
+                    value: totalProfilePoints
+                },
+                {
+                    name: "संदर्भ",
+                    value: referralsPoints
+                },
+                {
+                    name: "सर्वेस",
+                    value: surveyPoints
+                },
                 {
                     name: "कुल अंक",
                     value: totalPoints
@@ -125,6 +157,18 @@ module.exports.getAllByUserId = async (req, res) => {
             ];
         } else {
             totalPointsInfo = [
+                {
+                    name: "Profile Completed",
+                    value: totalProfilePoints
+                },
+                {
+                    name: "Referral Points",
+                    value: referralsPoints
+                },
+                {
+                    name: "Surveys",
+                    value: surveyPoints
+                },
                 {
                     name: "Total Points",
                     value: totalPoints
