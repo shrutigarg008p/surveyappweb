@@ -1531,156 +1531,38 @@ const surveyTemplates = db.surveyTemplates;
 
 
 const userIds = [
-	"d692948f-8e5c-4641-ad7b-3291a934a72c",
-	"eac0ef8c-8226-401d-8c7e-d5f40a7ef045",
-	"6f95edeb-c840-4735-9941-ff106e6fcaec",
-	"745808fd-0cd3-4769-9b1c-d3db71bfce3a",
-	"005b14a7-acab-4966-b9f0-2d694d6cf1bc",
-	"707d3790-448f-4f88-83af-4d3a3886f3c5",
-	"36caf00e-b156-440a-8f34-359712e40621",
-	"641254de-4b84-4a52-9d38-3ae5c44836cd",
-	"ed828eba-037c-43dc-b448-9e05175a686a",
-	"4499ef5e-be91-4622-9437-1891096eda37",
-	"0506c043-45b0-45a6-bca1-676d49489c63",
-	"ebcca7d5-1a38-4cf3-8010-4e6acece9038",
-	"a53cde2b-8873-4a0b-99b0-637a16889287",
-	"54cad0d5-0f94-4e43-ba66-633c63e225ed",
-	"3023d32d-0583-43ba-bcd5-67a60024416b",
-	"222641c9-441e-4dde-95ca-0601d7b0b5dd",
-	"069cbacf-1fd5-4440-9056-eedeaf0f2cab",
-	"31afe415-dc7f-4457-9ae8-e5549c35ea1c",
-	"2e25eac6-d458-4cd9-a0e8-5121d2b506d0",
-	"f75b8660-9368-467c-a3d2-ca36b9d68329",
-	"87b7b34e-ebea-4cda-baf0-f63c6e7d3714",
-	"e15ac91b-67db-480e-9f39-2ef4aa9f1fbb",
-	"480e42fc-ba01-4270-be6e-1c0dee6b8773",
-	"afe9d4d6-8fa7-4609-b4fe-114aae26f930",
-	"74426aab-d370-48a1-aa55-c47ae2c0bae0",
-	"089a9ca6-3ecf-4c93-9938-c43fcf6be00f",
-	"4cb3923a-c1f0-429c-b1e7-bb0ba50b20d8",
-	"e997360b-2c89-4c19-8de9-c81142b39ce9",
-	"1f4c1e11-aa9a-4925-b842-4b5208ab8004",
-	"a4e6a5a6-0d1c-48c9-a49d-1fe8b0cc4963",
-	"3a0d6c43-efc6-4f58-9c9a-0525fe858e20",
-	"e7bd53d6-ca64-4727-b84e-f97f1ad3c804",
-	"68699612-de98-440b-aeea-d54e70128f45",
-	"dcd6b75b-3b7e-4c49-b655-47e78ff57288",
-	"a46d1ad6-7f5a-4f06-9871-451a8d5aaa38",
-	"e3e5e4fc-6a0a-49da-b6dc-91cb523f814b",
-	"b913e328-baeb-4cf7-be46-e0c2add140bf",
-	"a2029691-dd7c-457c-b7f4-227cc2b20be3",
-	"bb29075d-623e-49ea-83d3-fb375290fc44",
-	"02e2eca0-f4a0-4ea4-ad9d-431a61379dda",
-	"35a0e774-ea33-4d9b-b74c-617b0aaa29ea",
-	"81e05538-ac48-4c26-bb15-39cea3186e02",
-	"321d77ae-1992-46c2-8cad-54d47cc2fb6a",
-	"40c6c8df-6191-4524-9fe6-5e8fc8fd333a",
-	"50ce1dae-b4f1-4f91-a3f0-c8823ba794fd",
-	"9b381cc6-3fde-4ca1-bebe-6815bcdfc3ae",
-	"b48d8b85-161c-40b7-9f60-2a9fbca0bada",
-	"8105779c-4f6d-4ec9-b5ad-e1ff4b1661df",
-	"f280172b-fca0-4258-83ad-ceec8a1eb3a7",
-	"a59bece2-4615-48c7-b6ea-81899259ce51",
-	"2ac1383a-f73a-4991-8a1e-480afea06029",
-	"535af817-6f99-4ff2-b023-354e5cf22e36",
-	"924a6894-aed7-4ede-b665-e789d8123a96",
-	"2c63dbf2-7084-4bac-a99a-429bc6196398",
-	"4d6f2c46-7899-4443-8e1f-a5a44798199e",
-	"a6abacfb-6bb9-48a9-838f-58aaf9f293d8",
-	"d16e9ff7-e159-41f2-9419-1dcc8f9c453f",
-	"15b7b5de-f9a2-4665-841a-38fe7febc2de",
-	"f6cca0c5-fdbb-4baa-8ad5-470c3d2e8f6f",
-	"97e50e0a-e4c8-43bb-b1ff-24324a711804",
-	"ad5ebd4b-3134-4ab4-b540-25e0930e2169",
-	"02d9d8ee-a283-4eac-80b7-c058fcf20e70",
-	"cde22d1b-b010-4e52-a549-efbb71111aa7",
-	"ba452f9b-d05d-43b2-9ee6-6d9e74dcf0bd",
-	"04de8ede-d31e-459b-857a-2201aea64c20",
-	"0b823adc-a7a3-4115-811e-84cdcc2f7b21",
-	"c99ed2dc-4f6d-4800-af0b-3330d81d48cc",
-	"c812cced-1d32-4a03-82ce-d783edfb4e24",
-	"0c7d2750-0ada-4c80-990e-8d85b29c6c18",
-	"fbec8278-0084-4b8f-acc7-4646d0d9f758",
-	"586ac4b5-dfe7-42e2-a3a9-8df6a3f2da27",
-	"b95360b1-a164-456b-93fc-9237251b9528",
-	"3fac8b25-8fb7-4a82-96c8-c6c873dc405a",
-	"d396c490-4993-476e-8e1c-8f19d964e060",
-	"7f6c27c8-7e17-4ca7-adfd-f54dbd1e52e5",
-	"38a71c47-92a6-4f63-acc6-c6f3ce098259",
-	"c8479731-1dc8-4666-a41c-3cf88477e039",
-	"263f5156-1d24-4a04-afde-33acdf1b0d9e",
-	"b23ab4cf-e2d0-466f-b213-b6fd1665bd83",
-	"00c2aa17-c359-4935-95cc-f300d11fbec5",
-	"6abc151b-b827-4199-bfd8-03711000dec9",
-	"3ce0d8e5-41fb-4622-98a9-f37ca5a1a8c5",
-	"8861160e-92c9-46d0-a2d2-657e631be3fc",
-	"ac844de0-4d5f-4c1c-9810-fe3c4b1518ff",
-	"f017be6d-7969-40ce-82f6-9edd12482d3c",
-	"1a9a0cd0-dcb2-43a8-959b-844d431eab87",
-	"7ecb686f-1193-4cf5-8e49-615cc19bf65e",
-	"7eec7b55-edff-43e2-babd-b6803d152428",
-	"56da8980-9640-4be1-a0ed-878ae92407b4",
-	"183bca02-c8d6-4f2b-8134-074bea7ba9d1",
-	"9078a90b-37cf-4a5a-8ec4-3004b9b9bf36",
-	"396f0dd3-9de6-4f70-bdfc-6923f4e1bdb4",
-	"e74124c0-ce96-473c-bad2-164561981954",
-	"8bba47d0-4043-4e64-a716-fce6c8a379f0",
-	"b7bd4f59-b39d-412f-b7a5-0331c0bd54ac",
-	"37a9dc5d-f415-4629-9c32-496abe5e64ff",
-	"dfd0cb31-1810-4663-aa6b-e8b884878eda",
-	"b96dd652-42f6-413a-8184-b0020e95ec3e",
-	"68c2dcd1-8604-4614-bdaf-9eb498413294",
-	"ec00cc4c-69f5-4270-8787-a04d47e1e53c",
-	"0166cac2-74fd-47d8-bc0e-ed9dfe570347",
-	"879075ad-34bd-4843-b694-d04f9f26fc22",
-	"fc97d4a6-bc03-470a-ae19-846fda9ffce4",
-	"cc5cfe73-8152-4d21-bf17-6437815ec2fc",
-	"c11da3b2-bb31-41b3-b6a5-8532c9ab1d3f",
-	"07adb240-ea9f-4b0f-90a8-dadbc1abdbe4",
-	"bf88818b-4590-40fc-a99e-a5754d70e97c",
-	"ea0da4a3-37b3-49e0-83ee-5b75da9ab788",
-	"1c691720-98dc-4216-b522-35404a172179",
-	"d6a20934-e12f-420d-ad50-6a3d030cde98",
-	"7d4950e6-24a9-4f7c-98d2-f354d84eb8dd",
-	"4224038a-e562-45d8-a377-bf0bc3e99b51",
-	"16905c52-6e58-403e-ab84-5ff4660a2fbd",
-	"df530baa-7050-444e-bc49-ce9014886eaf",
-	"ab0b6119-96a5-4d38-a348-26c21ee21898",
-	"c2e32627-6f2a-471d-99a7-8096ac3ab4f3",
-	"3ad99b0f-9631-4888-8a80-c98f144b684f",
-	"67a03313-3723-4a8c-b724-b56cf29ffbea",
-	"0ef35246-795f-498a-ae1b-39bb5ba8cdd1",
-	"16087b4f-ed6c-4169-aaf9-4c466c3e2f08",
-	"1fce0d2d-2b66-4ee0-b528-1bd7adaed6df",
-	"4e15a0a4-6244-4ad8-9a85-484a24104a6d",
-	"bbaa263d-9e5f-4cbb-a89d-56af708d0350",
-	"0a022995-df20-41c5-acce-4c19de5ac83b",
-	"277ef922-d2f2-4267-b904-b9b10cb93aec",
-	"9a762234-3d88-4770-be02-3eb9546b4e4b",
-	"a629a6b8-38ab-4322-8499-695a992a3718",
-	"e9cdf9a4-b66c-4b6a-ae61-df28bdc985d9",
-	"b8e6213b-5a5e-4b65-b0ee-7ea7353b3837",
-	"f2efd2c8-8ce9-4e5b-95d8-4a1ac5187c7e"
+	"d39658cc-3a9d-4092-9996-f17bdd2741a3",
+	"f72b6459-0ff3-4f0e-8c16-3234468cbbe4",
+	"90ddac1b-efb9-4a7c-9b00-bc6e39145a4d",
+	"efcbe4d8-fa7c-4637-bc6d-0d3c31df8275",
+	"435e155c-b374-4808-b192-57541d166bdd",
+	"3afe62a4-8b40-4297-bc58-6b3c65bc0a46",
+	"3fa94efe-fabe-41e8-896e-92bc27920cbd",
+	"6fad1ae3-a1ad-4d3a-abec-9fdbf90e7fea",
+	"8c9aec56-e5ce-47cf-8ef2-040040cb5522",
+	"be756277-23e7-44a9-bcda-50da42c5b453",
+	"3771eaf3-bdc7-4fad-a2bb-95f2c1ff6a69",
+	"72fcb7ce-a3d1-47dd-8360-09df09c5d2ce"
 ];
 
 const deleteRecords = async () => {
 	try {
-		await BasicProfile.destroy({ where: { userId: userIds } });
-		await User.destroy({ where: { id: userIds } });
-		await asssignSurveys.destroy({ where: { userId: userIds } });
-		await applicationAssignUser.destroy({ where: { applicationUser_id: userIds } });
-		await messages.destroy({ where: { userId: userIds } });
-		await notifications.destroy({ where: { userId: userIds } });
-		await profileUserResponse.destroy({ where: { userId: userIds } });
-		await redemptionRequest.destroy({ where: { userId: userIds } });
-		await referrals.destroy({ where: { userId: userIds } });
-		await rewards.destroy({ where: { userId: userIds } });
+		await BasicProfile.destroy({ where: { userId: {[Op.notIn]: userIds } }});
+		await User.destroy({ where: { id: {[Op.notIn]: userIds } }});
+		await asssignSurveys.destroy({ where: { userId: {[Op.notIn]: userIds } }});
+		await applicationAssignUser.destroy({ where: { applicationUser_id: {[Op.notIn]: userIds }} });
+		await messages.destroy({ where: { userId: {[Op.notIn]: userIds } }});
+		await notifications.destroy({ where: { userId: {[Op.notIn]: userIds } }});
+		await profileUserResponse.destroy({ where: { userId: {[Op.notIn]: userIds } } });
+		await redemptionRequest.destroy({ where: { userId: {[Op.notIn]: userIds } }});
+		await referrals.destroy({ where: { userId: {[Op.notIn]: userIds } }});
+		await rewards.destroy({ where: { userId: {[Op.notIn]: userIds } }});
 
-		await blacklistedSurveys.destroy({ where: { } });
-		await surveyEmailSchedule.destroy({ where: { } });
-		await surveyPartners.destroy({ where: { } });
-		await surveys.destroy({ where: { } });
-		await surveyTemplates.destroy({ where: { } });
+		// await blacklistedSurveys.destroy({ where: { } });
+		// await surveyEmailSchedule.destroy({ where: { } });
+		// await surveyPartners.destroy({ where: { } });
+		// await surveys.destroy({ where: { } });
+		// await surveyTemplates.destroy({ where: { } });
 
 		console.log('Records deleted successfully.');
 	} catch (error) {
