@@ -139,7 +139,7 @@ module.exports.getAllByUserId = async (req, res) => {
                     value: referralsPoints
                 },
                 {
-                    name: "सर्वेस",
+                    name: "सर्वेक्षण",
                     value: surveyPoints
                 },
                 {
@@ -166,7 +166,7 @@ module.exports.getAllByUserId = async (req, res) => {
                     value: referralsPoints
                 },
                 {
-                    name: "Surveys",
+                    name: "Survey",
                     value: surveyPoints
                 },
                 {
@@ -183,7 +183,7 @@ module.exports.getAllByUserId = async (req, res) => {
                 }
             ];
         }
-        return apiResponses.successResponseWithData(res, 'success!', {data, totalPoints, totalRedeemed, leftPoints, totalPointsInfo });
+        return apiResponses.successResponseWithData(res, 'success!', {data: [], totalPoints, totalRedeemed, leftPoints, totalPointsInfo });
     } catch (err) {
         return apiResponses.errorResponse(res, err);
     }
