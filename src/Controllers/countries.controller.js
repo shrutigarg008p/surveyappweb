@@ -57,7 +57,7 @@ module.exports.getAll = async (req, res) => {
     try {
         const language = req.headers['language'] || req.query.language || 'en';
         const limit = req.params.limit;
-        const dataIn = await Countries.findAll({ deletedAt: null, order: [['createdAt', 'DESC']]})
+        const dataIn = await Countries.findAll({ deletedAt: null, order: [['createdAt', 'ASC']]})
 
        let data = dataIn.map(question => ({
             ...question.dataValues,
