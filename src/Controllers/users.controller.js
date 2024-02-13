@@ -11,6 +11,7 @@ const apiResponses = require('../Components/apiresponse');
 const {createToken} = require('../Middlewares/userAuthentications');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
+const moment = require('moment');
 const ip = require('ip');
 const Mails = require("../Config/Mails");
 const {BOOLEAN, literal} = require("sequelize");
@@ -607,12 +608,14 @@ module.exports.userLogin = async (req, res) => {
 module.exports.userUpdate = async (req, res) => {
 	try {
 		const language = req.headers['language'] || req.body.language || req.query.language || 'en';
+		const appType = req.headers['appType'] || 'web';
+
 		let obj = {
 			userId: req.params.userId,
 			firstName: req.body.firstName,
 			lastName: req.body.lastName,
 			gender: req.body.gender,
-			dateOfBirth: req.body.dateOfBirth,
+			dateOfBirth: appType === 'mobile' ?  moment(req.body.dateOfBirth, "DD/MM/YYYY").format("YYYY/MM/DD") : req.body.dateOfBirth,
 			referralSource: req.body.referralSource,
 			addressLine1: req.body.addressLine1,
 			addressLine2: req.body.addressLine2,
