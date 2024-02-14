@@ -129,8 +129,8 @@ module.exports.continueWithMobile = async (req, res) => {
 			const token = createToken(req.body.phoneNumber);
 			const OTP = generateOTP();
 			const user = await User.create({
-				email: req.body.email,
-				userName: req.body.email,
+				// email: req.body.email,
+				// userName: req.body.email,
 				phoneNumber: req.body.phoneNumber,
 				registeredDate: new Date().valueOf(),
 				createdAt: new Date().valueOf(),
@@ -608,7 +608,7 @@ module.exports.userLogin = async (req, res) => {
 module.exports.userUpdate = async (req, res) => {
 	try {
 		const language = req.headers['language'] || req.body.language || req.query.language || 'en';
-		const appType = req.headers['appType'] || 'web';
+		const appType = req.headers['app_type'] || 'web';
 
 		let obj = {
 			userId: req.params.userId,
