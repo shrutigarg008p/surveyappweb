@@ -61,8 +61,8 @@ const triggerSurveyEmail = async (id) => {
                     }
                 }
             })
-            if(survey) {
-                const sample = await Samples.findOne({ where: { id: scheduleEmail.sampleId, deletedAt: null }})
+            const sample = await Samples.findOne({ where: { id: scheduleEmail.sampleId, deletedAt: null }})
+            if(survey && sample) {
                 const sampleQuestions = await SampleQuestions.findAll({where: {sampleId: sample.id, deletedAt: null}})
                 if(sample) {
                     let whereClause = {};
