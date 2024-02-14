@@ -129,8 +129,8 @@ module.exports.continueWithMobile = async (req, res) => {
 			const token = createToken(req.body.phoneNumber);
 			const OTP = generateOTP();
 			const user = await User.create({
-				email: '',
-				userName: '',
+				email: req.body.email,
+				userName: req.body.email,
 				phoneNumber: req.body.phoneNumber,
 				registeredDate: new Date().valueOf(),
 				createdAt: new Date().valueOf(),
