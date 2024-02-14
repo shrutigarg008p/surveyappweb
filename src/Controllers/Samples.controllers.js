@@ -7,6 +7,7 @@ const BasicProfile = db.basicProfile;
 const ProfileUserResponses = db.profileUserResponse;
 const Users = db.user;
 const Cities = db.city;
+const States = db.states;
 const apiResponses = require('../Components/apiresponse');
 const {DataTypes, Op} = require("sequelize");
 const Sequelize = require("sequelize");
@@ -102,10 +103,6 @@ module.exports.getOne = async (req, res) => {
         let user = []
         if(sample) {
             let whereClause = {};
-            // Gender filter
-            if (sample.gender) {
-                whereClause.gender = sample.gender;
-            }
 
             // Age filter
             if (sample.fromAge || sample.toAge) {
@@ -121,19 +118,34 @@ module.exports.getOne = async (req, res) => {
                 };
             }
 
+            // Gender filter
+            if (sample.gender) {
+                whereClause.gender = {
+                    [Op.in]: sample.gender === 'Male' ? ["Male", 'male', 'पुरुष'] : sample.gender === 'Female' ? ["Female", "महिला", 'female'] : ["Others", 'others', "अन्य"]
+                };
+            }
+
             // States filter
             if (sample.stateIds && sample.stateIds.length > 0) {
-                const states = sample.stateIds.map((item => item.label))
+                const states = sample.stateIds.map((item => item.value))
+                const statesInfo = await States.findAll({ where: {id: { [Op.in]: states } }, attributes: ['name', 'hindi'], raw: true })
+                const names = statesInfo.map(item => item.name);
+                const hindiNames = statesInfo.map(item => item.hindi);
+                const stringArray = names.concat(hindiNames);
                 whereClause.state = {
-                    [Op.in]: states
+                    [Op.in]: stringArray
                 };
             }
 
             // Cities filter
             if (sample.cityIds && sample.cityIds.length > 0) {
-                const city = sample.cityIds.map((item => item.label))
+                const city = sample.cityIds.map((item => item.value))
+                const statesInfo = await Cities.findAll({ where: {id: { [Op.in]: city } }, attributes: ['name', 'hindi'], raw: true })
+                const names = statesInfo.map(item => item.name);
+                const hindiNames = statesInfo.map(item => item.hindi);
+                const stringArray = names.concat(hindiNames);
                 whereClause.city = {
-                    [Op.in]: city
+                    [Op.in]: stringArray
                 };
             }
 
