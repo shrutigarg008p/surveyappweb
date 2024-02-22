@@ -121,7 +121,7 @@ module.exports.getAll = async (req, res) => {
 module.exports.getOne = async (req, res) => {
     try {
         const data = await Questions.findOne({where: {id: req.params.id, deletedAt: null}})
-        const options = await Options.findAll({where: {questionId: data.id, deletedAt: null}})
+        const options = await Options.findAll({where: {questionId: data.id, deletedAt: null, isActive: true}})
         return apiResponses.successResponseWithData(res, 'success!', {...data, options});
     } catch (err) {
         return apiResponses.errorResponse(res, err);
@@ -131,7 +131,7 @@ module.exports.getOne = async (req, res) => {
 
 module.exports.getQuestionOptions = async (req, res) => {
     try {
-        const options = await Options.findAll({where: {questionId: req.params.id, deletedAt: null, order: [['displayOrder', 'ASC']]}})
+        const options = await Options.findAll({where: {questionId: req.params.id, deletedAt: null, isActive: true, order: [['displayOrder', 'ASC']]}})
         return apiResponses.successResponseWithData(res, 'success!', options);
     } catch (err) {
         return apiResponses.errorResponse(res, err);
@@ -186,23 +186,31 @@ async function questionsImport() {
 
 const jsonFileOption = require('../../options2024.json')
 async function OptionsImport() {
-    // console.log(jsonFileOption)
-    for(let i = 0; i < jsonFileOption.length; i++) {
-            const isExist = await Questions.findOne({where: {questionId: jsonFileOption[i].questionId}})
-            console.log(isExist)
+    try {
+        for (let i = 0; i < jsonFileOption.length; i++) {
+            const isExist = await Questions.findOne({ where: { id: jsonFileOption[i].questionId.toLowerCase() } });
             if (isExist) {
-                console.log('llllll----->', i)
+                console.log('Record exists for questionId:', jsonFileOption[i].questionId.toLowerCase());
                 const Question = await Options.create({
+                    id: jsonFileOption[i].id ? jsonFileOption[i].id.toLowerCase() : null,
                     value: jsonFileOption[i].value,
                     questionId: isExist.id,
                     displayOrder: jsonFileOption[i].displayOrder,
                     hint: jsonFileOption[i].hint,
+                    hindi: jsonFileOption[i].hindi,
                     isActive: true,
                     createdAt: new Date().valueOf(),
                     updatedAt: new Date().valueOf(),
-                })
+                });
+                console.log('Option created:', Question.id);
+            } else {
+                console.log('No record found for questionId:', jsonFileOption[i].questionId);
             }
         }
+    } catch (error) {
+        console.error('Error during OptionsImport:', error);
+    }
 }
+
 
 // OptionsImport()
