@@ -19,6 +19,7 @@ const {bool} = require("twilio/lib/base/serialize");
 const {userRegistration} = require("../Config/Mails");
 const axios = require("axios");
 const {sendVerificationMessage, generateOTP, sendVerificationMessageHindi} = require("../Config/Sms");
+const {respondentSummary} = require("../utils/RespondentSummary");
 const Op = db.Sequelize.Op;
 
 
@@ -880,6 +881,7 @@ module.exports.users = async (req, res) => {
 
 module.exports.getUser = async (req, res) => {
 	try {
+		const language = req.headers['language'] || req.body.language || req.query.language || 'en';
 		const user = await User.findOne({where: {id: req.params.id}})
 		const profile = await BasicProfile.findOne({where: {userId: req.params.id}})
 			/* #swagger.responses[404] = {
@@ -889,7 +891,37 @@ module.exports.getUser = async (req, res) => {
 			// return res.status(404).send({ message: "User Not found." });
 
 
-			return apiResponses.successResponseWithData(res, 'success!', {...user, profile});
+		const {
+			overallAttemptedPercentage,
+		} = await respondentSummary(req.params.id);
+		let dashboardMessage = {}
+		if(overallAttemptedPercentage < 100) {
+			if(language === 'hi'){
+				dashboardMessage = {
+					messages: 'आपकी प्रोफ़ाइल लंबित है, कृपया 50 i-प्वाइंट प्राप्त करने के लिए इसे पूरा करें। प्रोफ़ाइल भरना शुरू करने के लिए यहाँ क्लिक करें',
+					colourCode: '#FF0000'
+				}
+			} else {
+				dashboardMessage = {
+					messages: 'Your profile is pending, please complete it to get 50 i-Points. Click Here to start filling profile',
+					colourCode: '#FF0000'
+				}
+			}
+		} else {
+			if(language === 'hi'){
+				dashboardMessage = {
+					messages: 'आपकी प्रोफ़ाइल पूरी हो गई है, अपना इनाम देखने के लिए यहां क्लिक करें।',
+					colourCode: '#00FF00'
+				}
+			} else {
+				dashboardMessage = {
+					messages: 'Your profile is completed, click here to view your reward',
+					colourCode: '#00FF00'
+				}
+			}
+		}
+
+			return apiResponses.successResponseWithData(res, 'success!', {...user, profile, dashboardMessage});
 	} catch (err) {
 		return apiResponses.errorResponse(res, err);
 	}
