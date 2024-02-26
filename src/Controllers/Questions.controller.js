@@ -10,6 +10,7 @@ module.exports.create = async (req, res) => {
         if(!isExist) {
             const Question = await Questions.create({
                 text: req.body.text,
+                hindi: req.body.hindi,
                 profileId: req.body.profileId,
                 displayOrder: req.body.displayOrder,
                 hint: req.body.hint,
@@ -25,6 +26,7 @@ module.exports.create = async (req, res) => {
                         ...item,
                         questionId: Question.id,
                         value: item.value,
+                        hindi: item.hindi,
                         displayOrder: parseInt(item.displayOrder, 10),
                         createdAt: new Date().valueOf(),
                         updatedAt: new Date().valueOf(),
@@ -53,6 +55,7 @@ module.exports.update = async (req, res) => {
     try {
         let obj = {
             text: req.body.text,
+            hindi: req.body.hindi,
             profileId: req.body.profileId,
             displayOrder: req.body.displayOrder,
             hint: req.body.hint,

@@ -13,6 +13,7 @@ module.exports.create = async (req, res) => {
         if(!isExist) {
             const Profile = await Profiles.create({
                 name: req.body.name,
+                hindi: req.body.hindi,
                 description: req.body.description,
                 displayOrder: req.body.displayOrder,
                 createdAt: new Date().valueOf(),
@@ -39,6 +40,7 @@ module.exports.update = async (req, res) => {
     try {
         let obj = {
             name: req.body.name,
+            hindi: req.body.hindi,
             description: req.body.description,
             displayOrder: req.body.displayOrder,
             updatedAt: new Date().valueOf(),
