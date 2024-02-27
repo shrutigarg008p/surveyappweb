@@ -13,34 +13,43 @@ const {manualRedemptionRequest, manualRedemptionRequestHindi, manualApproveEmail
 module.exports.createRedemptionRequest = async (req, res) => {
     try {
         const language = req.headers['language'] || req.body.language || 'en';
-        const RedemptionRequest = await RedemptionRequests.create({
-            redemptionRequestStatus: req.body.redemptionRequestStatus,
-            notes: req.body.notes,
-            redemptionDate: req.body.redemptionDate,
-            pointsRedeemed: req.body.pointsRedeemed,
-            pointsRequested: req.body.pointsRequested,
-            redemptionModeTitle: req.body.redemptionModeTitle,
-            redemptionModeId: req.body.redemptionModeId,
-            userId: req.body.userId,
-            createdAt: new Date().valueOf(),
-            updatedAt: new Date().valueOf(),
-            requestDate: new Date().valueOf(),
-        })
-        const Basic = await BasicProfile.findOne({ where : { userId: req.body.userId }})
-        const user = await Users.findOne({ where : { id: req.body.userId }})
-        if(req.body.redemptionModeTitle === 'Amazon e-Gift Card') {
-            if(language === 'hi') {
-                manualRedemptionRequestHindi(`${Basic.firstName} ${Basic.lastName}`, user.email)
-            } else {
-                manualRedemptionRequest(`${Basic.firstName} ${Basic.lastName}`, user.email)
-            }
+        const allowedPoints = [100, 150, 200, 250, 300, 350, 400, 450, 500];
+        if (allowedPoints.includes(req.body.pointsRequested)) {
+            const RedemptionRequest = await RedemptionRequests.create({
+                redemptionRequestStatus: req.body.redemptionRequestStatus,
+                notes: req.body.notes,
+                redemptionDate: req.body.redemptionDate,
+                pointsRedeemed: req.body.pointsRedeemed,
+                pointsRequested: req.body.pointsRequested,
+                redemptionModeTitle: req.body.redemptionModeTitle,
+                redemptionModeId: req.body.redemptionModeId,
+                userId: req.body.userId,
+                createdAt: new Date().valueOf(),
+                updatedAt: new Date().valueOf(),
+                requestDate: new Date().valueOf(),
+            })
+            const Basic = await BasicProfile.findOne({where: {userId: req.body.userId}})
+            const user = await Users.findOne({where: {id: req.body.userId}})
+            if (req.body.redemptionModeTitle === 'Amazon e-Gift Card') {
+                if (language === 'hi') {
+                    manualRedemptionRequestHindi(`${Basic.firstName} ${Basic.lastName}`, user.email)
+                } else {
+                    manualRedemptionRequest(`${Basic.firstName} ${Basic.lastName}`, user.email)
+                }
 
+            }
+            return apiResponses.successResponseWithData(
+                res,
+                'Success!',
+                RedemptionRequest
+            );
+        } else {
+            if (language === 'hi') {
+                return apiResponses.validationErrorWithData(res, 'अनुरोधित बिंदु इनमें से एक होना चाहिए (100, 150, 200, 250, 300, 350, 400, 450, 500)');
+            } else {
+                return apiResponses.validationErrorWithData(res, 'Requested point should be one of these (100, 150, 200, 250, 300, 350, 400, 450, 500)');
+            }
         }
-        return apiResponses.successResponseWithData(
-            res,
-            'Success!',
-            RedemptionRequest
-        );
     } catch (err) {
         return apiResponses.errorResponse(res, err);
     }
