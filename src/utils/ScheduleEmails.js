@@ -32,14 +32,16 @@ function replaceVariables(html, variables) {
 }
 
 function appendParamsToUrl(baseUrl, userId, surveyId) {
-    const url = new URL(baseUrl);
+    let url = new URL(baseUrl);
     if (url.search) {
         url.search += `&userid=${userId}&surveyid=${surveyId}`;
     } else {
         url.search = `?userid=${userId}&surveyid=${surveyId}`;
     }
+    url = url.toString().replace("{userId}", userId);
     return url.toString();
 }
+
 
 const triggerSurveyEmail = async (id) => {
     try {
