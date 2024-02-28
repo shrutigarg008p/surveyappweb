@@ -134,9 +134,10 @@ module.exports.getOne = async (req, res) => {
 
 module.exports.getQuestionOptions = async (req, res) => {
     try {
-        const options = await Options.findAll({where: {questionId: req.params.id, deletedAt: null, isActive: true, order: [['displayOrder', 'ASC']]}})
+        const options = await Options.findAll({where: { questionId: req.params.id, deletedAt: null, isActive: true }, order: [['displayOrder', 'ASC']]})
         return apiResponses.successResponseWithData(res, 'success!', options);
     } catch (err) {
+        console.log('error---->', err)
         return apiResponses.errorResponse(res, err);
     }
 };
