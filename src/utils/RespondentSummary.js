@@ -2,7 +2,11 @@ const db = require('../models');
 const SurveyAssigned = db.asssignSurveys;
 const Rewards = db.rewards;
 const Profiles = db.profiles;
+const Surveys = db.surveys;
+const Users = db.user;
+const Referrals = db.referrals;
 const RedemptionRequests = db.redemptionRequest;
+const RedemptionRequestTransactions = db.redemptionRequestTransactions;
 const ProfileUserResponses = db.profileUserResponse;
 const {DataTypes, Op, Sequelize} = require("sequelize");
 
@@ -117,6 +121,135 @@ async function respondentSummary(userId) {
     };
 }
 
+
+async function getRewardsSummary(userId) {
+    Rewards.belongsTo(Surveys, { foreignKey: 'surveyId' });
+    Rewards.belongsTo(Users, { foreignKey: 'userId' });
+    // Rewards.belongsTo(Users, { foreignKey: 'referralId' });
+    const data = await Rewards.findAll({
+        where: { userId:  userId, deletedAt: null },
+        include: [
+            {
+                model: Surveys,
+                required: false,
+                attributes: ['name', 'description', 'ceggPoints', 'expiryDate', 'createdAt', 'disclaimer']
+            },
+            {
+                model: Users,
+                required: false,
+                attributes: ['email']
+            }
+        ],
+        order: [['createdAt', 'DESC']]
+    });
+
+    const totalRedeemedData = await RedemptionRequests.findAll({
+        where: { userId:  userId, deletedAt: null, redemptionRequestStatus: 'Redeemed' },
+    });
+    const totalRedeemed = totalRedeemedData.reduce((sum, reward) => sum + reward.pointsRedeemed, 0);
+    const totalProfilePoints = data.reduce((total, item) => {
+        if (item.rewardType === 'Profile Completed') {
+            return total + item.points;
+        }
+        return total;
+    }, 0);
+
+    const surveyPoints = data.reduce((total, item) => {
+        if (item.rewardType === 'Survey') {
+            return total + item.points;
+        }
+        return total;
+    }, 0);
+
+    const referralsPoints = data.reduce((total, item) => {
+        if (item.rewardType === 'Referral') {
+            return total + item.points;
+        }
+        return total;
+    }, 0);
+
+    const totalPoints = data.reduce((sum, reward) => sum + reward.points, 0);
+    const leftPoints = totalPoints - totalRedeemed
+    return {
+         totalProfilePoints,
+         referralsPoints,
+         surveyPoints,
+         totalPoints,
+         totalRedeemed,
+         leftPoints
+    }
+}
+
+
+async function getRedemptionSummary(userId) {
+    RedemptionRequests.belongsTo(Users, { foreignKey: 'userId' });
+    RedemptionRequests.hasOne(RedemptionRequestTransactions, { foreignKey: 'requestId' });
+    const data = await RedemptionRequests.findAll({
+        where: { userId:  userId, deletedAt: null },
+        include: [
+            {
+                model: Users,
+                required: false,
+                attributes: ['email', "phoneNumber"]
+            },
+            {
+                model: RedemptionRequestTransactions,
+                required: false,
+                // attributes: ['response']
+            }
+        ],
+        order: [['createdAt', 'DESC']]
+    });
+    const totalCountData = await Rewards.findAll({
+        where: { userId:  userId, deletedAt: null },
+    });
+    const totalRedeemedData = await RedemptionRequests.findAll({
+        where: { userId:  userId, deletedAt: null, redemptionRequestStatus: 'Redeemed' },
+    });
+    const totalPendingData = await RedemptionRequests.findAll({
+        where: { userId:  userId, deletedAt: null, redemptionRequestStatus: 'New' },
+    });
+
+    const totalEarned = totalCountData.reduce((sum, reward) => sum + reward.points, 0);
+    const totalRedeemed = totalRedeemedData.reduce((sum, reward) => sum + reward.pointsRedeemed, 0);
+    const totalPendingRedeemed = totalPendingData.reduce((sum, reward) => sum + reward.pointsRequested, 0);
+    const totalLeft = totalEarned - totalRedeemed
+
+    return {
+        totalEarned,
+        totalRedeemed,
+        totalPendingRedeemed,
+        totalLeft
+    }
+}
+
+async function getReferralSummary(userId) {
+    const totalCount = await Referrals.count({
+        where: {
+            userId: userId,
+            deletedAt: null
+        }
+    });
+
+    const approvedCount = await Referrals.count({
+        where: {
+            approvedById: {
+                [Op.not]: null
+            },
+            deletedAt: null,
+            userId: userId
+        }
+    });
+    return {
+        totalCount,
+        approvedCount,
+    }
+}
+
+
 module.exports = {
-    respondentSummary
+    respondentSummary,
+    getRewardsSummary,
+    getRedemptionSummary,
+    getReferralSummary
 }

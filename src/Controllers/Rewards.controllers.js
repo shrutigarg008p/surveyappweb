@@ -1,6 +1,7 @@
 const db = require('../models');
 const Rewards = db.rewards;
 const Users = db.user;
+const BasicProfile = db.basicProfile;
 const Surveys = db.surveys;
 const RedemptionRequests = db.redemptionRequest;
 const apiResponses = require('../Components/apiresponse');
@@ -64,10 +65,18 @@ module.exports.updateRewards = async (req, res) => {
 module.exports.getAll = async (req, res) => {
     try {
         const limit = req.params.limit;
+        Rewards.belongsTo(BasicProfile, { foreignKey: 'userId' });
         const data = await Rewards.findAll({
             where: { deletedAt: null },
             limit: limit,
-            order: [['createdAt', 'DESC']]
+            order: [['createdAt', 'DESC']],
+            include: [
+                {
+                    model: BasicProfile,
+                    required: false,
+                    attributes: ['firstName', 'lastName']
+                }
+            ],
         });
         return apiResponses.successResponseWithData(res, 'success!', data);
     } catch (err) {
