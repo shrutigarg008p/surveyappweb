@@ -13,7 +13,10 @@ const {manualRedemptionRequest, manualRedemptionRequestHindi, manualApproveEmail
 module.exports.createRedemptionRequest = async (req, res) => {
     try {
         const language = req.headers['language'] || req.body.language || 'en';
-        const allowedPoints = [100, 150, 200, 250, 300, 350, 400, 450, 500];
+        const allowedPoints = [100];
+        for (let i = 100; i <= 9500; i += 50) {
+            allowedPoints.push(i);
+        }
         if (allowedPoints.includes(req.body.pointsRequested)) {
             const RedemptionRequest = await RedemptionRequests.create({
                 redemptionRequestStatus: req.body.redemptionRequestStatus,
@@ -45,9 +48,9 @@ module.exports.createRedemptionRequest = async (req, res) => {
             );
         } else {
             if (language === 'hi') {
-                return apiResponses.validationErrorWithData(res, 'अनुरोधित बिंदु इनमें से एक होना चाहिए (100, 150, 200, 250, 300, 350, 400, 450, 500)');
+                return apiResponses.validationErrorWithData(res, 'रिडेम्पशन शुरू करने के लिए न्यूनतम 100 i-पॉइंट्स की आवश्यकता होती है, अनुरोधित पॉइंट्स 50 के गुणकों में होने चाहिए (जैसे-100, 150, 200, 250, 300, 350, 400, 450, 500, ... 9500 अधिकतम)');
             } else {
-                return apiResponses.validationErrorWithData(res, 'Requested point should be one of these (100, 150, 200, 250, 300, 350, 400, 450, 500)');
+                return apiResponses.validationErrorWithData(res, 'Minimum 100 i-Points are needed to begin redemption, requested points should be in multiples of 50 (Starting from 100, 150, 200, 250, 300, 350, 400, 450, 500, ...9500 Maximum)');
             }
         }
     } catch (err) {
