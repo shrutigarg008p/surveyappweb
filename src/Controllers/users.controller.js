@@ -5,6 +5,8 @@ const Questions = db.questions;
 const Profiles = db.profiles;
 const Referrals = db.referrals;
 const Rewards = db.rewards;
+const AsssignSurveys = db.asssignSurveys;
+const RedemptionRequest = db.redemptionRequest;
 const NotificationsDb = db.notifications;
 const ProfileUserResponse = db.profileUserResponse;
 const apiResponses = require('../Components/apiresponse');
@@ -19,7 +21,7 @@ const {bool} = require("twilio/lib/base/serialize");
 const {userRegistration} = require("../Config/Mails");
 const axios = require("axios");
 const {sendVerificationMessage, generateOTP, sendVerificationMessageHindi} = require("../Config/Sms");
-const {respondentSummary} = require("../utils/RespondentSummary");
+const {respondentSummary, getRewardsSummary, getRedemptionSummary, getReferralSummary} = require("../utils/RespondentSummary");
 const Op = db.Sequelize.Op;
 
 
@@ -1376,6 +1378,29 @@ module.exports.panelistProfile = async (req, res) => {
 			}]
 		}).then(
 			async (result) => {
+				const {
+					totalSurveys,
+					incompleteSurveys,
+					completeSurveys,
+					notStartedSurveys,
+					totalRewardPoints,
+				} = await respondentSummary(req.params.id);
+				const {
+					referralsPoints,
+					surveyPoints,
+					totalPoints,
+					leftPoints
+				} = await getRewardsSummary(req.params.id);
+				const {
+					totalEarned,
+					totalRedeemed,
+					totalPendingRedeemed,
+					totalLeft
+				} = await getRedemptionSummary(req.params.id);
+				const {
+					totalCount,
+					approvedCount,
+				} = await getReferralSummary(req.params.id);
 				if(result){
 				result = {
 					...result.toJSON(),
@@ -1392,32 +1417,30 @@ module.exports.panelistProfile = async (req, res) => {
 						Electronics: 0,
 					},
 					surveys: {
-						totalCount: 0,
-						completedCount: 0,
-						inCompletedCount: 0,
-						notStartedCount: 0,
+						totalCount: totalSurveys || 0,
+						completedCount: completeSurveys || 0,
+						inCompletedCount: incompleteSurveys || 0,
+						notStartedCount: notStartedSurveys || 0,
 						list: []
 					},
 					rewards: {
-						totalCount: 0,
-						completedCount: 0,
-						inCompletedCount: 0,
-						notStartedCount: 0,
+						earnedBySurvey: surveyPoints || 0,
+						earnedByReferrals: referralsPoints || 0,
+						totalLeftPoints: leftPoints || 0,
 						list: []
 					},
 					referrals: {
-						totalCount: 0,
-						completedCount: 0,
+						totalCount: totalCount || 0,
+						approvedCount: approvedCount || 0,
 						inCompletedCount: 0,
 						notStartedCount: 0,
 						list: []
 					},
 					redemption: {
-						totalCount: 0,
-						completedCount: 0,
-						inCompletedCount: 0,
-						notStartedCount: 0,
-						list: []
+						totalEarned: totalEarned || 0,
+						totalRedeemed: totalRedeemed || 0,
+						totalPendingRedeemed: totalPendingRedeemed || 0,
+						totalLeft: totalLeft || 0
 					}
 				}
 				return apiResponses.successResponseWithData(res, 'success!', result);
