@@ -38,7 +38,7 @@ function appendParamsToUrl(baseUrl, userId, surveyId) {
     } else {
         url.search = `?userid=${userId}&surveyid=${surveyId}`;
     }
-    url = url.toString().replace("{userId}", userId);
+    url = url.toString().replace("{userid}", userId);
     return url.toString();
 }
 

@@ -21,7 +21,7 @@ const {bool} = require("twilio/lib/base/serialize");
 const {userRegistration} = require("../Config/Mails");
 const axios = require("axios");
 const {sendVerificationMessage, generateOTP, sendVerificationMessageHindi} = require("../Config/Sms");
-const {respondentSummary, getRewardsSummary, getRedemptionSummary, getReferralSummary} = require("../utils/RespondentSummary");
+const {respondentSummary, getRewardsSummary, getRedemptionSummary, getReferralSummary, userAssignedSurveys} = require("../utils/RespondentSummary");
 const Op = db.Sequelize.Op;
 
 
@@ -1401,6 +1401,7 @@ module.exports.panelistProfile = async (req, res) => {
 					totalCount,
 					approvedCount,
 				} = await getReferralSummary(req.params.id);
+				const assignedSurveys = await userAssignedSurveys(req.params.id)
 				if(result){
 				result = {
 					...result.toJSON(),
@@ -1421,7 +1422,7 @@ module.exports.panelistProfile = async (req, res) => {
 						completedCount: completeSurveys || 0,
 						inCompletedCount: incompleteSurveys || 0,
 						notStartedCount: notStartedSurveys || 0,
-						list: []
+						list: assignedSurveys
 					},
 					rewards: {
 						earnedBySurvey: surveyPoints || 0,

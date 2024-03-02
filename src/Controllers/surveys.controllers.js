@@ -223,6 +223,7 @@ module.exports.getOneDetails = async (req, res) => {
         Surveys.hasMany(SurveysPartners, { foreignKey: 'surveyId' });
         Surveys.hasMany(SurveyTemplates, { foreignKey: 'surveyId' });
         let user = []
+        let samples = []
         let assignUsers =[]
         const data = await Surveys.findOne({where: {id: req.params.id, deletedAt: null},
             include: [
@@ -237,135 +238,168 @@ module.exports.getOneDetails = async (req, res) => {
                 }
             ],
         })
-        const scheduleEmail = await SurveyEmailSchedules.findOne({where: {
+        const scheduleEmail = await SurveyEmailSchedules.findAll({where: {
                 surveyId: data.id,
                 deletedAt: null,
             }})
-        if(scheduleEmail) {
-            const sample = await Samples.findOne({where: {id: scheduleEmail.sampleId, deletedAt: null}})
-            const sampleQuestions = await SamplesQuestions.findAll({where: {sampleId: sample.id, deletedAt: null}})
-            if (sample) {
-                let whereClause = {};
-
-                // Age filter
-                if (sample.fromAge || sample.toAge) {
-                    whereClause.dateOfBirth = {
-                        [Op.between]: [calculateBirthDate(sample.toAge), calculateBirthDate(sample.fromAge)]
-                    };
-                }
-
-                // Registration date filter
-                if (sample.fromRegistrationDate && sample.toRegistrationDate) {
-                    whereClause.createdAt = {
-                        [Op.between]: [new Date(sample.fromRegistrationDate), new Date(sample.toRegistrationDate)]
-                    };
-                }
-
-                // Gender filter
-                if (sample.gender) {
-                    whereClause.gender = {
-                        [Op.in]: sample.gender === 'Male' ? ["Male", 'male', 'पुरुष'] : sample.gender === 'Female' ? ["Female", "महिला", 'female'] : ["Others", 'others', "अन्य"]
-                    };
-                }
-
-                // States filter
-                if (sample.stateIds && sample.stateIds.length > 0) {
-                    const states = sample.stateIds.map((item => item.value))
-                    const statesInfo = await States.findAll({ where: {id: { [Op.in]: states } }, attributes: ['name', 'hindi'], raw: true })
-                    const names = statesInfo.map(item => item.name);
-                    const hindiNames = statesInfo.map(item => item.hindi);
-                    const stringArray = names.concat(hindiNames);
-                    whereClause.state = {
-                        [Op.in]: stringArray
-                    };
-                }
-
-                // Cities filter
-                if (sample.cityIds && sample.cityIds.length > 0) {
-                    const city = sample.cityIds.map((item => item.value))
-                    const statesInfo = await Cities.findAll({ where: {id: { [Op.in]: city } }, attributes: ['name', 'hindi'], raw: true })
-                    const names = statesInfo.map(item => item.name);
-                    const hindiNames = statesInfo.map(item => item.hindi);
-                    const stringArray = names.concat(hindiNames);
-                    whereClause.city = {
-                        [Op.in]: stringArray
-                    };
-                }
-
-                //Segments
-                if(sample.segments && sample.segments.length > 0) {
-                    let obj = {}
-                    const segments = sample.segments.map((item => item.label))
-                    obj.segment = {
-                        [Op.in]: segments
-                    };
-                    const segmentsCities = await Cities.findAll({ where: obj, attributes: ['name', 'segment'], raw: true })
-                    if(segmentsCities.length > 0) {
-                        const city = segmentsCities.map((item => item.name))
-                        whereClause.city = {
-                            [Op.in]: city
-                        };
-                    }
-                }
-
-                //Regions
-                if(sample.regions && sample.regions.length > 0) {
-                    let obj = {}
-                    const regions = sample.regions.map((item => item.label))
-                    obj.region = {
-                        [Op.in]: regions
-                    };
-                    const regionsCities = await Cities.findAll({ where: obj, attributes: ['name', 'region'], raw: true })
-                    if(regionsCities.length > 0) {
-                        const city = regionsCities.map((item => item.name))
-                        whereClause.city = {
-                            [Op.in]: city
-                        };
-                    }
-                }
-
-                BasicProfile.belongsTo(Users, {foreignKey: 'userId'});
-                console.log('whereClause--->', whereClause)
-                let usersQuery = await BasicProfile.findAll({
-                    where: whereClause,
-                    include: [
-                        {
-                            model: Users,
-                            required: false,
-                            attributes: ['email', 'role']
-                        },
-                    ],
-                });
-
-                if(sampleQuestions.length > 0) {
-                    let usersResponseList = await filterUserResponses(sampleQuestions);
-                    const userIdArray = usersResponseList.map(userResponse => userResponse.get('userId'));
-                    let usersQuestionCriteria = await BasicProfile.findAll({
+        if(scheduleEmail.length > 0) {
+            for (let i = 0; i < scheduleEmail.length; i++) {
+                const sample = await Samples.findOne({where: {id: scheduleEmail[i].sampleId, deletedAt: null}})
+                if (sample) {
+                    const sampleQuestions = await SamplesQuestions.findAll({
                         where: {
-                            userId: {
-                                [Op.in]: userIdArray,
-                            },
-                        },
-                        include: [
-                            {
-                                model: Users,
-                                required: false,
-                                attributes: ['email', 'role']
-                            },
-                        ],
+                            sampleId: sample.id,
+                            deletedAt: null
+                        }
                     })
-                    const filterCommonUsers = (arrA, arrB) => {
-                        return arrA.filter(userA => arrB.some(userB => userB.userId === userA.userId));
-                    };
-                    usersQuery = filterCommonUsers(usersQuestionCriteria, usersQuery);
-                }
+                    if (sample) {
+                        let whereClause = {};
 
-                user = usersQuery.filter(item => item.user ? item.user.role === 'panelist' : '')
-                assignUsers = await SurveyAssigned.findAll({where: {surveyId: data.id}})
+                        // Age filter
+                        if (sample.fromAge || sample.toAge) {
+                            whereClause.dateOfBirth = {
+                                [Op.between]: [calculateBirthDate(sample.toAge), calculateBirthDate(sample.fromAge)]
+                            };
+                        }
+
+                        // Registration date filter
+                        if (sample.fromRegistrationDate && sample.toRegistrationDate) {
+                            whereClause.createdAt = {
+                                [Op.between]: [new Date(sample.fromRegistrationDate), new Date(sample.toRegistrationDate)]
+                            };
+                        }
+
+                        // Gender filter
+                        if (sample.gender) {
+                            whereClause.gender = {
+                                [Op.in]: sample.gender === 'Male' ? ["Male", 'male', 'पुरुष'] : sample.gender === 'Female' ? ["Female", "महिला", 'female'] : ["Others", 'others', "अन्य"]
+                            };
+                        }
+
+                        // States filter
+                        if (sample.stateIds && sample.stateIds.length > 0) {
+                            const states = sample.stateIds.map((item => item.value))
+                            const statesInfo = await States.findAll({
+                                where: {id: {[Op.in]: states}},
+                                attributes: ['name', 'hindi'],
+                                raw: true
+                            })
+                            const names = statesInfo.map(item => item.name);
+                            const hindiNames = statesInfo.map(item => item.hindi);
+                            const stringArray = names.concat(hindiNames);
+                            whereClause.state = {
+                                [Op.in]: stringArray
+                            };
+                        }
+
+                        // Cities filter
+                        if (sample.cityIds && sample.cityIds.length > 0) {
+                            const city = sample.cityIds.map((item => item.value))
+                            const statesInfo = await Cities.findAll({
+                                where: {id: {[Op.in]: city}},
+                                attributes: ['name', 'hindi'],
+                                raw: true
+                            })
+                            const names = statesInfo.map(item => item.name);
+                            const hindiNames = statesInfo.map(item => item.hindi);
+                            const stringArray = names.concat(hindiNames);
+                            whereClause.city = {
+                                [Op.in]: stringArray
+                            };
+                        }
+
+                        //Segments
+                        if (sample.segments && sample.segments.length > 0) {
+                            let obj = {}
+                            const segments = sample.segments.map((item => item.label))
+                            obj.segment = {
+                                [Op.in]: segments
+                            };
+                            const segmentsCities = await Cities.findAll({
+                                where: obj,
+                                attributes: ['name', 'segment'],
+                                raw: true
+                            })
+                            if (segmentsCities.length > 0) {
+                                const city = segmentsCities.map((item => item.name))
+                                whereClause.city = {
+                                    [Op.in]: city
+                                };
+                            }
+                        }
+
+                        //Regions
+                        if (sample.regions && sample.regions.length > 0) {
+                            let obj = {}
+                            const regions = sample.regions.map((item => item.label))
+                            obj.region = {
+                                [Op.in]: regions
+                            };
+                            const regionsCities = await Cities.findAll({
+                                where: obj,
+                                attributes: ['name', 'region'],
+                                raw: true
+                            })
+                            if (regionsCities.length > 0) {
+                                const city = regionsCities.map((item => item.name))
+                                whereClause.city = {
+                                    [Op.in]: city
+                                };
+                            }
+                        }
+
+                        BasicProfile.belongsTo(Users, {foreignKey: 'userId'});
+                        console.log('whereClause--->', whereClause)
+                        let usersQuery = await BasicProfile.findAll({
+                            where: whereClause,
+                            include: [
+                                {
+                                    model: Users,
+                                    required: false,
+                                    attributes: ['email', 'role']
+                                },
+                            ],
+                        });
+
+                        if (sampleQuestions.length > 0) {
+                            let usersResponseList = await filterUserResponses(sampleQuestions);
+                            const userIdArray = usersResponseList.map(userResponse => userResponse.get('userId'));
+                            let usersQuestionCriteria = await BasicProfile.findAll({
+                                where: {
+                                    userId: {
+                                        [Op.in]: userIdArray,
+                                    },
+                                },
+                                include: [
+                                    {
+                                        model: Users,
+                                        required: false,
+                                        attributes: ['email', 'role']
+                                    },
+                                ],
+                            })
+                            const filterCommonUsers = (arrA, arrB) => {
+                                return arrA.filter(userA => arrB.some(userB => userB.userId === userA.userId));
+                            };
+                            usersQuery = filterCommonUsers(usersQuestionCriteria, usersQuery);
+                        }
+                        let filterUsers = usersQuery.filter(item => item.user ? item.user.role === 'panelist' : '')
+
+                        samples.push({label: sample.name, value: sample.name})
+                        filterUsers = JSON.parse(JSON.stringify(filterUsers));
+                        let addSample = filterUsers.map(user => ({
+                            ...user,
+                            sampleName: sample.name
+                        }));
+                        user = user.concat(addSample);
+                    }
+                }
             }
+            assignUsers = await SurveyAssigned.findAll({where: {surveyId: data.id}})
         }
-        return apiResponses.successResponseWithData(res, 'success!', { data, user, assignUsers });
+        return apiResponses.successResponseWithData(res, 'success!', { data, user, assignUsers, samples });
     } catch (err) {
+        console.log('error--->', err)
         return apiResponses.errorResponse(res, err);
     }
 };
@@ -415,10 +449,17 @@ module.exports.GetUserAllAssignedSurvey = async (req, res) => {
             where: {
                 userId: req.params.userId
             },
+            attributes: ['status', 'createdAt'],
                 include: [
                     {
                         model: Surveys,
                         required: false,
+                        where: {
+                            closeDate: { [Op.or]: [null] },
+                            expiryDate: {
+                                [Op.gt]: new Date()
+                            }
+                        },
                         attributes: ['name', 'description', 'surveyLength', 'ceggPoints', 'expiryDate', "description_one", "description_two", "description_three", "description_four", "colorcode"]
                     },
                 ],
