@@ -246,10 +246,34 @@ async function getReferralSummary(userId) {
     }
 }
 
+async function userAssignedSurveys(userId) {
+    SurveyAssigned.belongsTo(Surveys, { foreignKey: 'surveyId' });
+    return await SurveyAssigned.findAll({
+        where: {
+            userId: userId
+        },
+        include: [
+            {
+                model: Surveys,
+                required: false,
+                // where: {
+                //     closeDate: {[Op.or]: [null]},
+                //     expiryDate: {
+                //         [Op.gt]: new Date()
+                //     }
+                // },
+                attributes: ['name', 'description', 'surveyLength', 'ceggPoints', 'expiryDate', "description_one", "description_two", "description_three", "description_four", "colorcode"]
+            },
+        ],
+        limit: 100000,
+        order: [['createdAt', 'DESC']]
+    })
+}
 
 module.exports = {
     respondentSummary,
     getRewardsSummary,
     getRedemptionSummary,
-    getReferralSummary
+    getReferralSummary,
+    userAssignedSurveys
 }
