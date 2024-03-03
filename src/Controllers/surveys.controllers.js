@@ -454,7 +454,8 @@ module.exports.GetUserAllAssignedSurvey = async (req, res) => {
                         model: Surveys,
                         required: false,
                         where: {
-                            closeDate: { [Op.or]: [null] },
+                            surveyType: 'Open',
+                            // closeDate: { [Op.or]: [null] },
                             expiryDate: {
                                 [Op.gt]: new Date()
                             }
