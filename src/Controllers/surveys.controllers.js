@@ -449,7 +449,6 @@ module.exports.GetUserAllAssignedSurvey = async (req, res) => {
             where: {
                 userId: req.params.userId
             },
-            attributes: ['status', 'createdAt'],
                 include: [
                     {
                         model: Surveys,
@@ -466,7 +465,8 @@ module.exports.GetUserAllAssignedSurvey = async (req, res) => {
                 limit: 100000,
             order: [['createdAt', 'DESC']]
         })
-        return apiResponses.successResponseWithData(res, 'Success', surveysList);
+        const data = surveysList.filter((survey) => survey.survey !== null)
+        return apiResponses.successResponseWithData(res, 'Success', data);
     } catch (err) {
         console.log('erro-->', err)
         return apiResponses.errorResponse(res, err);
