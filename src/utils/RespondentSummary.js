@@ -252,6 +252,7 @@ async function userAssignedSurveys(userId) {
         where: {
             userId: userId
         },
+        attributes: ['status', 'createdAt'],
         include: [
             {
                 model: Surveys,
