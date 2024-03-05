@@ -1,6 +1,7 @@
 const db = require('../models');
 const SurveyTemplates = db.surveyTemplates;
 const SurveyAssign = db.asssignSurveys;
+const Surveys = db.surveys;
 const apiResponses = require('../Components/apiresponse');
 const {Op} = require("sequelize");
 
@@ -79,31 +80,56 @@ module.exports.delete = async (req, res) => {
 module.exports.redirectToSurvey = async (req, res) => {
     try {
         console.log('req.params--->', req.params)
-        const assignedSurvey = await SurveyAssign.findOne({ where: {
+
+        SurveyAssign.belongsTo(Surveys, { foreignKey: 'surveyId' });
+        const assignedSurvey = await SurveyAssign.findOne({
+            where: {
                 temporarySurveyLinkId: parseInt(req.params.id, 10),
                 userId: req.params.userId,
                 status: 'pending',
                 expiryDate: {
                     [Op.gt]: new Date()
-                }
-            }
-        })
-        console.log('assignedSurvey---->', assignedSurvey)
+                },
+            },
+            include: [
+                {
+                    model: Surveys,
+                    required: false,
+                    where: {
+                        surveyType: 'Close',
+                        expiryDate: {
+                            [Op.gt]: new Date()
+                        }
+                    },
+                    attributes: ['name', 'description']
+                },
+            ],
+        });
+
+        console.log('assignedSurvey---->', assignedSurvey.survey)
         if(assignedSurvey) {
-            await SurveyAssign.update({
-                isStarted: true,
-                isCompleted: true
-            }, { where: {
-                    temporarySurveyLinkId: parseInt(req.params.id, 10),
-                    userId: req.params.userId,
-                    expiryDate: {
-                        [Op.gt]: new Date()
-                    } } })
-            res.redirect(assignedSurvey.originalSurveyLink);
+            if(assignedSurvey.survey) {
+                await SurveyAssign.update({
+                    isStarted: true,
+                    isCompleted: true
+                }, {
+                    where: {
+                        temporarySurveyLinkId: parseInt(req.params.id, 10),
+                        userId: req.params.userId,
+                        expiryDate: {
+                            [Op.gt]: new Date()
+                        }
+                    }
+                })
+                return res.redirect(assignedSurvey.originalSurveyLink);
+            } else {
+                return res.redirect('https://panel.indiapolls.com/#/survey-unavailable-message');
+            }
         } else {
-            res.redirect('https://panel.indiapolls.com/#/survey-attempted-message');
+            return res.redirect('https://panel.indiapolls.com/#/survey-attempted-message');
         }
     } catch (err) {
+        console.log('error--->', err)
         return apiResponses.errorResponse(res, err);
     }
 };
