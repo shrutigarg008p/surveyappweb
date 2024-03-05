@@ -82,6 +82,7 @@ module.exports.redirectToSurvey = async (req, res) => {
         const assignedSurvey = await SurveyAssign.findOne({ where: {
                 temporarySurveyLinkId: parseInt(req.params.id, 10),
                 userId: req.params.userId,
+                status: 'pending',
                 expiryDate: {
                     [Op.gt]: new Date()
                 }
@@ -100,7 +101,7 @@ module.exports.redirectToSurvey = async (req, res) => {
                     } } })
             res.redirect(assignedSurvey.originalSurveyLink);
         } else {
-            res.redirect('https://panel.wwww.com/');
+            res.redirect('https://panel.indiapolls.com/#/survey-attempted-message');
         }
     } catch (err) {
         return apiResponses.errorResponse(res, err);
