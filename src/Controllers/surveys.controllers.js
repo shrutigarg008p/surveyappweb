@@ -48,6 +48,7 @@ module.exports.create = async (req, res) => {
     try {
         const isExist = await Surveys.findOne({ where: { name: req.body.name, deletedAt: null }})
         console.log(isExist)
+        let sixDigitRandomNumber = Math.floor(100000 + Math.random() * 900000);
         if(!isExist) {
             const Survey = await Surveys.create({
                 name: req.body.name,
@@ -78,6 +79,7 @@ module.exports.create = async (req, res) => {
                 description_three: req.body.description_three,
                 description_four: req.body.description_four,
                 country: req.body.country,
+                uniqueid: sixDigitRandomNumber,
                 colorcode: req.body.colorcode || '#FFA500',
                 createdAt: new Date().valueOf(),
                 updatedAt: new Date().valueOf(),

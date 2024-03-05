@@ -193,9 +193,9 @@ const triggerSurveyEmail = async (id) => {
                                 let link = ''
                                 if (survey.useUniqueLinks === true) {
                                     sixDigitRandomNumber = Math.floor(100000 + Math.random() * 900000);
-                                    link = `https://indiapolls.com:9000/surveys/${sixDigitRandomNumber}/${users[i].userId}`
+                                    link = `https://indiapolls.com:9000/surveys/${survey.uniqueid}/${users[i].userId}`
                                 } else {
-                                    link = `https://indiapolls.com:9000/surveys/${sixDigitRandomNumber}/${users[i].userId}`
+                                    link = `https://indiapolls.com:9000/surveys/${survey.uniqueid}/${users[i].userId}`
                                 }
                                 const data = {
                                     firstName: users[i].firstName,
@@ -205,7 +205,7 @@ const triggerSurveyEmail = async (id) => {
                                     surveyLink: link
                                 };
                                 const processedHtml = replaceVariables(emailTemplate.body, data);
-                                const originalSurveyLink = appendParamsToUrl(survey.url, users[i].userId, sixDigitRandomNumber)
+                                const originalSurveyLink = appendParamsToUrl(survey.url, users[i].userId, survey.uniqueid)
                                 let insertRecord = {
                                     surveyId: survey.id,
                                     userId: users[i].userId,
@@ -220,7 +220,7 @@ const triggerSurveyEmail = async (id) => {
                                     pointsRewarded: 0,
                                     temporarySurveyLink: link,
                                     originalSurveyLink: originalSurveyLink,
-                                    temporarySurveyLinkId: sixDigitRandomNumber,
+                                    temporarySurveyLinkId: survey.uniqueid,
                                     expiryDate: survey.expiryDate,
                                     createdAt: new Date().valueOf(),
                                     updatedAt: new Date().valueOf()
