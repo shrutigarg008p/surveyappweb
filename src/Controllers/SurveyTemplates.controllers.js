@@ -106,7 +106,7 @@ module.exports.redirectToSurvey = async (req, res) => {
             ],
         });
 
-        console.log('assignedSurvey----->', assignedSurvey.survey)
+        console.log('assignedSurvey----->', assignedSurvey)
         if(assignedSurvey) {
             if(assignedSurvey.survey) {
                 await SurveyAssign.update({
