@@ -8,7 +8,8 @@ const Rewards = db.rewards;
 const RedemptionRequestTransactions = db.redemptionRequestTransactions;
 const apiResponses = require('../Components/apiresponse');
 const {DataTypes} = require("sequelize");
-const {manualRedemptionRequest, manualRedemptionRequestHindi, manualApproveEmail, manualApproveEmailHindi} = require("../Config/Mails");
+const { manualRedemptionRequest, manualRedemptionRequestHindi, manualApproveEmail, manualApproveEmailHindi} = require("../Config/Mails");
+const { getRedemptionSummary } = require("../utils/RespondentSummary");
 
 module.exports.createRedemptionRequest = async (req, res) => {
     try {
@@ -17,47 +18,55 @@ module.exports.createRedemptionRequest = async (req, res) => {
         for (let i = 100; i <= 9500; i += 50) {
             allowedPoints.push(i);
         }
-        if (allowedPoints.includes(req.body.pointsRequested)) {
-            const RedemptionRequest = await RedemptionRequests.create({
-                redemptionRequestStatus: req.body.redemptionRequestStatus,
-                notes: req.body.notes,
-                redemptionDate: req.body.redemptionDate,
-                pointsRedeemed: req.body.pointsRedeemed,
-                pointsRequested: req.body.pointsRequested,
-                redemptionModeTitle: req.body.redemptionModeTitle,
-                redemptionModeId: req.body.redemptionModeId,
-                userId: req.body.userId,
-                createdAt: new Date().valueOf(),
-                updatedAt: new Date().valueOf(),
-                requestDate: new Date().valueOf(),
-            })
-            const Basic = await BasicProfile.findOne({where: {userId: req.body.userId}})
-            const user = await Users.findOne({where: {id: req.body.userId}})
-            if (req.body.redemptionModeTitle === 'Amazon e-Gift Card') {
-                if (language === 'hi') {
-                    manualRedemptionRequestHindi(`${Basic.firstName} ${Basic.lastName}`, user.email)
-                } else {
-                    manualRedemptionRequest(`${Basic.firstName} ${Basic.lastName}`, user.email)
-                }
+        const totalLeftPoints = await getRedemptionSummary(req.body.userId)
+        if(totalLeftPoints.totalLeft >= 100 && req.body.pointsRequested <= totalLeftPoints.totalLeft) {
+            if (allowedPoints.includes(req.body.pointsRequested) && req.body.pointsRequested % 50 === 0) {
+                const RedemptionRequest = await RedemptionRequests.create({
+                    redemptionRequestStatus: req.body.redemptionRequestStatus,
+                    notes: req.body.notes,
+                    redemptionDate: req.body.redemptionDate,
+                    pointsRedeemed: req.body.pointsRedeemed,
+                    pointsRequested: req.body.pointsRequested,
+                    redemptionModeTitle: req.body.redemptionModeTitle,
+                    redemptionModeId: req.body.redemptionModeId,
+                    userId: req.body.userId,
+                    createdAt: new Date().valueOf(),
+                    updatedAt: new Date().valueOf(),
+                    requestDate: new Date().valueOf(),
+                })
+                const Basic = await BasicProfile.findOne({where: {userId: req.body.userId}})
+                const user = await Users.findOne({where: {id: req.body.userId}})
+                if (req.body.redemptionModeTitle === 'Amazon e-Gift Card') {
+                    if (language === 'hi') {
+                        manualRedemptionRequestHindi(`${Basic.firstName} ${Basic.lastName}`, user.email)
+                    } else {
+                        manualRedemptionRequest(`${Basic.firstName} ${Basic.lastName}`, user.email)
+                    }
 
+                }
+                return apiResponses.successResponseWithData(
+                    res,
+                    'Success!',
+                    RedemptionRequest
+                );
+            } else {
+                if (language === 'hi') {
+                    return apiResponses.validationErrorWithData(res, 'रिडेम्पशन शुरू करने के लिए न्यूनतम 100 i-पॉइंट्स की आवश्यकता होती है, अनुरोधित पॉइंट्स 50 के गुणकों में होने चाहिए (जैसे-100, 150, 200, 250, 300, 350, 400, 450, 500, ... 9500 अधिकतम)');
+                } else {
+                    return apiResponses.validationErrorWithData(res, 'Minimum 100 i-Points are needed to begin redemption, requested points should be in multiples of 50 (Starting from 100, 150, 200, 250, 300, 350, 400, 450, 500, ...9500 Maximum)');
+                }
             }
-            return apiResponses.successResponseWithData(
-                res,
-                'Success!',
-                RedemptionRequest
-            );
         } else {
             if (language === 'hi') {
-                return apiResponses.validationErrorWithData(res, 'रिडेम्पशन शुरू करने के लिए न्यूनतम 100 i-पॉइंट्स की आवश्यकता होती है, अनुरोधित पॉइंट्स 50 के गुणकों में होने चाहिए (जैसे-100, 150, 200, 250, 300, 350, 400, 450, 500, ... 9500 अधिकतम)');
+                return apiResponses.validationErrorWithData(res, 'अनुरोधित अंक आपके कुल बचे अंकों के बराबर या उससे कम होने चाहिए.');
             } else {
-                return apiResponses.validationErrorWithData(res, 'Minimum 100 i-Points are needed to begin redemption, requested points should be in multiples of 50 (Starting from 100, 150, 200, 250, 300, 350, 400, 450, 500, ...9500 Maximum)');
+                return apiResponses.validationErrorWithData(res, 'Requested points should be equal or less than your total left points.');
             }
         }
     } catch (err) {
         return apiResponses.errorResponse(res, err);
     }
 };
-
 
 module.exports.updateRedemptionRequest = async (req, res) => {
     try {
@@ -185,7 +194,7 @@ module.exports.getAllByUserId = async (req, res) => {
         const totalEarned = totalCountData.reduce((sum, reward) => sum + reward.points, 0);
         const totalRedeemed = totalRedeemedData.reduce((sum, reward) => sum + reward.pointsRedeemed, 0);
         const totalPendingRedeemed = totalPendingData.reduce((sum, reward) => sum + reward.pointsRequested, 0);
-        const totalLeft = totalEarned - totalRedeemed
+        const totalLeft = totalEarned - totalRedeemed - totalPendingRedeemed
 
 
         return apiResponses.successResponseWithData(res, 'success!', { data, totalEarned, totalRedeemed, totalPendingRedeemed, totalLeft});
