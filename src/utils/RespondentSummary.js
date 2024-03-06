@@ -146,6 +146,13 @@ async function getRewardsSummary(userId) {
     const totalRedeemedData = await RedemptionRequests.findAll({
         where: { userId:  userId, deletedAt: null, redemptionRequestStatus: 'Redeemed' },
     });
+
+    const totalPendingData = await RedemptionRequests.findAll({
+        where: { userId:  userId, deletedAt: null, redemptionRequestStatus: 'New' },
+    });
+
+    const totalPendingRedeemed = totalPendingData.reduce((sum, reward) => sum + reward.pointsRequested, 0);
+
     const totalRedeemed = totalRedeemedData.reduce((sum, reward) => sum + reward.pointsRedeemed, 0);
     const totalProfilePoints = data.reduce((total, item) => {
         if (item.rewardType === 'Profile Completed') {
@@ -169,7 +176,7 @@ async function getRewardsSummary(userId) {
     }, 0);
 
     const totalPoints = data.reduce((sum, reward) => sum + reward.points, 0);
-    const leftPoints = totalPoints - totalRedeemed
+    const leftPoints = totalPoints - totalRedeemed - totalPendingRedeemed
     return {
          totalProfilePoints,
          referralsPoints,
@@ -213,7 +220,7 @@ async function getRedemptionSummary(userId) {
     const totalEarned = totalCountData.reduce((sum, reward) => sum + reward.points, 0);
     const totalRedeemed = totalRedeemedData.reduce((sum, reward) => sum + reward.pointsRedeemed, 0);
     const totalPendingRedeemed = totalPendingData.reduce((sum, reward) => sum + reward.pointsRequested, 0);
-    const totalLeft = totalEarned - totalRedeemed
+    const totalLeft = totalEarned - totalRedeemed - totalPendingRedeemed
 
     return {
         totalEarned,
