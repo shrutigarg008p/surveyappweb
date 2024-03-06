@@ -96,7 +96,7 @@ module.exports.redirectToSurvey = async (req, res) => {
                     model: Surveys,
                     required: false,
                     where: {
-                        surveyType: 'Close',
+                        surveyType: 'Open',
                         expiryDate: {
                             [Op.gt]: new Date()
                         }
