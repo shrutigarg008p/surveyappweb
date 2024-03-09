@@ -1338,7 +1338,8 @@ module.exports.allPanelists = async (req, res) => {
 					}
 				});
 			}
-		return apiResponses.successResponseWithData(res, 'success!',  filteredUserPanelists);
+		const filteredPanelists = filteredUserPanelists.filter(panelist => panelist.phoneNumber || panelist.email);
+		return apiResponses.successResponseWithData(res, 'success!',  filteredPanelists);
 	} catch (err) {
 		console.log(err)
 		return apiResponses.errorResponse(res, err);
