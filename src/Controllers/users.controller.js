@@ -905,7 +905,7 @@ module.exports.getUser = async (req, res) => {
 				}
 			} else {
 				dashboardMessage = {
-					messages: 'Your profile is pending, please complete it to get 50 i-Points. Click Here to start filling profile',
+					messages: 'Your profile is pending, please complete it to get 25 i-Points. Click Here to start filling profile',
 					colourCode: '#FF0000'
 				}
 			}
