@@ -59,48 +59,48 @@ module.exports.registration = async (req, res) => {
 		}
 		// return res.status(200).send({ status:'200', message: "User registered successfully!" , data: userData });
 		console.log('successResponseWithData---->', user.email)
-		if(req.body.referralId) {
-			const isExist = await Referrals.findOne({ where: { email: user.email, userId: req.body.referralId } })
-			if(isExist) {
-				await Referrals.update(
-					{ referredUserId: user.id, referralStatus: "Accepted" },
-					{ where: { email: user.email, userId: req.body.referralId }}
-				)
-			    await Rewards.create({
-					points: 200,
-					rewardType: 'Referral',
-					referralId: user.id,
-					rewardStatus: 'Accepted',
-					userId: req.body.referralId,
-					createdAt: new Date().valueOf(),
-					updatedAt: new Date().valueOf(),
-					rewardDate: new Date().valueOf(),
-				})
-			} else {
-				await Referrals.create({
-					name: 'Unknown',
-					email: req.body.email,
-					phoneNumber: req.body.phoneNumber,
-					referralStatus: "Accepted",
-					referralMethod: "Link",
-					userId: req.body.referralId,
-					referredUserId: user.id,
-					createdAt: new Date().valueOf(),
-					updatedAt: new Date().valueOf(),
-					rewardDate: new Date().valueOf(),
-				})
-				await Rewards.create({
-					points: 200,
-					rewardType: 'Referral',
-					referralId: user.id,
-					rewardStatus: 'Accepted',
-					userId: req.body.referralId,
-					createdAt: new Date().valueOf(),
-					updatedAt: new Date().valueOf(),
-					rewardDate: new Date().valueOf(),
-				})
-			}
-		}
+		// if(req.body.referralId) {
+		// 	const isExist = await Referrals.findOne({ where: { email: user.email, userId: req.body.referralId } })
+		// 	if(isExist) {
+		// 		await Referrals.update(
+		// 			{ referredUserId: user.id, referralStatus: "Accepted" },
+		// 			{ where: { email: user.email, userId: req.body.referralId }}
+		// 		)
+		// 	    await Rewards.create({
+		// 			points: 200,
+		// 			rewardType: 'Referral',
+		// 			referralId: user.id,
+		// 			rewardStatus: 'Accepted',
+		// 			userId: req.body.referralId,
+		// 			createdAt: new Date().valueOf(),
+		// 			updatedAt: new Date().valueOf(),
+		// 			rewardDate: new Date().valueOf(),
+		// 		})
+		// 	} else {
+		// 		await Referrals.create({
+		// 			name: 'Unknown',
+		// 			email: req.body.email,
+		// 			phoneNumber: req.body.phoneNumber,
+		// 			referralStatus: "Accepted",
+		// 			referralMethod: "Link",
+		// 			userId: req.body.referralId,
+		// 			referredUserId: user.id,
+		// 			createdAt: new Date().valueOf(),
+		// 			updatedAt: new Date().valueOf(),
+		// 			rewardDate: new Date().valueOf(),
+		// 		})
+		// 		await Rewards.create({
+		// 			points: 200,
+		// 			rewardType: 'Referral',
+		// 			referralId: user.id,
+		// 			rewardStatus: 'Accepted',
+		// 			userId: req.body.referralId,
+		// 			createdAt: new Date().valueOf(),
+		// 			updatedAt: new Date().valueOf(),
+		// 			rewardDate: new Date().valueOf(),
+		// 		})
+		// 	}
+		// }
 		if(language === 'hi') {
 			await sendVerificationMessageHindi(OTP, req.body.phoneNumber, 'उपयोगकर्ता')
 		} else {
@@ -152,48 +152,48 @@ module.exports.continueWithMobile = async (req, res) => {
 				activeStatus: 0,
 				otp: OTP
 			})
-			if (req.body.referralId) {
-				const isExist = await Referrals.findOne({where: {email: user.email, userId: req.body.referralId}})
-				if (isExist) {
-					await Referrals.update(
-						{referredUserId: user.id, referralStatus: "Accepted"},
-						{where: {email: user.email, userId: req.body.referralId}}
-					)
-					await Rewards.create({
-						points: 200,
-						rewardType: 'Referral',
-						referralId: user.id,
-						rewardStatus: 'Accepted',
-						userId: req.body.referralId,
-						createdAt: new Date().valueOf(),
-						updatedAt: new Date().valueOf(),
-						rewardDate: new Date().valueOf(),
-					})
-				} else {
-					await Referrals.create({
-						name: 'Unknown',
-						email: req.body.email,
-						phoneNumber: req.body.phoneNumber,
-						referralStatus: "Accepted",
-						referralMethod: "Link",
-						userId: req.body.referralId,
-						referredUserId: user.id,
-						createdAt: new Date().valueOf(),
-						updatedAt: new Date().valueOf(),
-						rewardDate: new Date().valueOf(),
-					})
-					await Rewards.create({
-						points: 200,
-						rewardType: 'Referral',
-						referralId: user.id,
-						rewardStatus: 'Accepted',
-						userId: req.body.referralId,
-						createdAt: new Date().valueOf(),
-						updatedAt: new Date().valueOf(),
-						rewardDate: new Date().valueOf(),
-					})
-				}
-			}
+			// if (req.body.referralId) {
+			// 	const isExist = await Referrals.findOne({where: {email: user.email, userId: req.body.referralId}})
+			// 	if (isExist) {
+			// 		await Referrals.update(
+			// 			{referredUserId: user.id, referralStatus: "Accepted"},
+			// 			{where: {email: user.email, userId: req.body.referralId}}
+			// 		)
+			// 		await Rewards.create({
+			// 			points: 200,
+			// 			rewardType: 'Referral',
+			// 			referralId: user.id,
+			// 			rewardStatus: 'Accepted',
+			// 			userId: req.body.referralId,
+			// 			createdAt: new Date().valueOf(),
+			// 			updatedAt: new Date().valueOf(),
+			// 			rewardDate: new Date().valueOf(),
+			// 		})
+			// 	} else {
+			// 		await Referrals.create({
+			// 			name: 'Unknown',
+			// 			email: req.body.email,
+			// 			phoneNumber: req.body.phoneNumber,
+			// 			referralStatus: "Accepted",
+			// 			referralMethod: "Link",
+			// 			userId: req.body.referralId,
+			// 			referredUserId: user.id,
+			// 			createdAt: new Date().valueOf(),
+			// 			updatedAt: new Date().valueOf(),
+			// 			rewardDate: new Date().valueOf(),
+			// 		})
+			// 		await Rewards.create({
+			// 			points: 200,
+			// 			rewardType: 'Referral',
+			// 			referralId: user.id,
+			// 			rewardStatus: 'Accepted',
+			// 			userId: req.body.referralId,
+			// 			createdAt: new Date().valueOf(),
+			// 			updatedAt: new Date().valueOf(),
+			// 			rewardDate: new Date().valueOf(),
+			// 		})
+			// 	}
+			// }
 			if(language === 'hi') {
 				await sendVerificationMessageHindi(OTP, req.body.phoneNumber, 'उपयोगकर्ता')
 			} else {
