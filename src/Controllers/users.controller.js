@@ -22,6 +22,7 @@ const {userRegistration} = require("../Config/Mails");
 const axios = require("axios");
 const {sendVerificationMessage, generateOTP, sendVerificationMessageHindi} = require("../Config/Sms");
 const {respondentSummary, getRewardsSummary, getRedemptionSummary, getReferralSummary, userAssignedSurveys} = require("../utils/RespondentSummary");
+const {validateDob} = require("../utils/dateValidations");
 const Op = db.Sequelize.Op;
 
 
@@ -634,7 +635,12 @@ module.exports.userUpdate = async (req, res) => {
 			imagePath: req.body.imagePath
 		}
 
-		console.log('re---->', obj, req.params)
+		const validateDate = validateDob(obj.dateOfBirth)
+		if(validateDate === false) {
+			const msg = `${language === 'hi' ? 'कृपया कोई मान्य जन्मतिथि दर्ज करें । पैनलिस्ट के रूप में पंजीकरण करने के लिए आपकी आयु 16 वर्ष से अधिक होनी चाहिए ।' : 'Please enter a valid Date of Birth. You must be above 16 years of Age to register as a panelist.'}`;
+			return apiResponses.validationErrorWithData(res, msg, null);
+		}
+
 		const isExist = await BasicProfile.findOne({ where: { userId: req.params.userId } })
 		if(!isExist) {
 			const user = await BasicProfile.create(
