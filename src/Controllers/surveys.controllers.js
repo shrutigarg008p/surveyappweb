@@ -449,7 +449,10 @@ module.exports.GetUserAllAssignedSurvey = async (req, res) => {
         SurveyAssigned.belongsTo(Surveys, { foreignKey: 'surveyId' });
         const surveysList = await SurveyAssigned.findAll({
             where: {
-                userId: req.params.userId
+                userId: req.params.userId,
+                status: {
+                    [Op.not]: ['Completed', 'Terminated', 'Over Quota', 'Quality Terminated']
+                }
             },
                 include: [
                     {
