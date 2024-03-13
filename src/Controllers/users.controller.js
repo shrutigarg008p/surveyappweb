@@ -801,7 +801,6 @@ module.exports.userUpdate = async (req, res) => {
 						required: false,
 					}],
 				})
-				await Rewards.update({ rewardStatus: 'Accepted' },{ where: { referralId: req.params.userId, rewardType: 'Referral', rewardStatus: 'Pending' } })
 				return apiResponses.successResponseWithData(res, 'Success Update', userInfo);
 			}
 
@@ -814,7 +813,6 @@ module.exports.userUpdate = async (req, res) => {
 					required: false,
 				}],
 			})
-			await Rewards.update({ rewardStatus: 'Accepted' },{ where: { referralId: req.params.userId, rewardType: 'Referral', rewardStatus: 'Pending' } })
 			return apiResponses.successResponseWithData(res, 'Success Update', userInfo);
 		}
 	} catch (err) {
