@@ -84,17 +84,19 @@ async function respondentSummary(userId) {
     const overallAttemptedQuestions = result.reduce((total, section) => total + section.attemptedQuestions, 0);
     const overallAttemptedPercentage = Math.round((overallAttemptedQuestions / overallTotalQuestions) * 100);
     console.log('looo----->', overallAttemptedPercentage)
-    const totalRewardPoints = await Rewards.sum('points', {where: {userId: userId}});
+    const totalRewardPoints = await Rewards.sum('points', {where: {userId: userId, rewardStatus: "Accepted"}});
     const totalReferralsPoints = await Rewards.sum('points', {
         where: {
             userId: userId,
+            rewardStatus: "Accepted",
             rewardType: 'Referral'
         }
     });
     const totalReferralsApproved = await Rewards.sum('points', {
         where: {
             userId: userId,
-            rewardType: 'Accepted'
+            rewardStatus: "Accepted",
+            rewardType: 'Referral'
         }
     });
 
@@ -127,7 +129,7 @@ async function getRewardsSummary(userId) {
     Rewards.belongsTo(Users, { foreignKey: 'userId' });
     // Rewards.belongsTo(Users, { foreignKey: 'referralId' });
     const data = await Rewards.findAll({
-        where: { userId:  userId, deletedAt: null },
+        where: { userId:  userId, deletedAt: null, rewardStatus: "Accepted" },
         include: [
             {
                 model: Surveys,
@@ -208,7 +210,7 @@ async function getRedemptionSummary(userId) {
         order: [['createdAt', 'DESC']]
     });
     const totalCountData = await Rewards.findAll({
-        where: { userId:  userId, deletedAt: null },
+        where: { userId:  userId, deletedAt: null, rewardStatus: "Accepted" },
     });
     const totalRedeemedData = await RedemptionRequests.findAll({
         where: { userId:  userId, deletedAt: null, redemptionRequestStatus: 'Redeemed' },

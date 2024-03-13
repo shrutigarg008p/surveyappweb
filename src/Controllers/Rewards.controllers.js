@@ -87,112 +87,231 @@ module.exports.getAll = async (req, res) => {
 module.exports.getAllByUserId = async (req, res) => {
     try {
         const language = req.headers['language'] || req.body.language || 'en';
+        const appType = req.headers['app_type'] || 'web';
         Rewards.belongsTo(Surveys, { foreignKey: 'surveyId' });
         Rewards.belongsTo(Users, { foreignKey: 'userId' });
         // Rewards.belongsTo(Users, { foreignKey: 'referralId' });
-        const limit = req.params.limit;
-        const data = await Rewards.findAll({
-            where: { userId: req.params.userId, deletedAt: null },
-            include: [
-                {
-                    model: Surveys,
-                    required: false,
-                    attributes: ['name', 'description', 'ceggPoints', 'expiryDate', 'createdAt', 'disclaimer']
-                },
-                {
-                    model: Users,
-                    required: false,
-                    attributes: ['email']
+        if(appType !== 'web') {
+            const limit = req.params.limit;
+            const data = await Rewards.findAll({
+                where: {userId: req.params.userId, deletedAt: null, rewardStatus: "Accepted"},
+                include: [
+                    {
+                        model: Surveys,
+                        required: false,
+                        attributes: ['name', 'description', 'ceggPoints', 'expiryDate', 'createdAt', 'disclaimer']
+                    },
+                    {
+                        model: Users,
+                        required: false,
+                        attributes: ['email']
+                    }
+                ],
+                limit: limit,
+                order: [['createdAt', 'DESC']]
+            });
+
+            const totalRedeemedData = await RedemptionRequests.findAll({
+                where: {userId: req.params.userId, deletedAt: null, redemptionRequestStatus: 'Redeemed'},
+            });
+            const totalRedeemed = totalRedeemedData.reduce((sum, reward) => sum + reward.pointsRedeemed, 0);
+            const totalProfilePoints = data.reduce((total, item) => {
+                if (item.rewardType === 'Profile Completed') {
+                    return total + item.points;
                 }
-            ],
-            limit: limit,
-            order: [['createdAt', 'DESC']]
-        });
+                return total;
+            }, 0);
 
-        const totalRedeemedData = await RedemptionRequests.findAll({
-            where: { userId: req.params.userId, deletedAt: null, redemptionRequestStatus: 'Redeemed' },
-        });
-        const totalRedeemed = totalRedeemedData.reduce((sum, reward) => sum + reward.pointsRedeemed, 0);
-        const totalProfilePoints = data.reduce((total, item) => {
-            if (item.rewardType === 'Profile Completed') {
-                return total + item.points;
-            }
-            return total;
-        }, 0);
-
-        const surveyPoints = data.reduce((total, item) => {
-            if (item.rewardType === 'Survey') {
-                return total + item.points;
-            }
-            return total;
-        }, 0);
-
-        const referralsPoints = data.reduce((total, item) => {
-            if (item.rewardType === 'Referral') {
-                return total + item.points;
-            }
-            return total;
-        }, 0);
-
-        const totalPoints = data.reduce((sum, reward) => sum + reward.points, 0);
-        const leftPoints = totalPoints - totalRedeemed
-        let totalPointsInfo = []
-        if (language === 'hi'){
-            totalPointsInfo = [
-                {
-                    name: "प्रोफाइल पूरा किया",
-                    value: totalProfilePoints
-                },
-                {
-                    name: "संदर्भ",
-                    value: referralsPoints
-                },
-                {
-                    name: "सर्वेक्षण",
-                    value: surveyPoints
-                },
-                {
-                    name: "कुल अंक",
-                    value: totalPoints
-                },
-                {
-                    name: "कुल रीडीम",
-                    value: totalRedeemed
-                },
-                {
-                    name: "बचे हुए अंक",
-                    value: leftPoints
+            const surveyPoints = data.reduce((total, item) => {
+                if (item.rewardType === 'Survey') {
+                    return total + item.points;
                 }
-            ];
+                return total;
+            }, 0);
+
+            const referralsPoints = data.reduce((total, item) => {
+                if (item.rewardType === 'Referral') {
+                    return total + item.points;
+                }
+                return total;
+            }, 0);
+
+            const totalPoints = data.reduce((sum, reward) => sum + reward.points, 0);
+            const leftPoints = totalPoints - totalRedeemed
+            let totalPointsInfo = []
+            if (language === 'hi') {
+                totalPointsInfo = [
+                    {
+                        name: "प्रोफाइल पूरा किया",
+                        value: totalProfilePoints
+                    },
+                    {
+                        name: "संदर्भ",
+                        value: referralsPoints
+                    },
+                    {
+                        name: "सर्वेक्षण",
+                        value: surveyPoints
+                    },
+                    {
+                        name: "कुल अंक",
+                        value: totalPoints
+                    },
+                    {
+                        name: "कुल रीडीम",
+                        value: totalRedeemed
+                    },
+                    {
+                        name: "बचे हुए अंक",
+                        value: leftPoints
+                    }
+                ];
+            } else {
+                totalPointsInfo = [
+                    {
+                        name: "Profile Completed",
+                        value: totalProfilePoints
+                    },
+                    {
+                        name: "Referral Points",
+                        value: referralsPoints
+                    },
+                    {
+                        name: "Survey",
+                        value: surveyPoints
+                    },
+                    {
+                        name: "Total Points",
+                        value: totalPoints
+                    },
+                    {
+                        name: "Total Redeemed",
+                        value: totalRedeemed
+                    },
+                    {
+                        name: "Left Points",
+                        value: leftPoints
+                    }
+                ];
+            }
+            return apiResponses.successResponseWithData(res, 'success!', {
+                data: [],
+                totalPoints,
+                totalRedeemed,
+                leftPoints,
+                totalPointsInfo
+            });
         } else {
-            totalPointsInfo = [
-                {
-                    name: "Profile Completed",
-                    value: totalProfilePoints
-                },
-                {
-                    name: "Referral Points",
-                    value: referralsPoints
-                },
-                {
-                    name: "Survey",
-                    value: surveyPoints
-                },
-                {
-                    name: "Total Points",
-                    value: totalPoints
-                },
-                {
-                    name: "Total Redeemed",
-                    value: totalRedeemed
-                },
-                {
-                    name: "Left Points",
-                    value: leftPoints
+            const limit = req.params.limit;
+            const data = await Rewards.findAll({
+                where: {userId: req.params.userId, deletedAt: null, rewardStatus: "Accepted" },
+                include: [
+                    {
+                        model: Surveys,
+                        required: false,
+                        attributes: ['name', 'description', 'ceggPoints', 'expiryDate', 'createdAt', 'disclaimer']
+                    },
+                    {
+                        model: Users,
+                        required: false,
+                        attributes: ['email']
+                    }
+                ],
+                limit: limit,
+                order: [['createdAt', 'DESC']]
+            });
+
+            const totalRedeemedData = await RedemptionRequests.findAll({
+                where: {userId: req.params.userId, deletedAt: null, redemptionRequestStatus: 'Redeemed'},
+            });
+            const totalRedeemed = totalRedeemedData.reduce((sum, reward) => sum + reward.pointsRedeemed, 0);
+            const totalProfilePoints = data.reduce((total, item) => {
+                if (item.rewardType === 'Profile Completed') {
+                    return total + item.points;
                 }
-            ];
+                return total;
+            }, 0);
+
+            const surveyPoints = data.reduce((total, item) => {
+                if (item.rewardType === 'Survey') {
+                    return total + item.points;
+                }
+                return total;
+            }, 0);
+
+            const referralsPoints = data.reduce((total, item) => {
+                if (item.rewardType === 'Referral') {
+                    return total + item.points;
+                }
+                return total;
+            }, 0);
+
+            const totalPoints = data.reduce((sum, reward) => sum + reward.points, 0);
+            const leftPoints = totalPoints - totalRedeemed
+            let totalPointsInfo = []
+            if (language === 'hi') {
+                totalPointsInfo = [
+                    {
+                        name: "प्रोफाइल पूरा किया",
+                        value: totalProfilePoints
+                    },
+                    {
+                        name: "संदर्भ",
+                        value: referralsPoints
+                    },
+                    {
+                        name: "सर्वेक्षण",
+                        value: surveyPoints
+                    },
+                    {
+                        name: "कुल अंक",
+                        value: totalPoints
+                    },
+                    {
+                        name: "कुल रीडीम",
+                        value: totalRedeemed
+                    },
+                    {
+                        name: "बचे हुए अंक",
+                        value: leftPoints
+                    }
+                ];
+            } else {
+                totalPointsInfo = [
+                    {
+                        name: "Profile Completed",
+                        value: totalProfilePoints
+                    },
+                    {
+                        name: "Referral Points",
+                        value: referralsPoints
+                    },
+                    {
+                        name: "Survey",
+                        value: surveyPoints
+                    },
+                    {
+                        name: "Total Points",
+                        value: totalPoints
+                    },
+                    {
+                        name: "Total Redeemed",
+                        value: totalRedeemed
+                    },
+                    {
+                        name: "Left Points",
+                        value: leftPoints
+                    }
+                ];
+            }
+            return apiResponses.successResponseWithData(res, 'success!', {
+                data,
+                totalPoints,
+                totalRedeemed,
+                leftPoints,
+                totalPointsInfo
+            });
         }
-        return apiResponses.successResponseWithData(res, 'success!', {data: [], totalPoints, totalRedeemed, leftPoints, totalPointsInfo });
     } catch (err) {
         return apiResponses.errorResponse(res, err);
     }

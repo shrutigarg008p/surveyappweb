@@ -593,7 +593,7 @@ module.exports.GetUserOneAssignedSurveyCallback = async (req, res) => {
                         points: surveysDetails.survey.ceggPoints,
                         rewardType: 'Survey',
                         surveyId: surveysDetails.surveyId,
-                        rewardStatus: 'Pending',
+                        rewardStatus: 'Accepted',
                         userId: req.body.userId,
                         createdAt: new Date().valueOf(),
                         updatedAt: new Date().valueOf(),
@@ -922,10 +922,11 @@ module.exports.adminRespondentDashboardWeb = async (req, res) => {
             const overallAttemptedQuestions = result.reduce((total, section) => total + section.attemptedQuestions, 0);
             const overallAttemptedPercentage = Math.round((overallAttemptedQuestions / overallTotalQuestions) * 100);
 
-            const totalRewardPoints = await Rewards.sum('points');
+            const totalRewardPoints = await Rewards.sum('points', { where: { rewardStatus: "Accepted" } });
             const totalReferralsPoints = await Rewards.sum('points', {
                 where: {
-                    rewardType: 'Referral'
+                    rewardType: 'Referral',
+                    rewardStatus: "Accepted"
                 }
             });
             const totalReferralsApproved = await Rewards.sum('points', {
