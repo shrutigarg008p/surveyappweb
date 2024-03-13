@@ -67,39 +67,59 @@ module.exports.registration = async (req, res) => {
 					{ referredUserId: user.id, referralStatus: "Accepted" },
 					{ where: { email: user.email, userId: req.body.referralId }}
 				)
-			    await Rewards.create({
-					points: 25,
-					rewardType: 'Referral',
-					referralId: user.id,
-					rewardStatus: 'Accepted',
-					userId: req.body.referralId,
-					createdAt: new Date().valueOf(),
-					updatedAt: new Date().valueOf(),
-					rewardDate: new Date().valueOf(),
-				})
+				const rewardsExist = await Rewards.findOne({ where: { userId: req.body.referralId, referralId: user.id, rewardType: 'Referral' } })
+				if(!rewardsExist) {
+					await Rewards.create({
+						points: 25,
+						rewardType: 'Referral',
+						referralId: user.id,
+						rewardStatus: 'Pending',
+						userId: req.body.referralId,
+						createdAt: new Date().valueOf(),
+						updatedAt: new Date().valueOf(),
+						rewardDate: new Date().valueOf(),
+					})
+				}
 			} else {
-				await Referrals.create({
-					name: 'Unknown',
-					email: req.body.email,
-					phoneNumber: req.body.phoneNumber,
-					referralStatus: "Accepted",
-					referralMethod: "Link",
-					userId: req.body.referralId,
-					referredUserId: user.id,
-					createdAt: new Date().valueOf(),
-					updatedAt: new Date().valueOf(),
-					rewardDate: new Date().valueOf(),
+				const referralExist = await Referrals.findOne({
+					where: {
+						userId: req.body.referralId,
+						referredUserId: user.id
+					}
 				})
-				await Rewards.create({
-					points: 25,
-					rewardType: 'Referral',
-					referralId: user.id,
-					rewardStatus: 'Accepted',
-					userId: req.body.referralId,
-					createdAt: new Date().valueOf(),
-					updatedAt: new Date().valueOf(),
-					rewardDate: new Date().valueOf(),
-				})
+				if (!referralExist) {
+					await Referrals.create({
+						name: 'Unknown',
+						email: req.body.email,
+						phoneNumber: req.body.phoneNumber,
+						referralStatus: "Accepted",
+						referralMethod: "Link",
+						userId: req.body.referralId,
+						referredUserId: user.id,
+						createdAt: new Date().valueOf(),
+						updatedAt: new Date().valueOf(),
+						rewardDate: new Date().valueOf(),
+					})
+					const rewardsExist = await Rewards.findOne({
+						where: {
+							userId: req.body.referralId,
+							referralId: user.id,
+							rewardType: 'Referral'
+						}
+					})
+					if (!rewardsExist) {
+						await Rewards.create({
+							points: 25,
+							rewardType: 'Referral',
+							referralId: user.id,
+							rewardStatus: 'Pending',
+							userId: req.body.referralId,
+							createdAt: new Date().valueOf(),
+							updatedAt: new Date().valueOf(),
+							rewardDate: new Date().valueOf(),
+						})
+					}
+				}
 			}
 		}
 		if(language === 'hi') {
@@ -153,46 +173,66 @@ module.exports.continueWithMobile = async (req, res) => {
 				activeStatus: 0,
 				otp: OTP
 			})
-			if (req.body.referralId) {
-				const isExist = await Referrals.findOne({where: {email: user.email, userId: req.body.referralId}})
-				if (isExist) {
+			if(req.body.referralId) {
+				const isExist = await Referrals.findOne({ where: { email: user.email, userId: req.body.referralId } })
+				if(isExist) {
 					await Referrals.update(
-						{referredUserId: user.id, referralStatus: "Accepted"},
-						{where: {email: user.email, userId: req.body.referralId}}
+						{ referredUserId: user.id, referralStatus: "Accepted" },
+						{ where: { email: user.email, userId: req.body.referralId }}
 					)
-					await Rewards.create({
-						points: 25,
-						rewardType: 'Referral',
-						referralId: user.id,
-						rewardStatus: 'Accepted',
-						userId: req.body.referralId,
-						createdAt: new Date().valueOf(),
-						updatedAt: new Date().valueOf(),
-						rewardDate: new Date().valueOf(),
-					})
+					const rewardsExist = await Rewards.findOne({ where: { userId: req.body.referralId, referralId: user.id, rewardType: 'Referral' } })
+					if(!rewardsExist) {
+						await Rewards.create({
+							points: 25,
+							rewardType: 'Referral',
+							referralId: user.id,
+							rewardStatus: 'Pending',
+							userId: req.body.referralId,
+							createdAt: new Date().valueOf(),
+							updatedAt: new Date().valueOf(),
+							rewardDate: new Date().valueOf(),
+						})
+					}
 				} else {
-					await Referrals.create({
-						name: 'Unknown',
-						email: req.body.email,
-						phoneNumber: req.body.phoneNumber,
-						referralStatus: "Accepted",
-						referralMethod: "Link",
-						userId: req.body.referralId,
-						referredUserId: user.id,
-						createdAt: new Date().valueOf(),
-						updatedAt: new Date().valueOf(),
-						rewardDate: new Date().valueOf(),
+					const referralExist = await Referrals.findOne({
+						where: {
+							userId: req.body.referralId,
+							referredUserId: user.id
+						}
 					})
-					await Rewards.create({
-						points: 25,
-						rewardType: 'Referral',
-						referralId: user.id,
-						rewardStatus: 'Accepted',
-						userId: req.body.referralId,
-						createdAt: new Date().valueOf(),
-						updatedAt: new Date().valueOf(),
-						rewardDate: new Date().valueOf(),
-					})
+					if (!referralExist) {
+						await Referrals.create({
+							name: 'Unknown',
+							email: req.body.email,
+							phoneNumber: req.body.phoneNumber,
+							referralStatus: "Accepted",
+							referralMethod: "Link",
+							userId: req.body.referralId,
+							referredUserId: user.id,
+							createdAt: new Date().valueOf(),
+							updatedAt: new Date().valueOf(),
+							rewardDate: new Date().valueOf(),
+						})
+						const rewardsExist = await Rewards.findOne({
+							where: {
+								userId: req.body.referralId,
+								referralId: user.id,
+								rewardType: 'Referral'
+							}
+						})
+						if (!rewardsExist) {
+							await Rewards.create({
+								points: 25,
+								rewardType: 'Referral',
+								referralId: user.id,
+								rewardStatus: 'Pending',
+								userId: req.body.referralId,
+								createdAt: new Date().valueOf(),
+								updatedAt: new Date().valueOf(),
+								rewardDate: new Date().valueOf(),
+							})
+						}
+					}
 				}
 			}
 			if(language === 'hi') {
@@ -663,6 +703,7 @@ module.exports.userUpdate = async (req, res) => {
 					required: false,
 				}],
 			})
+			await Rewards.update({ rewardStatus: 'Accepted' },{ where: { referralId: req.params.userId, rewardType: 'Referral', rewardStatus: 'Pending' }})
 			return apiResponses.successResponseWithData(res, 'Success Created', userInfo);
 		} else {
 			delete obj.userId
@@ -760,6 +801,7 @@ module.exports.userUpdate = async (req, res) => {
 						required: false,
 					}],
 				})
+				await Rewards.update({ rewardStatus: 'Accepted' },{ where: { referralId: req.params.userId, rewardType: 'Referral', rewardStatus: 'Pending' } })
 				return apiResponses.successResponseWithData(res, 'Success Update', userInfo);
 			}
 
@@ -772,6 +814,7 @@ module.exports.userUpdate = async (req, res) => {
 					required: false,
 				}],
 			})
+			await Rewards.update({ rewardStatus: 'Accepted' },{ where: { referralId: req.params.userId, rewardType: 'Referral', rewardStatus: 'Pending' } })
 			return apiResponses.successResponseWithData(res, 'Success Update', userInfo);
 		}
 	} catch (err) {

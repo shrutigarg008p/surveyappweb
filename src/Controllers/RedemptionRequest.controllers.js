@@ -182,7 +182,7 @@ module.exports.getAllByUserId = async (req, res) => {
             order: [['createdAt', 'DESC']]
         });
         const totalCountData = await Rewards.findAll({
-            where: { userId: req.params.userId, deletedAt: null },
+            where: { userId: req.params.userId, deletedAt: null, rewardStatus: "Accepted" },
         });
         const totalRedeemedData = await RedemptionRequests.findAll({
             where: { userId: req.params.userId, deletedAt: null, redemptionRequestStatus: 'Redeemed' },
