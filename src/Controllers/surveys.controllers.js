@@ -581,16 +581,25 @@ module.exports.GetUserOneAssignedSurveyCallback = async (req, res) => {
             })
 
             if (req.body.status === 'Completed' && surveysDetails && surveysDetails.survey) {
-                const Reward = await Rewards.create({
-                    points: surveysDetails.survey.ceggPoints,
-                    rewardType: 'Survey',
-                    surveyId: surveysDetails.surveyId,
-                    rewardStatus: 'Pending',
-                    userId: req.body.userId,
-                    createdAt: new Date().valueOf(),
-                    updatedAt: new Date().valueOf(),
-                    rewardDate: new Date().valueOf(),
+                const isRewardExist = await Rewards.findOne({
+                    where: {
+                        userId: req.body.userId,
+                        surveyId: surveysDetails.surveyId,
+                        rewardType: 'Survey'
+                    }
                 })
+                if (!isRewardExist) {
+                    const Reward = await Rewards.create({
+                        points: surveysDetails.survey.ceggPoints,
+                        rewardType: 'Survey',
+                        surveyId: surveysDetails.surveyId,
+                        rewardStatus: 'Pending',
+                        userId: req.body.userId,
+                        createdAt: new Date().valueOf(),
+                        updatedAt: new Date().valueOf(),
+                        rewardDate: new Date().valueOf(),
+                    })
+                }
             }
             if (req.body.partnerId && req.body.partnerId !== 'NA') {
                 let url = null
