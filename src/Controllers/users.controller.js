@@ -1262,7 +1262,7 @@ module.exports.allPanelists = async (req, res) => {
 		User.hasOne(BasicProfile, {
 			foreignKey: 'userId',
 		});
-		const limit = req.params.limit;
+		const limit = 50000;
 		let whereClauseProfile = {};
 		let whereClauseUser = {};
 		let filteredProfilePanelists = []
@@ -1348,7 +1348,7 @@ module.exports.allPanelists = async (req, res) => {
 						required: false
 					},
 				],
-				limit: limit,
+				// limit: limit,
 				order: [['createdAt', 'DESC']]
 			});
 
