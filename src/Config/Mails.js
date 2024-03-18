@@ -188,7 +188,7 @@ module.exports = {
 		<p>All the surveys that we respond to are used by various companies to provide better products and services to customers like us - so your valuable opinion will always count!</p>
 		<p>Once you register, do invite your friends too, and keep earning those I-Points.</p>
 		<p>To join IndiaPolls and take paid surveys about the topics that matter to you, click on the link below:<br>
-		<a href="https://panel.indiapolls.com/#/referrals/view/${userId}" target="_blank">https://indiapolls.com <span class="il">indiaPolls</span>.com/<wbr>referrals/view/${userId}</a><br><br>
+		<a href="https://panel.indiapolls.com/#/referrals/view/${userId}" target="_blank">https://panel.<span class="il">indiaPolls</span>.com/<wbr>referrals/view/${userId}</a><br><br>
 		<img alt="logo" src="https://indiapolls.com:9000/Images/logo-black.png" class="CToWUd" data-bit="iit">
 		</p>
 		<p>Please make sure you do register via this link so that my account gets updated.</p>
@@ -226,7 +226,7 @@ module.exports = {
 			<p>हमारे द्वारा दिए गए सभी सर्वेक्षणों का उपयोग विभिन्न कंपनियाँ हम जैसे ग्राहकों को बेहतर उत्पाद और सेवाएँ प्रदान करने के लिए करती हैं - इसलिए आपकी अमूल्य राय हमेशा मायने रखेगी!</p>
 			<p>एक बार जब आप पंजीकृत हो जाते हैं, तो अपने दोस्तों को भी आमंत्रित करें, और उन I-Points को कमाते रहें।</p>
 			<p>आपके लिए महत्वपूर्ण विषयों पर भुगतान किए गए सर्वेक्षणों में भाग लेने के लिए IndiaPolls में शामिल होने के लिए, नीचे दिए गए लिंक पर क्लिक करें:<br>
-			<a href="https://panel.indiapolls.com/#/referrals/view/${userId}" target="_blank">https://test.<span class="il">indiaPolls</span>.com/<wbr>referrals/view/${userId}</a><br><br>
+			<a href="https://panel.indiapolls.com/#/referrals/view/${userId}" target="_blank">https://panel.<span class="il">indiaPolls</span>.com/<wbr>referrals/view/${userId}</a><br><br>
 			<img alt="logo" src="https://indiapolls.com:9000/Images/logo-black.png" class="CToWUd" data-bit="iit">
 			</p>
 			<p>कृपया सुनिश्चित करें कि आप इस लिंक के माध्यम से पंजीकरण करें ताकि मेरा खाता अपडेट हो सके।</p>
