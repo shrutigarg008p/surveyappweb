@@ -1184,7 +1184,7 @@ module.exports.basicProfileOnly = async (req, res) => {
 				attributes: ['firstName', 'lastName', 'dateOfBirth', 'city', 'firstName', 'lastName'],
 				required: false,
 			}],
-		limit: limit,
+		// limit: limit,
 		order: [['createdAt', 'DESC']]
 		}).then(
 			async (result) => {
@@ -1202,7 +1202,7 @@ module.exports.basicProfileOnly = async (req, res) => {
 							attributes: ['firstName', 'lastName', 'dateOfBirth', 'city', 'firstName', 'lastName'],
 							required: false,
 						}],
-						limit: limit,
+						// limit: limit,
 						order: [['createdAt', 'DESC']]
 					})
 				} else if(req.params.type === 'deleteRequestOnly') {
@@ -1218,7 +1218,7 @@ module.exports.basicProfileOnly = async (req, res) => {
 							attributes: ['firstName', 'lastName', 'dateOfBirth', 'city', 'firstName', 'lastName'],
 							required: false,
 						}],
-						limit: limit,
+						// limit: limit,
 						order: [['createdAt', 'DESC']]
 					})
 				} else if(req.params.type === 'bouncedOnly') {
@@ -1229,7 +1229,7 @@ module.exports.basicProfileOnly = async (req, res) => {
 							attributes: ['firstName', 'lastName', 'dateOfBirth', 'city', 'firstName', 'lastName'],
 							required: false,
 						}],
-						limit: limit,
+						// limit: limit,
 						order: [['createdAt', 'DESC']]
 					})
 				} else {
@@ -1241,7 +1241,7 @@ module.exports.basicProfileOnly = async (req, res) => {
 							attributes: ['firstName', 'lastName', 'dateOfBirth', 'city', 'firstName', 'lastName'],
 							required: false,
 						}],
-						limit: limit,
+						// limit: limit,
 						order: [['createdAt', 'DESC']]
 					})
 				}
@@ -1353,38 +1353,38 @@ module.exports.allPanelists = async (req, res) => {
 			});
 
 			let mergedArray = []
-			if(filteredProfilePanelists.length > filteredUserPanelists.length) {
-				mergedArray = filteredProfilePanelists.map(user => {
-					const matchingPanelist = filteredUserPanelists.find(panelist => panelist.id === user.userId);
-					return {
-						"userId": user.userId || matchingPanelist.id,
-						"isActive": matchingPanelist.activeStatus,
-						"firstName": user.firstName || matchingPanelist.basic_profile ? matchingPanelist.basic_profile.firstName : '',
-						"lastName": user.lastName || matchingPanelist.basic_profile ? matchingPanelist.basic_profile.lastName : '',
-						"gender": user.gender || matchingPanelist.basic_profile ? matchingPanelist.basic_profile.gender : '',
-						"mobile": matchingPanelist ? matchingPanelist.phoneNumber : user ? user.mobile : '',
-						"email": user.email || matchingPanelist ? matchingPanelist.email : '',
-						"dateOfBirth": user.dateOfBirth || matchingPanelist.basic_profile ? matchingPanelist.basic_profile.dateOfBirth : '',
-						"city": user.city || matchingPanelist.basic_profile ? matchingPanelist.basic_profile.city : '',
-
-					}
-				});
-			} else {
-				mergedArray = filteredUserPanelists.map(user => {
-					const matchingPanelist = filteredProfilePanelists.find(panelist => panelist.userId === user.id);
-					return {
-						"userId": user.id || matchingPanelist.userId,
-						"isActive": user.activeStatus,
-						"firstName": matchingPanelist ? matchingPanelist.firstName : user.basic_profile ? user.basic_profile.firstName : '',
-						"lastName": matchingPanelist ? matchingPanelist.lastName : user.basic_profile ? user.basic_profile.lastName : '',
-						"gender": matchingPanelist ? matchingPanelist.gender : user.basic_profile ? user.basic_profile.gender : '',
-						"mobile": user.phoneNumber,
-						"email": user.email || '',
-						"dateOfBirth": matchingPanelist ? matchingPanelist.dateOfBirth : user.basic_profile ? user.basic_profile.dateOfBirth : '',
-						"city": matchingPanelist ? matchingPanelist.city : user.basic_profile ? user.basic_profile.city : '',
-					}
-				});
-			}
+			// if(filteredProfilePanelists.length > filteredUserPanelists.length) {
+			// 	mergedArray = filteredProfilePanelists.map(user => {
+			// 		const matchingPanelist = filteredUserPanelists.find(panelist => panelist.id === user.userId);
+			// 		return {
+			// 			"userId": user.userId || matchingPanelist.id,
+			// 			"isActive": matchingPanelist.activeStatus,
+			// 			"firstName": user.firstName || matchingPanelist.basic_profile ? matchingPanelist.basic_profile.firstName : '',
+			// 			"lastName": user.lastName || matchingPanelist.basic_profile ? matchingPanelist.basic_profile.lastName : '',
+			// 			"gender": user.gender || matchingPanelist.basic_profile ? matchingPanelist.basic_profile.gender : '',
+			// 			"mobile": matchingPanelist ? matchingPanelist.phoneNumber : user ? user.mobile : '',
+			// 			"email": user.email || matchingPanelist ? matchingPanelist.email : '',
+			// 			"dateOfBirth": user.dateOfBirth || matchingPanelist.basic_profile ? matchingPanelist.basic_profile.dateOfBirth : '',
+			// 			"city": user.city || matchingPanelist.basic_profile ? matchingPanelist.basic_profile.city : '',
+			//
+			// 		}
+			// 	});
+			// } else {
+			// 	mergedArray = filteredUserPanelists.map(user => {
+			// 		const matchingPanelist = filteredProfilePanelists.find(panelist => panelist.userId === user.id);
+			// 		return {
+			// 			"userId": user.id || matchingPanelist.userId,
+			// 			"isActive": user.activeStatus,
+			// 			"firstName": matchingPanelist ? matchingPanelist.firstName : user.basic_profile ? user.basic_profile.firstName : '',
+			// 			"lastName": matchingPanelist ? matchingPanelist.lastName : user.basic_profile ? user.basic_profile.lastName : '',
+			// 			"gender": matchingPanelist ? matchingPanelist.gender : user.basic_profile ? user.basic_profile.gender : '',
+			// 			"mobile": user.phoneNumber,
+			// 			"email": user.email || '',
+			// 			"dateOfBirth": matchingPanelist ? matchingPanelist.dateOfBirth : user.basic_profile ? user.basic_profile.dateOfBirth : '',
+			// 			"city": matchingPanelist ? matchingPanelist.city : user.basic_profile ? user.basic_profile.city : '',
+			// 		}
+			// 	});
+			// }
 		const filteredPanelists = filteredUserPanelists.filter(panelist => panelist.phoneNumber || panelist.email);
 		return apiResponses.successResponseWithData(res, 'success!',  filteredPanelists);
 	} catch (err) {
