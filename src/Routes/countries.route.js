@@ -72,6 +72,34 @@ module.exports= function(app) {
     );
 
     app.get(
+        '/api/v1/country/getAllRegions',
+        countriesController.getAllRegions,
+    );
+
+    app.post(
+        '/api/v1/country/getTiersBasedOnSegment',
+        countriesController.getTiersBasedOnRegion,
+    );
+
+    app.post(
+        '/api/v1/country/getStatesByTiers',
+        countriesController.getStatesByTiers,
+    );
+
+    app.post(
+        '/api/v1/country/getUniqueDistrictByStateIds',
+        countriesController.getUniqueDistrictByStateIds,
+    );
+
+    app.post(
+        '/api/v1/country/getUniqueCitiesByDistrict',
+        countriesController.getUniqueCitiesByDistrict,
+    );
+
+
+
+
+    app.get(
         '/api/v1/country/getAllStatesAndCitiesByZipCode/:zipCode/:limit',
         countriesController.getAllStatesAndCitiesByZipCode,
     );

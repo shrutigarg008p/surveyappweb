@@ -250,6 +250,133 @@ module.exports.getAllCities = async (req, res) => {
 };
 
 
+module.exports.getAllRegions = async (req, res) => {
+    try {
+        const limit = req.params.limit;
+        const data = await Cities.findAll({
+            where: {
+                deletedAt: null
+            },
+            attributes: [
+                'region',
+                [Sequelize.fn('MIN', Sequelize.col('createdAt')), 'createdAt']
+            ],
+            group: ['region'],
+            order: [['createdAt', 'ASC']]
+        });
+        return apiResponses.successResponseWithData(res, 'success!', data);
+    } catch (err) {
+        console.log('Error:', err);
+        return apiResponses.errorResponse(res, err);
+    }
+};
+
+
+module.exports.getTiersBasedOnRegion = async (req, res) => {
+    try {
+        const data = await Cities.findAll({
+            where: {
+                region: {
+                    [Op.in]: req.body.regions,
+                },
+            },
+            attributes: [
+                'tier',
+                [Sequelize.fn('MIN', Sequelize.col('createdAt')), 'createdAt'] // Use MIN function to get the earliest createdAt date for each tier
+            ],
+            group: ['tier'], // Group by tier to get distinct tiers
+            order: [['createdAt', 'DESC']] // Order by the earliest createdAt date
+        });
+
+        return apiResponses.successResponseWithData(res, 'Success!', data);
+    } catch (err) {
+        console.log('Error:', err);
+        return apiResponses.errorResponse(res, err);
+    }
+};
+
+
+
+module.exports.getStatesByTiers = async (req, res) => {
+    try {
+        const { tiers } = req.body;
+
+        const cities = await Cities.findAll({
+            where: {
+                tier: {
+                    [Op.in]: tiers
+                }
+            }
+        });
+
+        const stateIds = cities.map(city => city.stateId);
+        const uniqueStateIds = [...new Set(stateIds)];
+
+        const states = await States.findAll({
+            where: {
+                id: {
+                    [Op.in]: uniqueStateIds
+                }
+            }
+        });
+
+        return apiResponses.successResponseWithData(res, 'Success!', states);
+    } catch (err) {
+        console.log('Error:', err);
+        return apiResponses.errorResponse(res, err);
+    }
+};
+
+
+
+module.exports.getUniqueDistrictByStateIds = async (req, res) => {
+    try {
+        const { stateIds } = req.body;
+
+        const district = await Cities.findAll({
+            where: {
+                stateId: {
+                    [Op.in]: stateIds
+                }
+            }
+        });
+
+        return apiResponses.successResponseWithData(res, 'Success!', district);
+    } catch (err) {
+        console.log('Error:', err);
+        return apiResponses.errorResponse(res, err);
+    }
+};
+
+
+module.exports.getUniqueCitiesByDistrict = async (req, res) => {
+    try {
+        const { districts } = req.body;
+
+        const cities = await Cities.findAll({
+            where: {
+                segment: {
+                    [Op.in]: districts
+                }
+            }
+        });
+
+        return apiResponses.successResponseWithData(res, 'Success!', cities);
+    } catch (err) {
+        console.log('Error:', err);
+        return apiResponses.errorResponse(res, err);
+    }
+};
+
+
+
+
+
+
+
+
+
+//=================================================IMPORT==============================================================
 //Import States Only
 const jsonFile = require('../../States.json')
 async function statesImport() {
@@ -320,7 +447,7 @@ async function citiesImportNew() {
 //Xlsx To Json
 const XLSX = require('xlsx');
 const fs = require("fs");
-const {Op} = require("sequelize");
+const {Op, Sequelize} = require("sequelize");
 
 function readXlsxFile(filePath, sheetName) {
     try {
