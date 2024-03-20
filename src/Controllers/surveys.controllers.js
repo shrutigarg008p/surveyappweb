@@ -324,6 +324,12 @@ module.exports.getOneDetails = async (req, res) => {
                             const hindiNames = statesInfo.map(item => item.hindi);
                             const stringArray = names.concat(hindiNames);
                             stateCities = stringArray
+                            stateCities = stringArray
+                            if (sample.cityIds && sample.cityIds.length < 0) {
+                                whereClause.city = {
+                                    [Op.in]: stringArray
+                                };
+                            }
                             // whereClause.state = {
                             //     [Op.in]: stringArray
                             // };
