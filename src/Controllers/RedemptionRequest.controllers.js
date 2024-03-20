@@ -58,9 +58,9 @@ module.exports.createRedemptionRequest = async (req, res) => {
             }
         } else {
             if (language === 'hi') {
-                return apiResponses.validationErrorWithData(res, 'अनुरोधित अंक आपके कुल बचे अंकों के बराबर या उससे कम होने चाहिए.');
+                return apiResponses.validationErrorWithData(res, 'रिडेम्पशन शुरू करने के लिए न्यूनतम 100 i-पॉइंट्स की आवश्यकता होती है, अनुरोधित पॉइंट्स 50 के गुणकों में होने चाहिए (जैसे-100, 150, 200, 250, 300, 350, 400, 450, 500, ... 9500 अधिकतम)');
             } else {
-                return apiResponses.validationErrorWithData(res, 'Requested points should be equal or less than your total left points.');
+                return apiResponses.validationErrorWithData(res, 'Minimum 100 i-Points are needed to begin redemption, requested points should be in multiples of 50 (Starting from 100, 150, 200, 250, 300, 350, 400, 450, 500, ...9500 Maximum)');
             }
         }
     } catch (err) {
