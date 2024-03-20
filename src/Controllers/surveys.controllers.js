@@ -278,33 +278,64 @@ module.exports.getOneDetails = async (req, res) => {
                             };
                         }
 
+                        // // States filter
+                        // if (sample.stateIds && sample.stateIds.length > 0) {
+                        //     const states = sample.stateIds.map((item => item.value))
+                        //     const statesInfo = await States.findAll({
+                        //         where: {id: {[Op.in]: states}},
+                        //         attributes: ['name', 'hindi'],
+                        //         raw: true
+                        //     })
+                        //     const names = statesInfo.map(item => item.name);
+                        //     const hindiNames = statesInfo.map(item => item.hindi);
+                        //     const stringArray = names.concat(hindiNames);
+                        //     whereClause.state = {
+                        //         [Op.in]: stringArray
+                        //     };
+                        // }
+                        //
+                        // // Cities filter
+                        // if (sample.cityIds && sample.cityIds.length > 0) {
+                        //     const city = sample.cityIds.map((item => item.value))
+                        //     const statesInfo = await Cities.findAll({
+                        //         where: {id: {[Op.in]: city}},
+                        //         attributes: ['name', 'hindi'],
+                        //         raw: true
+                        //     })
+                        //     const names = statesInfo.map(item => item.name);
+                        //     const hindiNames = statesInfo.map(item => item.hindi);
+                        //     const stringArray = names.concat(hindiNames);
+                        //     whereClause.city = {
+                        //         [Op.in]: stringArray
+                        //     };
+                        // }
+
+                        let stateCities = []
+                        let segmentCities = []
                         // States filter
                         if (sample.stateIds && sample.stateIds.length > 0) {
                             const states = sample.stateIds.map((item => item.value))
-                            const statesInfo = await States.findAll({
-                                where: {id: {[Op.in]: states}},
-                                attributes: ['name', 'hindi'],
-                                raw: true
-                            })
+                            // const statesInfo = await States.findAll({ where: {id: { [Op.in]: states } }, attributes: ['name', 'hindi'], raw: true })
+                            // const names = statesInfo.map(item => item.name);
+                            // const hindiNames = statesInfo.map(item => item.hindi);
+                            // const stringArray = names.concat(hindiNames);
+                            const statesInfo = await Cities.findAll({ where: {stateId: { [Op.in]: states } }, attributes: ['name', 'hindi'], raw: true })
                             const names = statesInfo.map(item => item.name);
                             const hindiNames = statesInfo.map(item => item.hindi);
                             const stringArray = names.concat(hindiNames);
-                            whereClause.state = {
-                                [Op.in]: stringArray
-                            };
+                            stateCities = stringArray
+                            // whereClause.state = {
+                            //     [Op.in]: stringArray
+                            // };
                         }
 
                         // Cities filter
                         if (sample.cityIds && sample.cityIds.length > 0) {
                             const city = sample.cityIds.map((item => item.value))
-                            const statesInfo = await Cities.findAll({
-                                where: {id: {[Op.in]: city}},
-                                attributes: ['name', 'hindi'],
-                                raw: true
-                            })
+                            const statesInfo = await Cities.findAll({ where: {id: { [Op.in]: city } }, attributes: ['name', 'hindi'], raw: true })
                             const names = statesInfo.map(item => item.name);
                             const hindiNames = statesInfo.map(item => item.hindi);
-                            const stringArray = names.concat(hindiNames);
+                            const stringArray = names.concat(hindiNames, stateCities);
                             whereClause.city = {
                                 [Op.in]: stringArray
                             };
