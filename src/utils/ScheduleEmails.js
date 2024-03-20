@@ -90,7 +90,7 @@ const triggerSurveyEmail = async (id) => {
                         };
                     }
 
-                    // // States filter
+                    // States filter
                     // if (sample.stateIds && sample.stateIds.length > 0) {
                     //     const states = sample.stateIds.map((item => item.value))
                     //     const statesInfo = await States.findAll({ where: {id: { [Op.in]: states } }, attributes: ['name', 'hindi'], raw: true })
@@ -113,9 +113,42 @@ const triggerSurveyEmail = async (id) => {
                     //         [Op.in]: stringArray
                     //     };
                     // }
+                    //
+                    // //Segments
+                    // if(sample.segments && sample.segments.length > 0) {
+                    //     let obj = {}
+                    //     const segments = sample.segments.map((item => item.label))
+                    //     obj.segment = {
+                    //         [Op.in]: segments
+                    //     };
+                    //     const segmentsCities = await Cities.findAll({ where: obj, attributes: ['name', 'segment'], raw: true })
+                    //     if(segmentsCities.length > 0) {
+                    //         const city = segmentsCities.map((item => item.name))
+                    //         whereClause.city = {
+                    //             [Op.in]: city
+                    //         };
+                    //     }
+                    // }
+                    //
+                    // //Regions
+                    // if(sample.regions && sample.regions.length > 0) {
+                    //     let obj = {}
+                    //     const regions = sample.regions.map((item => item.label))
+                    //     obj.region = {
+                    //         [Op.in]: regions
+                    //     };
+                    //     const regionsCities = await Cities.findAll({ where: obj, attributes: ['name', 'region'], raw: true })
+                    //     if(regionsCities.length > 0) {
+                    //         const city = regionsCities.map((item => item.name))
+                    //         whereClause.city = {
+                    //             [Op.in]: city
+                    //         };
+                    //     }
+                    // }
 
-                    let stateCities = []
-                    let segmentCities = []
+
+                    //--Temp
+                    let allCities = []
                     // States filter
                     if (sample.stateIds && sample.stateIds.length > 0) {
                         const states = sample.stateIds.map((item => item.value))
@@ -127,12 +160,12 @@ const triggerSurveyEmail = async (id) => {
                         const names = statesInfo.map(item => item.name);
                         const hindiNames = statesInfo.map(item => item.hindi);
                         const stringArray = names.concat(hindiNames);
-                        stateCities = stringArray
-                        if (sample.cityIds && sample.cityIds.length < 0) {
-                            whereClause.city = {
-                                [Op.in]: stringArray
-                            };
-                        }
+                        allCities.push(...stringArray);
+                        // if (sample.cityIds && sample.cityIds.length === 0) {
+                        //     whereClause.city = {
+                        //         [Op.in]: stringArray
+                        //     };
+                        // }
                         // whereClause.state = {
                         //     [Op.in]: stringArray
                         // };
@@ -144,10 +177,14 @@ const triggerSurveyEmail = async (id) => {
                         const statesInfo = await Cities.findAll({ where: {id: { [Op.in]: city } }, attributes: ['name', 'hindi'], raw: true })
                         const names = statesInfo.map(item => item.name);
                         const hindiNames = statesInfo.map(item => item.hindi);
-                        const stringArray = names.concat(hindiNames, stateCities);
-                        whereClause.city = {
-                            [Op.in]: stringArray
-                        };
+                        const stringArray = names.concat(hindiNames);
+                        allCities.push(...stringArray);
+
+                        // if(sample.segments && sample.segments.length === 0) {
+                        //     whereClause.city = {
+                        //         [Op.in]: stringArray
+                        //     };
+                        // }
                     }
 
                     //Segments
@@ -157,12 +194,15 @@ const triggerSurveyEmail = async (id) => {
                         obj.segment = {
                             [Op.in]: segments
                         };
-                        const segmentsCities = await Cities.findAll({ where: obj, attributes: ['name', 'segment'], raw: true })
+                        const segmentsCities = await Cities.findAll({ where: obj, attributes: ['name', 'hindi'], raw: true })
                         if(segmentsCities.length > 0) {
-                            const city = segmentsCities.map((item => item.name))
-                            whereClause.city = {
-                                [Op.in]: city
-                            };
+                            const names = segmentsCities.map(item => item.name);
+                            const hindiNames = segmentsCities.map(item => item.hindi);
+                            const stringArray = names.concat(hindiNames);
+                            allCities.push(...stringArray);
+                            // whereClause.city = {
+                            //     [Op.in]: city
+                            // };
                         }
                     }
 
@@ -176,10 +216,16 @@ const triggerSurveyEmail = async (id) => {
                         const regionsCities = await Cities.findAll({ where: obj, attributes: ['name', 'region'], raw: true })
                         if(regionsCities.length > 0) {
                             const city = regionsCities.map((item => item.name))
-                            whereClause.city = {
-                                [Op.in]: city
-                            };
+                            // whereClause.city = {
+                            //     [Op.in]: city
+                            // };
                         }
+                    }
+
+                    if(allCities.length > 0) {
+                        whereClause.city = {
+                            [Op.in]: allCities
+                        };
                     }
 
                     BasicProfile.belongsTo(Users, { foreignKey: 'userId' });
