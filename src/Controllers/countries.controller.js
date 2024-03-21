@@ -56,16 +56,26 @@ module.exports.update = async (req, res) => {
 module.exports.getAll = async (req, res) => {
     try {
         const language = req.headers['language'] || req.query.language || 'en';
+        const appType = req.headers['app_type'] || 'web';
         const limit = req.params.limit;
-        const dataIn = await Countries.findAll({ deletedAt: null, order: [['createdAt', 'ASC']]})
+        if(appType === 'mobile') {
+            const dataIn = await Countries.findAll({ where: { name: "India", deletedAt: null}})
+            let data = dataIn.map(question => ({
+                ...question.dataValues,
+                name: language === 'hi' ? question.hindi : question.name,
+                title: question.name
+            }))
+            return apiResponses.successResponseWithData(res, 'success!', data);
+        } else {
+            let dataIn = await Countries.findAll({deletedAt: null, order: [['createdAt', 'ASC']]})
+            let data = dataIn.map(question => ({
+                ...question.dataValues,
+                name: language === 'hi' ? question.hindi : question.name,
+                title: question.name
+            }))
 
-       let data = dataIn.map(question => ({
-            ...question.dataValues,
-            name: language === 'hi' ? question.hindi : question.name,
-            title:  question.name
-        }))
-
-        return apiResponses.successResponseWithData(res, 'success!', data);
+            return apiResponses.successResponseWithData(res, 'success!', data);
+        }
     } catch (err) {
         return apiResponses.errorResponse(res, err);
     }
