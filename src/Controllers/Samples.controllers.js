@@ -192,7 +192,10 @@ module.exports.getOne = async (req, res) => {
                 };
                 const regionsCities = await Cities.findAll({ where: obj, attributes: ['name', 'region'], raw: true })
                 if(regionsCities.length > 0) {
-                    const city = regionsCities.map((item => item.name))
+                    const names = regionsCities.map(item => item.name);
+                    const hindiNames = regionsCities.map(item => item.hindi);
+                    const stringArray = names.concat(hindiNames);
+                    allCities.push(...stringArray);
                     // whereClause.city = {
                     //     [Op.in]: city
                     // };

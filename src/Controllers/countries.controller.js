@@ -285,11 +285,11 @@ module.exports.getAllRegions = async (req, res) => {
 module.exports.getTiersBasedOnRegion = async (req, res) => {
     try {
         const data = await Cities.findAll({
-            where: {
-                region: {
-                    [Op.in]: req.body.regions,
-                },
-            },
+            // where: {
+            //     region: {
+            //         [Op.in]: req.body.regions,
+            //     },
+            // },
             attributes: [
                 'tier',
                 [Sequelize.fn('MIN', Sequelize.col('createdAt')), 'createdAt'] // Use MIN function to get the earliest createdAt date for each tier
@@ -311,22 +311,23 @@ module.exports.getStatesByTiers = async (req, res) => {
     try {
         const { tiers } = req.body;
 
-        const cities = await Cities.findAll({
-            where: {
-                tier: {
-                    [Op.in]: tiers
-                }
-            }
-        });
-
-        const stateIds = cities.map(city => city.stateId);
-        const uniqueStateIds = [...new Set(stateIds)];
+        // const cities = await Cities.findAll({
+        //     // where: {
+        //     //     tier: {
+        //     //         [Op.in]: tiers
+        //     //     }
+        //     // }
+        // });
+        //
+        // const stateIds = cities.map(city => city.stateId);
+        // const uniqueStateIds = [...new Set(stateIds)];
 
         const states = await States.findAll({
             where: {
-                id: {
-                    [Op.in]: uniqueStateIds
-                }
+            //     id: {
+            //         [Op.in]: uniqueStateIds
+            //     }
+                deletedAt: null
             }
         });
 
@@ -343,15 +344,14 @@ module.exports.getUniqueDistrictByStateIds = async (req, res) => {
     try {
         const { stateIds } = req.body;
 
-        const district = await Cities.findAll({
+        const districts = await Cities.findAll({
             where: {
-                stateId: {
-                    [Op.in]: stateIds
-                }
-            }
+                deletedAt: null
+            },
+            attributes: [[Sequelize.fn('DISTINCT', Sequelize.col('segment')), 'segment']]
         });
 
-        return apiResponses.successResponseWithData(res, 'Success!', district);
+        return apiResponses.successResponseWithData(res, 'Success!', districts);
     } catch (err) {
         console.log('Error:', err);
         return apiResponses.errorResponse(res, err);
@@ -361,14 +361,15 @@ module.exports.getUniqueDistrictByStateIds = async (req, res) => {
 
 module.exports.getUniqueCitiesByDistrict = async (req, res) => {
     try {
-        const { districts } = req.body;
+        const { city } = req.body;
 
         const cities = await Cities.findAll({
             where: {
-                segment: {
-                    [Op.in]: districts
+                name: {
+                    [Op.iLike]: `%${city}%`
                 }
-            }
+            },
+            limit: 50
         });
 
         return apiResponses.successResponseWithData(res, 'Success!', cities);

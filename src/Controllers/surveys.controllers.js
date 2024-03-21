@@ -178,13 +178,12 @@ module.exports.getAll = async (req, res) => {
             where: {
                 deletedAt: null
             },
-            include: [
-                {
-                    model: SurveyAssigned,
-                    order: [['createdAt', 'DESC']]
-                }
-                ],
-            limit: limit,
+            // include: [
+            //     {
+            //         model: SurveyAssigned,
+            //         order: [['createdAt', 'DESC']]
+            //     }
+            //     ],
             order: [['createdAt', 'DESC']]
         })
         return apiResponses.successResponseWithData(res, 'success!', data);
@@ -419,7 +418,10 @@ module.exports.getOneDetails = async (req, res) => {
                             };
                             const regionsCities = await Cities.findAll({ where: obj, attributes: ['name', 'region'], raw: true })
                             if(regionsCities.length > 0) {
-                                const city = regionsCities.map((item => item.name))
+                                const names = regionsCities.map(item => item.name);
+                                const hindiNames = regionsCities.map(item => item.hindi);
+                                const stringArray = names.concat(hindiNames);
+                                allCities.push(...stringArray);
                                 // whereClause.city = {
                                 //     [Op.in]: city
                                 // };
@@ -481,12 +483,18 @@ module.exports.getOneDetails = async (req, res) => {
             }
             assignUsers = await SurveyAssigned.findAll({where: {surveyId: data.id}})
         }
-        return apiResponses.successResponseWithData(res, 'success!', { data, user, assignUsers, samples });
+        const users = user.map(user => ({
+            ...user,
+            assignUser: assignUsers.find(assignUser => assignUser.userId === user.userId)
+        }));
+        return apiResponses.successResponseWithData(res, 'success!', { data, user, users, samples });
     } catch (err) {
         console.log('error--->', err)
         return apiResponses.errorResponse(res, err);
     }
 };
+
+
 
 module.exports.delete = async (req, res) => {
     try {
