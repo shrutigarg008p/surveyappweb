@@ -277,101 +277,17 @@ module.exports.getOneDetails = async (req, res) => {
                             };
                         }
 
-                        // States filter
-                        // if (sample.stateIds && sample.stateIds.length > 0) {
-                        //     const states = sample.stateIds.map((item => item.value))
-                        //     const statesInfo = await States.findAll({
-                        //         where: {id: {[Op.in]: states}},
-                        //         attributes: ['name', 'hindi'],
-                        //         raw: true
-                        //     })
-                        //     const names = statesInfo.map(item => item.name);
-                        //     const hindiNames = statesInfo.map(item => item.hindi);
-                        //     const stringArray = names.concat(hindiNames);
-                        //     whereClause.state = {
-                        //         [Op.in]: stringArray
-                        //     };
-                        // }
-                        //
-                        // // Cities filter
-                        // if (sample.cityIds && sample.cityIds.length > 0) {
-                        //     const city = sample.cityIds.map((item => item.value))
-                        //     const statesInfo = await Cities.findAll({
-                        //         where: {id: {[Op.in]: city}},
-                        //         attributes: ['name', 'hindi'],
-                        //         raw: true
-                        //     })
-                        //     const names = statesInfo.map(item => item.name);
-                        //     const hindiNames = statesInfo.map(item => item.hindi);
-                        //     const stringArray = names.concat(hindiNames);
-                        //     whereClause.city = {
-                        //         [Op.in]: stringArray
-                        //     };
-                        // }
-                        //
-                        // //Segments
-                        // if (sample.segments && sample.segments.length > 0) {
-                        //     let obj = {}
-                        //     const segments = sample.segments.map((item => item.label))
-                        //     obj.segment = {
-                        //         [Op.in]: segments
-                        //     };
-                        //     const segmentsCities = await Cities.findAll({
-                        //         where: obj,
-                        //         attributes: ['name', 'segment'],
-                        //         raw: true
-                        //     })
-                        //     if (segmentsCities.length > 0) {
-                        //         const city = segmentsCities.map((item => item.name))
-                        //         whereClause.city = {
-                        //             [Op.in]: city
-                        //         };
-                        //     }
-                        // }
-                        //
-                        // //Regions
-                        // if (sample.regions && sample.regions.length > 0) {
-                        //     let obj = {}
-                        //     const regions = sample.regions.map((item => item.label))
-                        //     obj.region = {
-                        //         [Op.in]: regions
-                        //     };
-                        //     const regionsCities = await Cities.findAll({
-                        //         where: obj,
-                        //         attributes: ['name', 'region'],
-                        //         raw: true
-                        //     })
-                        //     if (regionsCities.length > 0) {
-                        //         const city = regionsCities.map((item => item.name))
-                        //         whereClause.city = {
-                        //             [Op.in]: city
-                        //         };
-                        //     }
-                        // }
-
 
                         //--Temp
                         let allCities = []
                         // States filter
                         if (sample.stateIds && sample.stateIds.length > 0) {
                             const states = sample.stateIds.map((item => item.value))
-                            // const statesInfo = await States.findAll({ where: {id: { [Op.in]: states } }, attributes: ['name', 'hindi'], raw: true })
-                            // const names = statesInfo.map(item => item.name);
-                            // const hindiNames = statesInfo.map(item => item.hindi);
-                            // const stringArray = names.concat(hindiNames);
                             const statesInfo = await Cities.findAll({ where: {stateId: { [Op.in]: states } }, attributes: ['name', 'hindi'], raw: true })
                             const names = statesInfo.map(item => item.name);
                             const hindiNames = statesInfo.map(item => item.hindi);
                             const stringArray = names.concat(hindiNames);
                             allCities.push(...stringArray);
-                            // if (sample.cityIds && sample.cityIds.length === 0) {
-                            //     whereClause.city = {
-                            //         [Op.in]: stringArray
-                            //     };
-                            // }
-                            // whereClause.state = {
-                            //     [Op.in]: stringArray
-                            // };
                         }
 
                         // Cities filter
@@ -382,12 +298,6 @@ module.exports.getOneDetails = async (req, res) => {
                             const hindiNames = statesInfo.map(item => item.hindi);
                             const stringArray = names.concat(hindiNames);
                             allCities.push(...stringArray);
-
-                            // if(sample.segments && sample.segments.length === 0) {
-                            //     whereClause.city = {
-                            //         [Op.in]: stringArray
-                            //     };
-                            // }
                         }
 
                         //Segments
@@ -403,9 +313,6 @@ module.exports.getOneDetails = async (req, res) => {
                                 const hindiNames = segmentsCities.map(item => item.hindi);
                                 const stringArray = names.concat(hindiNames);
                                 allCities.push(...stringArray);
-                                // whereClause.city = {
-                                //     [Op.in]: city
-                                // };
                             }
                         }
 
@@ -422,9 +329,6 @@ module.exports.getOneDetails = async (req, res) => {
                                 const hindiNames = regionsCities.map(item => item.hindi);
                                 const stringArray = names.concat(hindiNames);
                                 allCities.push(...stringArray);
-                                // whereClause.city = {
-                                //     [Op.in]: city
-                                // };
                             }
                         }
 
@@ -483,9 +387,14 @@ module.exports.getOneDetails = async (req, res) => {
             }
             assignUsers = await SurveyAssigned.findAll({where: {surveyId: data.id}})
         }
+        const assignUsersMap = new Map();
+        assignUsers.forEach(assignUser => {
+            assignUsersMap.set(assignUser.userId, assignUser);
+        });
+
         const users = user.map(user => ({
             ...user,
-            assignUser: assignUsers.find(assignUser => assignUser.userId === user.userId)
+            assignUser: assignUsersMap.get(user.userId)
         }));
         return apiResponses.successResponseWithData(res, 'success!', { data, user, users, samples });
     } catch (err) {
