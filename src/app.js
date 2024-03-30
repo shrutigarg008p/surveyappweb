@@ -7,7 +7,7 @@ const port = process.env.PORT || 9000;
 require('dotenv').config();
 const { startScheduledEmailsCronJob } = require('./utils/CronJobs');
 
-startScheduledEmailsCronJob();
+//startScheduledEmailsCronJob();
 
 app.use(cors());
 app.use(
