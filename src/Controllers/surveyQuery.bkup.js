@@ -141,3 +141,105 @@
 //
 // }
 //old version end-------------
+
+
+
+//New Version scheduler-------------
+//New one----
+// if (emailTemplate) {
+//     const totalUsers = users.length;
+//     const batchSize = Math.min(totalUsers, users.length); // Define maximum batch size
+//
+//     const batchedUsers = [];
+//     for (let i = 0; i < totalUsers; i += batchSize) {
+//         batchedUsers.push(users.slice(i, i + batchSize));
+//     }
+//
+//     const processBatch = async (batch) => {
+//         const assignedSurvey = [];
+//         const notificationsArray = [];
+//         const emailsArray = [];
+//         const smsArray = [];
+//
+//         // Process each user in the batch
+//         for (let i = 0; i < batch.length; i++) {
+//             const user = batch[i];
+//             let link = '';
+//
+//             if (survey.useUniqueLinks === true) {
+//                 link = `https://indiapolls.com:9000/surveys/${survey.uniqueid}/${user.userId}`;
+//             } else {
+//                 link = `https://indiapolls.com:9000/surveys/${survey.uniqueid}/${user.userId}`;
+//             }
+//
+//             const data = {
+//                 firstName: user.firstName,
+//                 lastName: user.lastName,
+//                 surveyName: survey.name,
+//                 surveyDescription: survey.description,
+//                 surveyLink: link
+//             };
+//
+//             // Replace variables in email body
+//             const processedHtml = replaceVariables(emailTemplate.body, data);
+//
+//             // Prepare record for bulk insert
+//             const insertRecord = {
+//                 surveyId: survey.id,
+//                 userId: user.userId,
+//                 isStarted: false,
+//                 isCompleted: false,
+//                 isDisqualified: false,
+//                 isOverQuota: false,
+//                 isClosedSurvey: false,
+//                 isOutlier: false,
+//                 isRejected: false,
+//                 status: 'pending',
+//                 pointsRewarded: 0,
+//                 temporarySurveyLink: link,
+//                 originalSurveyLink: appendParamsToUrl(survey.url, user.userId, survey.uniqueid),
+//                 temporarySurveyLinkId: survey.uniqueid,
+//                 expiryDate: survey.expiryDate,
+//                 createdAt: new Date(),
+//                 updatedAt: new Date()
+//             };
+//             assignedSurvey.push(insertRecord);
+//
+//
+//             // Send email to user
+//             emailsArray.push(surveyInvite(emailTemplate.subject, 'panelist@yopmail.com', processedHtml));
+//
+//             // Send SMS to user
+//             // smsArray.push(sendSurveyMessage(`${users[i].firstName} ${users[i].lastName}`, link, users[i].mobile, survey.name));
+//
+//             if (user.user.devicetoken) {
+//                 // notificationsArray.push(Notifications(users[i].user.devicetoken, emailTemplate.subject, 'New survey has been assigned to you'));
+//                 const notificationInfo = {
+//                     userId: user.userId,
+//                     message: `You have assigned ${survey.name} survey`,
+//                     type: 'survey',
+//                     id: survey.id
+//                 };
+//                 // notificationsArray.push(notificationCreate(notificationInfo));
+//             }
+//         }
+//
+//         console.log('assignedSurvey--->', assignedSurvey.length)
+//         // Execute bulk operations
+//         await Promise.all([
+//             AssignSurveys.bulkCreate(assignedSurvey),
+//             SurveyEmailSchedules.update({
+//                 scheduleStatus: 'Sent',
+//                 emailsCreatedAt: new Date()
+//             }, {where: {id: scheduleEmail.id}}),
+//             ...emailsArray,
+//             ...smsArray,
+//             ...notificationsArray
+//         ]);
+//     };
+//
+//     // Process each batch of users asynchronously
+//     for (const batch of batchedUsers) {
+//         await processBatch(batch);
+//     }
+// }
