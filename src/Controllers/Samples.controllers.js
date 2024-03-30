@@ -99,8 +99,27 @@ module.exports.getAll = async (req, res) => {
 module.exports.getOne = async (req, res) => {
     try {
         const sample = await Samples.findOne({where: {id: req.params.id, deletedAt: null}})
+        let user = []
+        let obj = {
+            sample,
+            user: user ||  []
+        }
+            return apiResponses.successResponseWithData(res, 'success!', obj);
+    } catch (err) {
+        console.log('err---->', err)
+        return apiResponses.errorResponse(res, err);
+    }
+};
+
+
+module.exports.getOneSampleUsers = async (req, res) => {
+    try {
+        const currentPage = req.query.page || 1; // Current page number
+        const pageSize = req.query.limit || 100;
+        const sample = await Samples.findOne({where: {id: req.params.id, deletedAt: null}})
         const sampleQuestions = await SamplesQuestions.findAll({where: {sampleId: sample.id, deletedAt: null}})
         let user = []
+        let totalCount = 0
         if(sample) {
             let whereClause = {};
 
@@ -126,26 +145,13 @@ module.exports.getOne = async (req, res) => {
             }
 
             let allCities = []
-            // States filter
             if (sample.stateIds && sample.stateIds.length > 0) {
                 const states = sample.stateIds.map((item => item.value))
-                // const statesInfo = await States.findAll({ where: {id: { [Op.in]: states } }, attributes: ['name', 'hindi'], raw: true })
-                // const names = statesInfo.map(item => item.name);
-                // const hindiNames = statesInfo.map(item => item.hindi);
-                // const stringArray = names.concat(hindiNames);
                 const statesInfo = await Cities.findAll({ where: {stateId: { [Op.in]: states } }, attributes: ['name', 'hindi'], raw: true })
                 const names = statesInfo.map(item => item.name);
                 const hindiNames = statesInfo.map(item => item.hindi);
                 const stringArray = names.concat(hindiNames);
                 allCities.push(...stringArray);
-                // if (sample.cityIds && sample.cityIds.length === 0) {
-                //     whereClause.city = {
-                //         [Op.in]: stringArray
-                //     };
-                // }
-                // whereClause.state = {
-                //     [Op.in]: stringArray
-                // };
             }
 
             // Cities filter
@@ -157,11 +163,6 @@ module.exports.getOne = async (req, res) => {
                 const stringArray = names.concat(hindiNames);
                 allCities.push(...stringArray);
 
-                // if(sample.segments && sample.segments.length === 0) {
-                //     whereClause.city = {
-                //         [Op.in]: stringArray
-                //     };
-                // }
             }
 
             //Segments
@@ -190,11 +191,11 @@ module.exports.getOne = async (req, res) => {
                 obj.region = {
                     [Op.in]: regions
                 };
-                const regionsCities = await Cities.findAll({ where: obj, attributes: ['name', 'region'], raw: true })
+                const regionsCities = await Cities.findAll({ where: obj, attributes: ['name', 'region', 'hindi'], raw: true })
                 if(regionsCities.length > 0) {
                     const names = regionsCities.map(item => item.name);
-                    const hindiNames = regionsCities.map(item => item.hindi);
-                    const stringArray = names.concat(hindiNames);
+                    // const hindiNames = regionsCities.map(item => item.hindi);
+                    const stringArray = names.concat([]);
                     allCities.push(...stringArray);
                     // whereClause.city = {
                     //     [Op.in]: city
@@ -210,15 +211,29 @@ module.exports.getOne = async (req, res) => {
             BasicProfile.belongsTo(Users, {foreignKey: 'userId'});
             console.log('whereClause--->', whereClause)
             user = await BasicProfile.findAll({
-                where: whereClause,
                 include: [
                     {
                         model: Users,
-                        required: false,
-                        attributes: ['email', 'role']
+                        required: true,
+                        attributes: ['email', 'role'],
+                        where: { role: 'panelist' }
                     },
                 ],
+                where: whereClause,
+                limit: pageSize,
+                offset: (currentPage - 1) * pageSize,
             });
+        //     totalCount = await BasicProfile.count({
+        //         include: [
+        //             {
+        //                 model: Users,
+        //                 required: true,
+        //                 attributes: ['email', 'role'],
+        //                 where: { role: 'panelist' }
+        //             },
+        //         ],
+        //         where: whereClause,
+        //     });
         }
         if(sampleQuestions.length > 0) {
             let usersResponseList = await filterUserResponses(sampleQuestions);
@@ -242,18 +257,20 @@ module.exports.getOne = async (req, res) => {
             };
             const commonUsers = filterCommonUsers(usersQuestionCriteria, user);
             let filteredUsers = commonUsers.filter(item => item.user ? item.user.role === 'panelist' : '')
+            // totalCount = totalCount + filteredUsers .length
             let obj = {
                 sample,
                 user: filteredUsers ? filteredUsers : []
             }
             return apiResponses.successResponseWithData(res, 'success!', obj);
         }
-        let filteredUsers = user.filter(item => item.user ? item.user.role === 'panelist' : '')
+        // let filteredUsers = user.filter(item => item.user ? item.user.role === 'panelist' : '')
         let obj = {
             sample,
-            user: filteredUsers ? filteredUsers : []
+            user: user ||  [],
+            totalCount: totalCount
         }
-            return apiResponses.successResponseWithData(res, 'success!', obj);
+        return apiResponses.successResponseWithData(res, 'success!', obj);
     } catch (err) {
         console.log('err---->', err)
         return apiResponses.errorResponse(res, err);
