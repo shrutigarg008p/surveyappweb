@@ -3,7 +3,7 @@ const app = express();
 const path = require('path');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const port = process.env.PORT || 9000;
+const port = process.env.PORT || 9001;
 require('dotenv').config();
 const { startScheduledEmailsCronJob } = require('./utils/CronJobs');
 
