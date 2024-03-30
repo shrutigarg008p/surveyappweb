@@ -30,6 +30,13 @@ module.exports= function(app) {
         samplesControllers.getOne,
     );
 
+
+    app.get(
+        '/api/v1/samples/getOneSampleUsers/:id',
+        samplesControllers.getOneSampleUsers,
+    );
+
+
     app.delete(
         '/api/v1/samples/delete/:id',
         samplesControllers.delete,
