@@ -220,6 +220,13 @@ const triggerSurveyEmail = async (id) => {
                             let notificationsArray = []
                             let emailsArray = []
                             let smsArray = []
+
+                            const info = await SurveyEmailSchedules.update({
+                                scheduleStatus: 'Sent',
+                                emailsCreatedAt: new Date().valueOf()
+                            }, {where: {id: scheduleEmail.id}})
+                            console.log('info----->', info)
+
                             for (let i = 0; i < users.length; i++) {
                                 let link = ''
                                 if (survey.useUniqueLinks === true) {
@@ -272,11 +279,6 @@ const triggerSurveyEmail = async (id) => {
                             }
                             await AssignSurveys.bulkCreate(assignedSurvey)
                             console.log('calling----->', scheduleEmail.id)
-                            const info = await SurveyEmailSchedules.update({
-                                scheduleStatus: 'Sent',
-                                emailsCreatedAt: new Date().valueOf()
-                            }, {where: {id: scheduleEmail.id}})
-                            console.log('info----->', info)
 
                         }
                     }
