@@ -683,6 +683,20 @@ module.exports.userUpdate = async (req, res) => {
 
 		const isExist = await BasicProfile.findOne({ where: { userId: req.params.userId } })
 		if(!isExist) {
+
+			const isMobileVerified = await User.findOne({ where: { id: req.params.userId } })
+			const userNotExist = `${language === 'hi' ? 'उपभोगकर्ता मौजूद नहीं।' : 'User does not exist.'}`;
+			const userNotVerified = `${language === 'hi' ? 'कृपया पहले मोबाइल ओटीपी सत्यापित करें ।' : 'Please verified mobile otp first.'}`;
+
+			if(!isMobileVerified) {
+				return apiResponses.validationErrorWithData(res, userNotExist, null);
+			}
+
+			if(isMobileVerified && isMobileVerified.phoneNumberConfirmed === false) {
+				return apiResponses.validationErrorWithData(res, userNotVerified, null);
+			}
+
+
 			const user = await BasicProfile.create(
 				obj
 			)
