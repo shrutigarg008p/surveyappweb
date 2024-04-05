@@ -149,12 +149,13 @@ module.exports.getAll = async (req, res) => {
             deletedAt: item.deletedAt,
             fullName: `${item.basic_profile.firstName} ${item.basic_profile.lastName}`,
             user: {
-                email: item.user.email,
-                phoneNumber: item.user.phoneNumber
+                email: item.user?.email,
+                phoneNumber: item.user?.phoneNumber
             }
         }))
         return apiResponses.successResponseWithData(res, 'success!', transformedRedemptionData);
     } catch (err) {
+        console.log('error---->', err)
         return apiResponses.errorResponse(res, err);
     }
 };
