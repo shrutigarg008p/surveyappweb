@@ -35,6 +35,18 @@ module.exports = (sequelize, Sequelize) => {
             type: DataTypes.INTEGER,
             allowNull: false,
         },
+        overquota: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+        },
+        terminate: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+        },
+        qualityterminate: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+        },
         disclaimer: {
             type: DataTypes.STRING,
             allowNull: false,
