@@ -57,6 +57,9 @@ module.exports.create = async (req, res) => {
                 isActive: req.body.isActive,
                 url: req.body.url,
                 ceggPoints: req.body.ceggPoints,
+                overquota: req.body.overquota,
+                terminate: req.body.terminate,
+                qualityterminate: req.body.qualityterminate,
                 publishDate: req.body.publishDate,
                 expiryDate: req.body.expiryDate,
                 userLimitCutoff: req.body.userLimitCutoff,
@@ -118,6 +121,9 @@ module.exports.update = async (req, res) => {
             isActive: req.body.isActive,
             url: req.body.url,
             ceggPoints: req.body.ceggPoints,
+            overquota: req.body.overquota,
+            terminate: req.body.terminate,
+            qualityterminate: req.body.qualityterminate,
             publishDate: req.body.publishDate,
             expiryDate: req.body.expiryDate,
             userLimitCutoff: req.body.userLimitCutoff,
@@ -464,7 +470,7 @@ module.exports.GetUserAllAssignedSurvey = async (req, res) => {
                                 [Op.gt]: new Date()
                             }
                         },
-                        attributes: ['name', 'description', 'surveyLength', 'ceggPoints', 'expiryDate', "description_one", "description_two", "description_three", "description_four", "colorcode"]
+                        attributes: ['name', 'description', 'surveyLength', 'ceggPoints',"overquota", "terminate", "qualityterminate", 'expiryDate', "description_one", "description_two", "description_three", "description_four", "colorcode"]
                     },
                 ],
                 limit: 100000,
@@ -489,7 +495,7 @@ module.exports.GetUserOneAssignedSurvey = async (req, res) => {
                     {
                         model: Surveys,
                         required: false,
-                        attributes: ['name', 'description', 'ceggPoints', 'expiryDate', "description_one", "description_two", "description_three", "description_four", "colorcode"]
+                        attributes: ['name', 'description', 'ceggPoints', "overquota", "terminate", "qualityterminate", 'expiryDate', "description_one", "description_two", "description_three", "description_four", "colorcode"]
                     },
                 ]
         })
@@ -570,7 +576,7 @@ module.exports.GetUserOneAssignedSurveyCallback = async (req, res) => {
                     {
                         model: Surveys,
                         required: false,
-                        attributes: ['name', 'description', 'ceggPoints', 'expiryDate', 'createdAt', 'disclaimer', 'country']
+                        attributes: ['name', 'description', 'ceggPoints', "overquota", "terminate", "qualityterminate", 'expiryDate', 'createdAt', 'disclaimer', 'country']
                     }
                 ]
             })
@@ -600,6 +606,73 @@ module.exports.GetUserOneAssignedSurveyCallback = async (req, res) => {
                     })
                 }
             }
+
+            if (req.body.status === 'Over Quota' && surveysDetails && surveysDetails.survey) {
+                const isRewardExist = await Rewards.findOne({
+                    where: {
+                        userId: req.body.userId,
+                        surveyId: surveysDetails.surveyId,
+                        rewardType: 'Survey'
+                    }
+                })
+                if (!isRewardExist) {
+                    const Reward = await Rewards.create({
+                        points: surveysDetails.survey.overquota,
+                        rewardType: 'Survey',
+                        surveyId: surveysDetails.surveyId,
+                        rewardStatus: 'Accepted',
+                        userId: req.body.userId,
+                        createdAt: new Date().valueOf(),
+                        updatedAt: new Date().valueOf(),
+                        rewardDate: new Date().valueOf(),
+                    })
+                }
+            }
+
+            if (req.body.status === 'Quality Terminated' && surveysDetails && surveysDetails.survey) {
+                const isRewardExist = await Rewards.findOne({
+                    where: {
+                        userId: req.body.userId,
+                        surveyId: surveysDetails.surveyId,
+                        rewardType: 'Survey'
+                    }
+                })
+                if (!isRewardExist) {
+                    const Reward = await Rewards.create({
+                        points: surveysDetails.survey.qualityterminate,
+                        rewardType: 'Survey',
+                        surveyId: surveysDetails.surveyId,
+                        rewardStatus: 'Accepted',
+                        userId: req.body.userId,
+                        createdAt: new Date().valueOf(),
+                        updatedAt: new Date().valueOf(),
+                        rewardDate: new Date().valueOf(),
+                    })
+                }
+            }
+
+            if (req.body.status === 'Terminated' && surveysDetails && surveysDetails.survey) {
+                const isRewardExist = await Rewards.findOne({
+                    where: {
+                        userId: req.body.userId,
+                        surveyId: surveysDetails.surveyId,
+                        rewardType: 'Survey'
+                    }
+                })
+                if (!isRewardExist) {
+                    const Reward = await Rewards.create({
+                        points: surveysDetails.survey.terminate,
+                        rewardType: 'Survey',
+                        surveyId: surveysDetails.surveyId,
+                        rewardStatus: 'Accepted',
+                        userId: req.body.userId,
+                        createdAt: new Date().valueOf(),
+                        updatedAt: new Date().valueOf(),
+                        rewardDate: new Date().valueOf(),
+                    })
+                }
+            }
+
             if (req.body.partnerId && req.body.partnerId !== 'NA') {
                 let url = null
                 const partnerInfo = await Partners.findOne({where: {id: req.body.partnerId}, raw: true})
