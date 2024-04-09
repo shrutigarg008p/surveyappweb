@@ -67,7 +67,10 @@ module.exports.getAll = async (req, res) => {
         const limit = req.params.limit;
         Rewards.belongsTo(BasicProfile, { foreignKey: 'userId' });
         const data = await Rewards.findAll({
-            where: { deletedAt: null },
+            where: {
+                deletedAt: null,
+                points: { [Sequelize.Op.ne]: 0 }
+            },
             limit: limit,
             order: [['createdAt', 'DESC']],
             include: [
