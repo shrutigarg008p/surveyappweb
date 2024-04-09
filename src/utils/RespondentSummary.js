@@ -272,7 +272,7 @@ async function userAssignedSurveys(userId) {
                 //         [Op.gt]: new Date()
                 //     }
                 // },
-                attributes: ['name', 'description', 'surveyLength', 'ceggPoints', 'expiryDate', "description_one", "description_two", "description_three", "description_four", "colorcode"]
+                attributes: ['name', 'description', 'surveyLength', 'ceggPoints', "overquota", "terminate", "qualityterminate", 'expiryDate', "description_one", "description_two", "description_three", "description_four", "colorcode"]
             },
         ],
         limit: 100000,
