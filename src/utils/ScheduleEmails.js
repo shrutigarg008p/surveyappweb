@@ -95,21 +95,23 @@ const triggerSurveyEmail = async (id) => {
                     let allCities = []
                     if (sample.stateIds && sample.stateIds.length > 0) {
                         const states = sample.stateIds.map((item => item.value))
-                        const statesInfo = await Cities.findAll({ where: {stateId: { [Op.in]: states } }, attributes: ['name', 'hindi'], raw: true })
+                        const statesInfo = await Cities.findAll({ where: {stateId: { [Op.in]: states } }, attributes: ['name', 'hindi', 'zipCode'], raw: true })
+                        const zipcodes = statesInfo.map(item => item.zipCode);
                         const names = statesInfo.map(item => item.name);
                         const hindiNames = statesInfo.map(item => item.hindi);
                         const stringArray = names.concat(hindiNames);
-                        allCities.push(...stringArray);
+                        allCities.push(...zipcodes);
                     }
 
                     // Cities filter
                     if (sample.cityIds && sample.cityIds.length > 0) {
                         const city = sample.cityIds.map((item => item.value))
-                        const statesInfo = await Cities.findAll({ where: {id: { [Op.in]: city } }, attributes: ['name', 'hindi'], raw: true })
+                        const statesInfo = await Cities.findAll({ where: {id: { [Op.in]: city } }, attributes: ['name', 'hindi', 'zipCode'], raw: true })
+                        const zipcodes = statesInfo.map(item => item.zipCode);
                         const names = statesInfo.map(item => item.name);
                         const hindiNames = statesInfo.map(item => item.hindi);
                         const stringArray = names.concat(hindiNames);
-                        allCities.push(...stringArray);
+                        allCities.push(...zipcodes);
 
                     }
 
@@ -120,12 +122,13 @@ const triggerSurveyEmail = async (id) => {
                         obj.segment = {
                             [Op.in]: segments
                         };
-                        const segmentsCities = await Cities.findAll({ where: obj, attributes: ['name', 'hindi'], raw: true })
+                        const segmentsCities = await Cities.findAll({ where: obj, attributes: ['name', 'hindi', 'zipCode'], raw: true })
                         if(segmentsCities.length > 0) {
+                            const zipcodes = segmentsCities.map(item => item.zipCode);
                             const names = segmentsCities.map(item => item.name);
                             const hindiNames = segmentsCities.map(item => item.hindi);
                             const stringArray = names.concat(hindiNames);
-                            allCities.push(...stringArray);
+                            allCities.push(...zipcodes);
                         }
                     }
 
@@ -136,17 +139,18 @@ const triggerSurveyEmail = async (id) => {
                         obj.region = {
                             [Op.in]: regions
                         };
-                        const regionsCities = await Cities.findAll({ where: obj, attributes: ['name', 'region'], raw: true })
+                        const regionsCities = await Cities.findAll({ where: obj, attributes: ['name', 'region', 'zipCode'], raw: true })
                         if(regionsCities.length > 0) {
+                            const zipcodes = regionsCities.map(item => item.zipCode);
                             const names = regionsCities.map(item => item.name);
                             const hindiNames = regionsCities.map(item => item.hindi);
                             const stringArray = names.concat(hindiNames);
-                            allCities.push(...stringArray);
+                            allCities.push(...zipcodes);
                         }
                     }
 
                     if(allCities.length > 0) {
-                        whereClause.city = {
+                        whereClause.pinCode = {
                             [Op.in]: allCities
                         };
                     }

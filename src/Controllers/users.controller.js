@@ -1195,7 +1195,7 @@ module.exports.basicProfileOnly = async (req, res) => {
 			attributes: ['phoneNumber', 'id', 'email', 'createdAt'],
 			include: [{
 				model: BasicProfile,
-				attributes: ['firstName', 'lastName', 'dateOfBirth', 'city', 'firstName', 'lastName'],
+				// attributes: ['firstName', 'lastName', 'dateOfBirth', 'city', 'firstName', 'lastName'],
 				required: false,
 			}],
 		// limit: limit,
