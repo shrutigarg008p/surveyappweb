@@ -105,8 +105,8 @@ const triggerSurveyEmail = async (id) => {
 
                     // Cities filter
                     if (sample.cityIds && sample.cityIds.length > 0) {
-                        const city = sample.cityIds.map((item => item.value))
-                        const statesInfo = await Cities.findAll({ where: {id: { [Op.in]: city } }, attributes: ['name', 'hindi', 'zipCode'], raw: true })
+                        const city = sample.cityIds.map((item => item.label))
+                        const statesInfo = await Cities.findAll({ where: {name: { [Op.in]: city } }, attributes: ['name', 'hindi', 'zipCode'], raw: true })
                         const zipcodes = statesInfo.map(item => item.zipCode);
                         const names = statesInfo.map(item => item.name);
                         const hindiNames = statesInfo.map(item => item.hindi);
