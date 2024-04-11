@@ -180,7 +180,7 @@ module.exports.getOneSampleUsers = async (req, res) => {
                     const names = segmentsCities.map(item => item.name);
                     const hindiNames = segmentsCities.map(item => item.hindi);
                     const stringArray = names.concat(hindiNames);
-                    allCities.push(...stringArray);
+                    allCities.push(...zipcodes);
                     // whereClause.city = {
                     //     [Op.in]: city
                     // };
