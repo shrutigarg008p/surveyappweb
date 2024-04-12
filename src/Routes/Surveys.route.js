@@ -117,4 +117,9 @@ module.exports= function(app) {
         '/api/v1/surveys/getAllPartnerUsers/:id/:surveyId',
         surveyControllers.getAllPartnerUsers,
     );
+
+    app.post(
+        '/api/v1/surveys/uploadBulkRewards',
+        surveyControllers.uploadBulkRewards,
+    );
 };

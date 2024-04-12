@@ -98,11 +98,165 @@ module.exports.getAll = async (req, res) => {
 
 module.exports.getOne = async (req, res) => {
     try {
+        const currentPage = req.query.page || 1; // Current page number
+        const pageSize = req.query.limit || 100;
         const sample = await Samples.findOne({where: {id: req.params.id, deletedAt: null}})
         let user = []
+        const sampleQuestions = await SamplesQuestions.findAll({where: {sampleId: sample.id, deletedAt: null}})
+        let totalCount = 0
+        if(sample) {
+            let whereClause = {};
+
+            // Age filter
+            if (sample.fromAge || sample.toAge) {
+                whereClause.dateOfBirth = {
+                    [Op.between]: [calculateBirthDate(sample.toAge), calculateBirthDate(sample.fromAge)]
+                };
+            }
+
+            // Registration date filter
+            if (sample.fromRegistrationDate && sample.toRegistrationDate) {
+                whereClause.createdAt = {
+                    [Op.between]: [new Date(sample.fromRegistrationDate), new Date(sample.toRegistrationDate)]
+                };
+            }
+
+            // Gender filter
+            if (sample.gender) {
+                whereClause.gender = {
+                    [Op.in]: sample.gender === 'Male' ? ["Male", 'male', 'पुरुष'] : sample.gender === 'Female' ? ["Female", "महिला", 'female'] : ["Others", 'others', "अन्य"]
+                };
+            }
+
+            let allCities = []
+            if (sample.stateIds && sample.stateIds.length > 0) {
+                const states = sample.stateIds.map((item => item.value))
+                const statesInfo = await Cities.findAll({ where: {stateId: { [Op.in]: states } }, attributes: ['name', 'hindi', 'zipCode'], raw: true })
+                const zipcodes = statesInfo.map(item => item.zipCode);
+                const names = statesInfo.map(item => item.name);
+                const hindiNames = statesInfo.map(item => item.hindi);
+                const stringArray = names.concat(hindiNames);
+                allCities.push(...zipcodes);
+            }
+
+            // Cities filter
+            if (sample.cityIds && sample.cityIds.length > 0) {
+                const city = sample.cityIds.map((item => item.label))
+                const statesInfo = await Cities.findAll({ where: {name: { [Op.in]: city } }, attributes: ['name', 'hindi', 'zipCode'], raw: true })
+                const zipcodes = statesInfo.map(item => item.zipCode);
+                const names = statesInfo.map(item => item.name);
+                const hindiNames = statesInfo.map(item => item.hindi);
+                const stringArray = names.concat(hindiNames);
+                allCities.push(...zipcodes);
+
+            }
+
+            //Segments
+            if(sample.segments && sample.segments.length > 0) {
+                let obj = {}
+                const segments = sample.segments.map((item => item.label))
+                obj.segment = {
+                    [Op.in]: segments
+                };
+                const segmentsCities = await Cities.findAll({ where: obj, attributes: ['name', 'hindi', 'zipCode'], raw: true })
+                if(segmentsCities.length > 0) {
+                    const zipcodes = segmentsCities.map(item => item.zipCode);
+                    const names = segmentsCities.map(item => item.name);
+                    const hindiNames = segmentsCities.map(item => item.hindi);
+                    const stringArray = names.concat(hindiNames);
+                    allCities.push(...zipcodes);
+                    // whereClause.city = {
+                    //     [Op.in]: city
+                    // };
+                }
+            }
+
+            //Regions
+            if(sample.regions && sample.regions.length > 0) {
+                let obj = {}
+                const regions = sample.regions.map((item => item.label))
+                obj.region = {
+                    [Op.in]: regions
+                };
+                const regionsCities = await Cities.findAll({ where: obj, attributes: ['name', 'region', 'hindi', 'zipCode'], raw: true })
+                if(regionsCities.length > 0) {
+                    const zipcodes = regionsCities.map(item => item.zipCode);
+                    const names = regionsCities.map(item => item.name);
+                    // const hindiNames = regionsCities.map(item => item.hindi);
+                    const stringArray = names.concat([]);
+                    allCities.push(...zipcodes);
+                    // whereClause.city = {
+                    //     [Op.in]: city
+                    // };
+                }
+            }
+
+            if(allCities.length > 0) {
+                whereClause.pinCode = {
+                    [Op.in]: allCities
+                };
+            }
+            BasicProfile.belongsTo(Users, {foreignKey: 'userId'});
+            console.log('whereClause--->', whereClause)
+            user = await BasicProfile.findAll({
+                include: [
+                    {
+                        model: Users,
+                        required: true,
+                        attributes: ['email', 'role'],
+                        where: { role: 'panelist' }
+                    },
+                ],
+                where: whereClause,
+                limit: pageSize,
+                offset: (currentPage - 1) * pageSize,
+            });
+            totalCount = await BasicProfile.count({
+                include: [
+                    {
+                        model: Users,
+                        required: true,
+                        attributes: ['email', 'role'],
+                        where: { role: 'panelist' }
+                    },
+                ],
+                where: whereClause,
+            });
+        }
+        if(sampleQuestions.length > 0) {
+            let usersResponseList = await filterUserResponses(sampleQuestions);
+            const userIdArray = usersResponseList.map(userResponse => userResponse.get('userId'));
+            let usersQuestionCriteria = await BasicProfile.findAll({
+                where: {
+                    userId: {
+                        [Op.in]: userIdArray,
+                    },
+                },
+                include: [
+                    {
+                        model: Users,
+                        required: false,
+                        attributes: ['email', 'role']
+                    },
+                ],
+            })
+            const filterCommonUsers = (arrA, arrB) => {
+                return arrA.filter(userA => arrB.some(userB => userB.userId === userA.userId));
+            };
+            const commonUsers = filterCommonUsers(usersQuestionCriteria, user);
+            let filteredUsers = commonUsers.filter(item => item.user ? item.user.role === 'panelist' : '')
+            totalCount = totalCount + filteredUsers .length
+            let obj = {
+                sample,
+                user: filteredUsers ? filteredUsers : [],
+                totalCount: totalCount
+            }
+            return apiResponses.successResponseWithData(res, 'success!', obj);
+        }
         let obj = {
             sample,
-            user: user ||  []
+            user: [],
+            totalCount: totalCount
         }
             return apiResponses.successResponseWithData(res, 'success!', obj);
     } catch (err) {
@@ -227,17 +381,17 @@ module.exports.getOneSampleUsers = async (req, res) => {
                 limit: pageSize,
                 offset: (currentPage - 1) * pageSize,
             });
-        //     totalCount = await BasicProfile.count({
-        //         include: [
-        //             {
-        //                 model: Users,
-        //                 required: true,
-        //                 attributes: ['email', 'role'],
-        //                 where: { role: 'panelist' }
-        //             },
-        //         ],
-        //         where: whereClause,
-        //     });
+            // totalCount = await BasicProfile.count({
+            //     include: [
+            //         {
+            //             model: Users,
+            //             required: true,
+            //             attributes: ['email', 'role'],
+            //             where: { role: 'panelist' }
+            //         },
+            //     ],
+            //     where: whereClause,
+            // });
         }
         if(sampleQuestions.length > 0) {
             let usersResponseList = await filterUserResponses(sampleQuestions);
