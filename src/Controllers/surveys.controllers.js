@@ -21,6 +21,7 @@ const apiResponses = require('../Components/apiresponse');
 const {DataTypes, Op, Sequelize} = require("sequelize");
 const {respondentSummary} = require("../utils/RespondentSummary");
 const {URL} = require("url");
+const axios = require("axios");
 
 
 
@@ -581,7 +582,7 @@ module.exports.GetUserOneAssignedSurveyCallback = async (req, res) => {
                     {
                         model: Surveys,
                         required: false,
-                        attributes: ['name', 'description', 'ceggPoints', "overquota", "terminate", "qualityterminate", 'expiryDate', 'createdAt', 'disclaimer', 'country']
+                        attributes: ['name', 'description', "pointAllocationType", 'ceggPoints', "overquota", "terminate", "qualityterminate", 'expiryDate', 'createdAt', 'disclaimer', 'country']
                     }
                 ]
             })
@@ -590,91 +591,93 @@ module.exports.GetUserOneAssignedSurveyCallback = async (req, res) => {
                 attributes: ['firstName', 'lastName']
             })
 
-            if (req.body.status === 'Completed' && surveysDetails && surveysDetails.survey) {
-                const isRewardExist = await Rewards.findOne({
-                    where: {
-                        userId: req.body.userId,
-                        surveyId: surveysDetails.surveyId,
-                        rewardType: 'Survey'
-                    }
-                })
-                if (!isRewardExist) {
-                    const Reward = await Rewards.create({
-                        points: surveysDetails.survey.ceggPoints,
-                        rewardType: 'Survey',
-                        surveyId: surveysDetails.surveyId,
-                        rewardStatus: 'Accepted',
-                        userId: req.body.userId,
-                        createdAt: new Date().valueOf(),
-                        updatedAt: new Date().valueOf(),
-                        rewardDate: new Date().valueOf(),
+            if(surveysDetails && surveysDetails.survey && surveysDetails.survey.pointAllocationType === 'Auto') {
+                if (req.body.status === 'Completed' && surveysDetails && surveysDetails.survey) {
+                    const isRewardExist = await Rewards.findOne({
+                        where: {
+                            userId: req.body.userId,
+                            surveyId: surveysDetails.surveyId,
+                            rewardType: 'Survey'
+                        }
                     })
+                    if (!isRewardExist) {
+                        const Reward = await Rewards.create({
+                            points: surveysDetails.survey.ceggPoints,
+                            rewardType: 'Survey',
+                            surveyId: surveysDetails.surveyId,
+                            rewardStatus: 'Accepted',
+                            userId: req.body.userId,
+                            createdAt: new Date().valueOf(),
+                            updatedAt: new Date().valueOf(),
+                            rewardDate: new Date().valueOf(),
+                        })
+                    }
                 }
-            }
 
-            if (req.body.status === 'Over Quota' && surveysDetails && surveysDetails.survey) {
-                const isRewardExist = await Rewards.findOne({
-                    where: {
-                        userId: req.body.userId,
-                        surveyId: surveysDetails.surveyId,
-                        rewardType: 'Survey'
-                    }
-                })
-                if (!isRewardExist) {
-                    const Reward = await Rewards.create({
-                        points: surveysDetails.survey.overquota,
-                        rewardType: 'Survey',
-                        surveyId: surveysDetails.surveyId,
-                        rewardStatus: 'Accepted',
-                        userId: req.body.userId,
-                        createdAt: new Date().valueOf(),
-                        updatedAt: new Date().valueOf(),
-                        rewardDate: new Date().valueOf(),
+                if (req.body.status === 'Over Quota' && surveysDetails && surveysDetails.survey) {
+                    const isRewardExist = await Rewards.findOne({
+                        where: {
+                            userId: req.body.userId,
+                            surveyId: surveysDetails.surveyId,
+                            rewardType: 'Survey'
+                        }
                     })
+                    if (!isRewardExist) {
+                        const Reward = await Rewards.create({
+                            points: surveysDetails.survey.overquota,
+                            rewardType: 'Survey',
+                            surveyId: surveysDetails.surveyId,
+                            rewardStatus: 'Accepted',
+                            userId: req.body.userId,
+                            createdAt: new Date().valueOf(),
+                            updatedAt: new Date().valueOf(),
+                            rewardDate: new Date().valueOf(),
+                        })
+                    }
                 }
-            }
 
-            if (req.body.status === 'Quality Terminated' && surveysDetails && surveysDetails.survey) {
-                const isRewardExist = await Rewards.findOne({
-                    where: {
-                        userId: req.body.userId,
-                        surveyId: surveysDetails.surveyId,
-                        rewardType: 'Survey'
-                    }
-                })
-                if (!isRewardExist) {
-                    const Reward = await Rewards.create({
-                        points: surveysDetails.survey.qualityterminate,
-                        rewardType: 'Survey',
-                        surveyId: surveysDetails.surveyId,
-                        rewardStatus: 'Accepted',
-                        userId: req.body.userId,
-                        createdAt: new Date().valueOf(),
-                        updatedAt: new Date().valueOf(),
-                        rewardDate: new Date().valueOf(),
+                if (req.body.status === 'Quality Terminated' && surveysDetails && surveysDetails.survey) {
+                    const isRewardExist = await Rewards.findOne({
+                        where: {
+                            userId: req.body.userId,
+                            surveyId: surveysDetails.surveyId,
+                            rewardType: 'Survey'
+                        }
                     })
+                    if (!isRewardExist) {
+                        const Reward = await Rewards.create({
+                            points: surveysDetails.survey.qualityterminate,
+                            rewardType: 'Survey',
+                            surveyId: surveysDetails.surveyId,
+                            rewardStatus: 'Accepted',
+                            userId: req.body.userId,
+                            createdAt: new Date().valueOf(),
+                            updatedAt: new Date().valueOf(),
+                            rewardDate: new Date().valueOf(),
+                        })
+                    }
                 }
-            }
 
-            if (req.body.status === 'Terminated' && surveysDetails && surveysDetails.survey) {
-                const isRewardExist = await Rewards.findOne({
-                    where: {
-                        userId: req.body.userId,
-                        surveyId: surveysDetails.surveyId,
-                        rewardType: 'Survey'
-                    }
-                })
-                if (!isRewardExist) {
-                    const Reward = await Rewards.create({
-                        points: surveysDetails.survey.terminate,
-                        rewardType: 'Survey',
-                        surveyId: surveysDetails.surveyId,
-                        rewardStatus: 'Accepted',
-                        userId: req.body.userId,
-                        createdAt: new Date().valueOf(),
-                        updatedAt: new Date().valueOf(),
-                        rewardDate: new Date().valueOf(),
+                if (req.body.status === 'Terminated' && surveysDetails && surveysDetails.survey) {
+                    const isRewardExist = await Rewards.findOne({
+                        where: {
+                            userId: req.body.userId,
+                            surveyId: surveysDetails.surveyId,
+                            rewardType: 'Survey'
+                        }
                     })
+                    if (!isRewardExist) {
+                        const Reward = await Rewards.create({
+                            points: surveysDetails.survey.terminate,
+                            rewardType: 'Survey',
+                            surveyId: surveysDetails.surveyId,
+                            rewardStatus: 'Accepted',
+                            userId: req.body.userId,
+                            createdAt: new Date().valueOf(),
+                            updatedAt: new Date().valueOf(),
+                            rewardDate: new Date().valueOf(),
+                        })
+                    }
                 }
             }
 
@@ -1252,5 +1255,34 @@ const getSurveyDetails = async (surveyId) => {
     } catch (error) {
         console.error('Error fetching partner details:', error.message);
         return null;
+    }
+};
+
+
+
+module.exports.uploadBulkRewards = async (req, res) => {
+    try {
+        if(req.body.bulkImportData.length > 0) {
+            const data = req.body.bulkImportData
+            for (let i = 0; i < data.length; i++) {
+                if (data[i] && data[i].userId && data[i].points) {
+                    const Reward = await Rewards.create({
+                        points: parseInt(data[i].points, 10) || 0,
+                        rewardType: 'Survey',
+                        surveyId: req.body.surveyId,
+                        rewardStatus: 'Accepted',
+                        userId: data[i].userId,
+                        createdAt: new Date().valueOf(),
+                        updatedAt: new Date().valueOf(),
+                        rewardDate: new Date().valueOf(),
+                    })
+                }
+            }
+            return apiResponses.successResponseWithData(res, 'Successfully uploaded');
+        } else {
+            return apiResponses.validationErrorWithData(res, 'Sheet should not be empty', null);
+        }
+    } catch (err) {
+        return apiResponses.errorResponse(res, err);
     }
 };
