@@ -67,7 +67,7 @@ module.exports.update = async (req, res) => {
 
         const isExist = await Questions.findOne({ where: { id: req.params.id, deletedAt: null } })
         if(!isExist) {
-            return apiResponses.validationErrorWithData(res, 'Redemption mode not exist');
+            return apiResponses.validationErrorWithData(res, 'Question not exist');
         } else {
             const user = await Questions.update(
                 obj, { where: { id: req.params.id } }
@@ -100,7 +100,7 @@ module.exports.update = async (req, res) => {
                     };
                 });
                 await Options.bulkCreate(newArray, {
-                    updateOnDuplicate: ['value', 'hint', 'displayOrder', 'isActive', 'updatedAt'],
+                    updateOnDuplicate: ['value', 'hint', 'hindi', 'displayOrder', 'isActive', 'updatedAt'],
                 });
             }
             return apiResponses.successResponseWithData(res, 'Success Update', user);

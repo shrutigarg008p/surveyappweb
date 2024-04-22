@@ -19,6 +19,7 @@ module.exports.createRedemptionRequest = async (req, res) => {
             allowedPoints.push(i);
         }
         const totalLeftPoints = await getRedemptionSummary(req.body.userId)
+        console.log('BODY-------->', req.body, '========>', totalLeftPoints.totalLeft)
         if(totalLeftPoints.totalLeft >= 100 && req.body.pointsRequested <= totalLeftPoints.totalLeft) {
             if (allowedPoints.includes(req.body.pointsRequested) && req.body.pointsRequested % 50 === 0) {
                 const RedemptionRequest = await RedemptionRequests.create({
@@ -53,7 +54,7 @@ module.exports.createRedemptionRequest = async (req, res) => {
                 if (language === 'hi') {
                     return apiResponses.validationErrorWithData(res, 'रिडेम्पशन शुरू करने के लिए न्यूनतम 100 i-पॉइंट्स की आवश्यकता होती है, अनुरोधित पॉइंट्स 50 के गुणकों में होने चाहिए (जैसे-100, 150, 200, 250, 300, 350, 400, 450, 500, ... 9500 अधिकतम)');
                 } else {
-                    return apiResponses.validationErrorWithData(res, 'Minimum 100 i-Points are needed to begin redemption, requested points should be in multiples of 50 (Starting from 100, 150, 200, 250, 300, 350, 400, 450, 500, ...9500 Maximum)');
+                    return apiResponses.validationErrorWithData(res, 'Minimum 100 i-Points are needed to begin redemption, requested points should be in multiples of 50 (Starting from 100, 150, 200, 250, 300, 350, 400, 450, 500, ...9500 Maximum).');
                 }
             }
         } else {
