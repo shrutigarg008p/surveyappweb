@@ -1265,7 +1265,8 @@ module.exports.uploadBulkRewards = async (req, res) => {
         if(req.body.bulkImportData.length > 0) {
             const data = req.body.bulkImportData
             for (let i = 0; i < data.length; i++) {
-                if (data[i] && data[i].userId && data[i].points) {
+                const isExist = await Rewards.findOne({ where: { surveyId: req.body.surveyId, userId: data[i].userId }})
+                if (data[i] && data[i].userId && data[i].points && !isExist) {
                     const Reward = await Rewards.create({
                         points: parseInt(data[i].points, 10) || 0,
                         rewardType: 'Survey',
