@@ -356,6 +356,30 @@ module.exports.ApproveRequest = async (req, res) => {
                         );
                     });
             } else {
+                const allowedPoints = {
+                    'Croma': [10000, 9999, 9500, 9000, 8500, 8000, 7500, 7000, 6500, 6000, 5500, 5000, 4500, 4000, 3500, 3000, 2500, 2000, 1500, 1000, 500],
+                    "Google Play Gift Code": [50000, 30000, 10000, 5000],
+                    "PhonePe eGift voucher": [10000, 5000, 4000, 3000, 2000, 1500, 1000, 700, 500, 400, 200, 100],
+                    "Flipkart INR": [10000, 9000, 8000, 7500, 7000, 6000, 5700, 5000, 4000, 3500, 1700, 1650, 1600, 1100, 1000, 950, 750, 700, 600, 500, 400, 350, 325, 300, 259, 250, 200, 125, 100, 75, 25],
+                    "AJIO E-Gift Card": [5000, 3000, 2000, 1000, 750, 500, 100]
+                };
+
+                function isPointAllowed(redemptionType, point) {
+                    const points = allowedPoints[redemptionType];
+                    if (!points) {
+                        return false; // Redemption type not found
+                    }
+                    return points.includes(point);
+                }
+
+                if (!isPointAllowed(requestData.redemptionModeTitle, requestData.pointsRequested)) {
+                    console.log("Point is not allowed for redemption type:", requestData.redemptionModeTitle);
+                    return apiResponses.validationErrorWithData(
+                        res,
+                        `Point is not allowed for redemption type: ${requestData.redemptionModeTitle}`
+                    );
+                }
+
                 let productId = ''
                 if(requestData.redemptionModeTitle === 'PhonePe eGift voucher') {
                     productId = 49609
@@ -620,107 +644,125 @@ module.exports.xoxoBulkApprove = async (req, res) => {
                     }, raw: true
                 })
                 if (requestData && data[i]) {
-                    let productId = ''
-                    if (requestData.redemptionModeTitle === 'PhonePe eGift voucher') {
-                        productId = 49609
-                    }
-
-                    if (requestData.redemptionModeTitle === 'Google Play Gift Code') {
-                        productId = 48801
-                    }
-
-                    if (requestData.redemptionModeTitle === 'Croma') {
-                        productId = 14383
-                    }
-
-                    if (requestData.redemptionModeTitle === 'Flipkart INR') {
-                        productId = 1007
-                    }
-
-                    if (requestData.redemptionModeTitle === 'AJIO E-Gift Card') {
-                        productId = 56170
-                    }
-
-                    const user = await Users.findOne({where: {id: requestData.userId}})
-                    let dataInfo = JSON.stringify({
-                        "query": "plumProAPI.mutation.placeOrder",
-                        "tag": "plumProAPI",
-                        "variables": {
-                            "data": {
-                                "productId": productId,
-                                "quantity": "1",
-                                "denomination": requestData.pointsRequested,
-                                "email": user.email,
-                                "contact": `+91-${user.phoneNumber}`,
-                                "tag": "",
-                                "poNumber": requestData.id+i,
-                                "notifyReceiverEmail": 1
-                            }
-                        }
-                    });
-
-                    let config = {
-                        method: 'post',
-                        maxBodyLength: Infinity,
-                        url: 'https://accounts.xoxoday.com/chef/v1/oauth/api',
-                        headers: {
-                            'Authorization': 'Bearer eyJ0b2tlbkNvbnRlbnQiOnsiaXNzdWVkRm9yIjoidGVzdCIsInNjb3BlIjoiIiwiaXNzdWVkQXQiOjE3MTI5MjQ1NTYxMzAsImV4cGlyZXNBdCI6MTcxNDIyMDU1NjEzMCwidG9rZW5fdHlwZSI6IlVTRVIifSwiYV90IjoiZXlKbGJtTWlPaUpCTVRJNFEwSkRMVWhUTWpVMklpd2lZV3huSWpvaVJVTkVTQzFGVXlJc0ltdHBaQ0k2SW1WdVl5SXNJbVZ3YXlJNmV5SnJkSGtpT2lKRlF5SXNJbU55ZGlJNklsQXRNalUySWl3aWVDSTZJalpWY2xOeFdrTlBOMHN5ZVVoYVZVUjZjVzlCUzE5RlNUSkhXRVk1VW5jemJURk1hM0Z1UmtsNmNHY2lMQ0o1SWpvaVJqWXhUVk0yYTBOTmRrdHhhMHRNWWw5U2RtOWhWemRIVldJeFJrdEdXVmR2TlhORFNVZGtObkZhY3lKOWZRLi5iMFFPbTNpemFOaEU3aGlkNWVtX3BRLnRuZHJWRmY2WGtkNnRyQ0EyeWFTaXU5WTFhRmV3YmpuTmdEODRIYUkzcmtmY2dlZjd4eWtsV0NKRlItNjNlOWFYcWt5cnpTV3BPWlY0Y0N2ZUN6cUZDZTlYQUtmSFRKcGFDUUhDLTNrejBkZ2M2MDdfVEZxOGd3NXBlN1lZdm91aEp3VWVHd1A5Snl1ZklFS2Q3Tm85QXJmZU5pc0h2b21nUWdqOUluSDcwQmctb1ZsZlFmYUg1eTFzaUlkdWotWDhMZGVaTHZUbEZJWVdMelBPRlgxaW84SW9jUnNVcmlnSFBKT3RKSzVscEczbVpBY3RsdEJGM2ZwZ0dZOElMTjl0VHlGQm9Pbmh4MVRkNlpHX2o1aklWQnRXejRrcXNqM2tMQkhWNk11MlNlTGNMOEllb3BHYXJ3Q3hoVzNpYUxvcDBHRGtFOHIwUk1UUFZTclhaMXEwWUNDdnZaTEdNLXRpTl9pb2RPNXVZcUlDSHZGZC1MaVJhMHVlb0JsSW0teDcxcERSNWZlc253WWlwRF9lR3VkNzBpYTV6d2w4NHM5d3RuWVRMOGYzdkJUUHk2RTBKcW5aUG4yRWlWM2xvUkxGcVhsM21xTTYtblNpMUtfNWFKSkF0MEx5U2lMV25FYk1JY1dzUWd3eTA0bGd3TmVQeHRhNVFBb1E5eEFrSWI0d3hZT1oxU1hhMUpOSmk5aGFhMndUUUd4a1hTOFlfeWZFZTdVQ21rUDBSRmtUa2lVTFdPcnBTMUlZUV9TRXQtZGMyUUg2NThaRy1fODltdVRPNkVvcmx1SXdxeFpRaGY3eTAtcXBrdW1vNFQ3WlJRN3Rwa2JHbUM0b1hFRERqX2Y0TE1tUXgzX05sOUhvaGluNEtydE5mQmxrb043SnVvWWVjVWl3RWFrd1Z4UVF5bmdEWGlDVnRTZUZRcHJYM25BdzRvWHhBMUJuRDQtbFN2cm1JVkpsck9XZHNUVG41bzNmalVFZUZ4M1lRQnFmRHY4ZjBfWnh6alZFVmtVVTFXTzRLbWZqSllJUC05b3l1dl93cmx6SU5XOHFFLWFFLW45SDVaWWlfbUY1d0xfMGRldXJzSTdDN21rQl9uckh1Q0VXT280cEdfNkZZMGgzaTdPRmNnbFozYjFNSEo0OXd6Sy10bXJyY09YbGhnLm1pRzY2OFFoRWh2ZEVrcmNVcUppR0EifQ==',
-                            'Content-Type': 'application/json',
-                            'Cookie': '__cf_bm=HUVN4tkMTW8KtIHKqzFTz3fROutLhihBCbEdox5iC8g-1706087320-1-AZ2QBFOh5IbAmku1wdIbWaWkJnAbRNpN6CKTwSTlAcy4RZggXunq4Qe8UTAmkPTqdpj1CviE1siSg+lRKNGNaOg=; _cfuvid=fS5l5NEZIWVwugVKZ5qbR.IsipPPJXgrVLSLrBeUdhg-1706084905801-0-604800000'
-                        },
-                        data: dataInfo
+                    const allowedPoints = {
+                        'Croma': [10000, 9999, 9500, 9000, 8500, 8000, 7500, 7000, 6500, 6000, 5500, 5000, 4500, 4000, 3500, 3000, 2500, 2000, 1500, 1000, 500],
+                        "Google Play Gift Code": [50000, 30000, 10000, 5000],
+                        "PhonePe eGift voucher": [10000, 5000, 4000, 3000, 2000, 1500, 1000, 700, 500, 400, 200, 100],
+                        "Flipkart INR": [10000, 9000, 8000, 7500, 7000, 6000, 5700, 5000, 4000, 3500, 1700, 1650, 1600, 1100, 1000, 950, 750, 700, 600, 500, 400, 350, 325, 300, 259, 250, 200, 125, 100, 75, 25],
+                        "AJIO E-Gift Card": [5000, 3000, 2000, 1000, 750, 500, 100]
                     };
 
-                    axios.request(config)
-                        .then(async (response) => {
-                            console.log('FINAL------>' + JSON.stringify(response.data));
-                            if (response) {
-                                if (response.data.data.placeOrder.status === 1) {
-                                    const RedemptionRequest = await RedemptionRequestTransactions.create({
-                                        requestId: data[i].id,
-                                        status: response.data.data.placeOrder.status,
-                                        response: response.data,
-                                        createdAt: new Date().valueOf(),
-                                        updatedAt: new Date().valueOf(),
-                                    })
+                    function isPointAllowed(redemptionType, point) {
+                        const points = allowedPoints[redemptionType];
+                        if (!points) {
+                            return false;
+                        }
+                        return points.includes(point);
+                    }
 
-                                    const user = await RedemptionRequests.update({
-                                            redemptionRequestStatus: 'Redeemed',
-                                            redemptionDate: new Date().valueOf(),
-                                            pointsRedeemed: requestData.pointsRequested,
-                                            userId: requestData.userId,
-                                            approvedById: data[i].approvedById,
-                                            createdAt: new Date().valueOf(),
-                                            updatedAt: new Date().valueOf(),
-                                            requestDate: new Date().valueOf()
-                                        },
-                                        {where: {id: data[i].id}}
-                                    )
-                                } else {
-                                    const RedemptionRequest = await RedemptionRequestTransactions.create({
-                                        requestId: data[i].id,
-                                        status: response.data.data.placeOrder.status,
-                                        response: response.data,
-                                        createdAt: new Date().valueOf(),
-                                        updatedAt: new Date().valueOf(),
-                                    })
+                    if (isPointAllowed(requestData.redemptionModeTitle, requestData.pointsRequested)) {
+                        let productId = ''
+                        if (requestData.redemptionModeTitle === 'PhonePe eGift voucher') {
+                            productId = 49609
+                        }
 
-                                    const user = await RedemptionRequests.update({
-                                            redemptionRequestStatus: 'Failed',
-                                            approvedById: data[i].approvedById,
-                                            createdAt: new Date().valueOf(),
-                                            updatedAt: new Date().valueOf(),
-                                            requestDate: new Date().valueOf()
-                                        },
-                                        {where: {id: data[i].id}}
-                                    )
+                        if (requestData.redemptionModeTitle === 'Google Play Gift Code') {
+                            productId = 48801
+                        }
+
+                        if (requestData.redemptionModeTitle === 'Croma') {
+                            productId = 14383
+                        }
+
+                        if (requestData.redemptionModeTitle === 'Flipkart INR') {
+                            productId = 1007
+                        }
+
+                        if (requestData.redemptionModeTitle === 'AJIO E-Gift Card') {
+                            productId = 56170
+                        }
+
+                        const user = await Users.findOne({where: {id: requestData.userId}})
+                        let dataInfo = JSON.stringify({
+                            "query": "plumProAPI.mutation.placeOrder",
+                            "tag": "plumProAPI",
+                            "variables": {
+                                "data": {
+                                    "productId": productId,
+                                    "quantity": "1",
+                                    "denomination": requestData.pointsRequested,
+                                    "email": user.email,
+                                    "contact": `+91-${user.phoneNumber}`,
+                                    "tag": "",
+                                    "poNumber": requestData.id + i,
+                                    "notifyReceiverEmail": 1
                                 }
                             }
-                        })
-                        .catch((error) => {
-                            console.log(error);
-                            return true
-                        })
+                        });
+
+                        let config = {
+                            method: 'post',
+                            maxBodyLength: Infinity,
+                            url: 'https://accounts.xoxoday.com/chef/v1/oauth/api',
+                            headers: {
+                                'Authorization': 'Bearer eyJ0b2tlbkNvbnRlbnQiOnsiaXNzdWVkRm9yIjoidGVzdCIsInNjb3BlIjoiIiwiaXNzdWVkQXQiOjE3MTI5MjQ1NTYxMzAsImV4cGlyZXNBdCI6MTcxNDIyMDU1NjEzMCwidG9rZW5fdHlwZSI6IlVTRVIifSwiYV90IjoiZXlKbGJtTWlPaUpCTVRJNFEwSkRMVWhUTWpVMklpd2lZV3huSWpvaVJVTkVTQzFGVXlJc0ltdHBaQ0k2SW1WdVl5SXNJbVZ3YXlJNmV5SnJkSGtpT2lKRlF5SXNJbU55ZGlJNklsQXRNalUySWl3aWVDSTZJalpWY2xOeFdrTlBOMHN5ZVVoYVZVUjZjVzlCUzE5RlNUSkhXRVk1VW5jemJURk1hM0Z1UmtsNmNHY2lMQ0o1SWpvaVJqWXhUVk0yYTBOTmRrdHhhMHRNWWw5U2RtOWhWemRIVldJeFJrdEdXVmR2TlhORFNVZGtObkZhY3lKOWZRLi5iMFFPbTNpemFOaEU3aGlkNWVtX3BRLnRuZHJWRmY2WGtkNnRyQ0EyeWFTaXU5WTFhRmV3YmpuTmdEODRIYUkzcmtmY2dlZjd4eWtsV0NKRlItNjNlOWFYcWt5cnpTV3BPWlY0Y0N2ZUN6cUZDZTlYQUtmSFRKcGFDUUhDLTNrejBkZ2M2MDdfVEZxOGd3NXBlN1lZdm91aEp3VWVHd1A5Snl1ZklFS2Q3Tm85QXJmZU5pc0h2b21nUWdqOUluSDcwQmctb1ZsZlFmYUg1eTFzaUlkdWotWDhMZGVaTHZUbEZJWVdMelBPRlgxaW84SW9jUnNVcmlnSFBKT3RKSzVscEczbVpBY3RsdEJGM2ZwZ0dZOElMTjl0VHlGQm9Pbmh4MVRkNlpHX2o1aklWQnRXejRrcXNqM2tMQkhWNk11MlNlTGNMOEllb3BHYXJ3Q3hoVzNpYUxvcDBHRGtFOHIwUk1UUFZTclhaMXEwWUNDdnZaTEdNLXRpTl9pb2RPNXVZcUlDSHZGZC1MaVJhMHVlb0JsSW0teDcxcERSNWZlc253WWlwRF9lR3VkNzBpYTV6d2w4NHM5d3RuWVRMOGYzdkJUUHk2RTBKcW5aUG4yRWlWM2xvUkxGcVhsM21xTTYtblNpMUtfNWFKSkF0MEx5U2lMV25FYk1JY1dzUWd3eTA0bGd3TmVQeHRhNVFBb1E5eEFrSWI0d3hZT1oxU1hhMUpOSmk5aGFhMndUUUd4a1hTOFlfeWZFZTdVQ21rUDBSRmtUa2lVTFdPcnBTMUlZUV9TRXQtZGMyUUg2NThaRy1fODltdVRPNkVvcmx1SXdxeFpRaGY3eTAtcXBrdW1vNFQ3WlJRN3Rwa2JHbUM0b1hFRERqX2Y0TE1tUXgzX05sOUhvaGluNEtydE5mQmxrb043SnVvWWVjVWl3RWFrd1Z4UVF5bmdEWGlDVnRTZUZRcHJYM25BdzRvWHhBMUJuRDQtbFN2cm1JVkpsck9XZHNUVG41bzNmalVFZUZ4M1lRQnFmRHY4ZjBfWnh6alZFVmtVVTFXTzRLbWZqSllJUC05b3l1dl93cmx6SU5XOHFFLWFFLW45SDVaWWlfbUY1d0xfMGRldXJzSTdDN21rQl9uckh1Q0VXT280cEdfNkZZMGgzaTdPRmNnbFozYjFNSEo0OXd6Sy10bXJyY09YbGhnLm1pRzY2OFFoRWh2ZEVrcmNVcUppR0EifQ==',
+                                'Content-Type': 'application/json',
+                                'Cookie': '__cf_bm=HUVN4tkMTW8KtIHKqzFTz3fROutLhihBCbEdox5iC8g-1706087320-1-AZ2QBFOh5IbAmku1wdIbWaWkJnAbRNpN6CKTwSTlAcy4RZggXunq4Qe8UTAmkPTqdpj1CviE1siSg+lRKNGNaOg=; _cfuvid=fS5l5NEZIWVwugVKZ5qbR.IsipPPJXgrVLSLrBeUdhg-1706084905801-0-604800000'
+                            },
+                            data: dataInfo
+                        };
+
+                        axios.request(config)
+                            .then(async (response) => {
+                                console.log('FINAL------>' + JSON.stringify(response.data));
+                                if (response) {
+                                    if (response.data.data.placeOrder.status === 1) {
+                                        const RedemptionRequest = await RedemptionRequestTransactions.create({
+                                            requestId: data[i].id,
+                                            status: response.data.data.placeOrder.status,
+                                            response: response.data,
+                                            createdAt: new Date().valueOf(),
+                                            updatedAt: new Date().valueOf(),
+                                        })
+
+                                        const user = await RedemptionRequests.update({
+                                                redemptionRequestStatus: 'Redeemed',
+                                                redemptionDate: new Date().valueOf(),
+                                                pointsRedeemed: requestData.pointsRequested,
+                                                userId: requestData.userId,
+                                                approvedById: data[i].approvedById,
+                                                createdAt: new Date().valueOf(),
+                                                updatedAt: new Date().valueOf(),
+                                                requestDate: new Date().valueOf()
+                                            },
+                                            {where: {id: data[i].id}}
+                                        )
+                                    } else {
+                                        const RedemptionRequest = await RedemptionRequestTransactions.create({
+                                            requestId: data[i].id,
+                                            status: response.data.data.placeOrder.status,
+                                            response: response.data,
+                                            createdAt: new Date().valueOf(),
+                                            updatedAt: new Date().valueOf(),
+                                        })
+
+                                        const user = await RedemptionRequests.update({
+                                                redemptionRequestStatus: 'Failed',
+                                                approvedById: data[i].approvedById,
+                                                createdAt: new Date().valueOf(),
+                                                updatedAt: new Date().valueOf(),
+                                                requestDate: new Date().valueOf()
+                                            },
+                                            {where: {id: data[i].id}}
+                                        )
+                                    }
+                                }
+                            })
+                            .catch((error) => {
+                                console.log(error);
+                                return true
+                            })
+                    }
                 }
             }
             return apiResponses.successResponseWithData(res, 'Successfully uploaded');
