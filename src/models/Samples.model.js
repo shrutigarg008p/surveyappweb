@@ -82,6 +82,10 @@ module.exports = (sequelize, Sequelize) => {
         regions: {
             type: DataTypes.JSON,
             allowNull: true,
+        },
+        genders: {
+            type: DataTypes.JSON,
+            allowNull: true,
         }
     });
 };

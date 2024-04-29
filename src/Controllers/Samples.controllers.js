@@ -18,6 +18,13 @@ function calculateBirthDate(age) {
     return new Date(birthYear, today.getMonth(), today.getDate());
 }
 
+function mapGender(gender) {
+    return gender === 'Male' ? ["Male", 'male', 'पुरुष'] :
+        gender === 'Female' ? ["Female", "महिला", 'female'] :
+            ["Other", 'other', "अन्य"];
+}
+
+
 module.exports.create = async (req, res) => {
     try {
         const isExist = await Samples.findOne({ where: { name: req.body.name, deletedAt: null }})
@@ -29,6 +36,7 @@ module.exports.create = async (req, res) => {
                 isActive: req.body.isActive,
                 profileCount: req.body.profileCount,
                 gender: req.body.gender,
+                genders: req.body.genders,
                 fromAge: req.body.fromAge,
                 toAge: req.body.toAge,
                 fromRegistrationDate: req.body.fromRegistrationDate,
@@ -66,6 +74,7 @@ module.exports.update = async (req, res) => {
             description: req.body.description,
             isActive: req.body.isActive,
             profileCount: req.body.profileCount,
+            genders: req.body.genders,
             gender: req.body.gender,
             fromAge: req.body.fromAge,
             toAge: req.body.toAge,
@@ -107,24 +116,50 @@ module.exports.getOne = async (req, res) => {
         if(sample) {
             let whereClause = {};
 
-            // Age filter
-            if (sample.fromAge || sample.toAge) {
-                whereClause.dateOfBirth = {
-                    [Op.between]: [calculateBirthDate(sample.toAge), calculateBirthDate(sample.fromAge)]
+            // // Age filter
+            // if (sample.fromAge || sample.toAge) {
+            //     whereClause.dateOfBirth = {
+            //         [Op.between]: [calculateBirthDate(sample.toAge), calculateBirthDate(sample.fromAge)]
+            //     };
+            // }
+            //
+            // // Gender filter
+            // if (sample.gender) {
+            //     whereClause.gender = {
+            //         [Op.in]: sample.gender === 'Male' ? ["Male", 'male', 'पुरुष'] : sample.gender === 'Female' ? ["Female", "महिला", 'female'] : ["Others", 'others', "अन्य"]
+            //     };
+            // }
+
+
+            let genderWhereClosure = []
+            sample.genders.length > 0 && sample.genders.forEach(range => {
+                const { gender, fromAge, toAge } = range;
+                const birthDateFrom = calculateBirthDate(toAge);
+                const birthDateTo = calculateBirthDate(fromAge);
+
+                const mappedGender = gender.flatMap(g => mapGender(g.label));
+
+                const condition = {
+                    [Op.and]: [
+                        {
+                            dateOfBirth: {
+                                [Op.between]: [birthDateFrom, birthDateTo]
+                            }
+                        },
+                        Sequelize.literal(`ARRAY[${mappedGender.map(g => `'${g}'`).join(',')}]::text[] @> ARRAY["basic_profile"."gender"]::text[]`)
+                    ]
                 };
-            }
+                genderWhereClosure.push(condition);
+            });
+
+            const genderClause = {
+                [Op.or]: genderWhereClosure
+            };
 
             // Registration date filter
             if (sample.fromRegistrationDate && sample.toRegistrationDate) {
                 whereClause.createdAt = {
                     [Op.between]: [new Date(sample.fromRegistrationDate), new Date(sample.toRegistrationDate)]
-                };
-            }
-
-            // Gender filter
-            if (sample.gender) {
-                whereClause.gender = {
-                    [Op.in]: sample.gender === 'Male' ? ["Male", 'male', 'पुरुष'] : sample.gender === 'Female' ? ["Female", "महिला", 'female'] : ["Others", 'others', "अन्य"]
                 };
             }
 
@@ -196,6 +231,14 @@ module.exports.getOne = async (req, res) => {
                     [Op.in]: allCities
                 };
             }
+
+            whereClause = {
+                [Op.and]: [
+                    whereClause,
+                    genderClause
+                ]
+            };
+
             BasicProfile.belongsTo(Users, {foreignKey: 'userId'});
             console.log('whereClause--->', whereClause)
             user = await BasicProfile.findAll({
@@ -277,12 +320,44 @@ module.exports.getOneSampleUsers = async (req, res) => {
         if(sample) {
             let whereClause = {};
 
-            // Age filter
-            if (sample.fromAge || sample.toAge) {
-                whereClause.dateOfBirth = {
-                    [Op.between]: [calculateBirthDate(sample.toAge), calculateBirthDate(sample.fromAge)]
+            // // Age filter
+            // if (sample.fromAge || sample.toAge) {
+            //     whereClause.dateOfBirth = {
+            //         [Op.between]: [calculateBirthDate(sample.toAge), calculateBirthDate(sample.fromAge)]
+            //     };
+            // }
+            //
+            // // Gender filter
+            // if (sample.gender) {
+            //     whereClause.gender = {
+            //         [Op.in]: sample.gender === 'Male' ? ["Male", 'male', 'पुरुष'] : sample.gender === 'Female' ? ["Female", "महिला", 'female'] : ["Others", 'others', "अन्य"]
+            //     };
+            // }
+
+            let genderWhereClosure = []
+            sample.genders.length > 0 && sample.genders.forEach(range => {
+                const { gender, fromAge, toAge } = range;
+                const birthDateFrom = calculateBirthDate(toAge);
+                const birthDateTo = calculateBirthDate(fromAge);
+
+                const mappedGender = gender.flatMap(g => mapGender(g.label));
+
+                const condition = {
+                    [Op.and]: [
+                        {
+                            dateOfBirth: {
+                                [Op.between]: [birthDateFrom, birthDateTo]
+                            }
+                        },
+                        Sequelize.literal(`ARRAY[${mappedGender.map(g => `'${g}'`).join(',')}]::text[] @> ARRAY["basic_profile"."gender"]::text[]`)
+                    ]
                 };
-            }
+                genderWhereClosure.push(condition);
+            });
+
+            const genderClause = {
+                [Op.or]: genderWhereClosure
+            };
 
             // Registration date filter
             if (sample.fromRegistrationDate && sample.toRegistrationDate) {
@@ -291,12 +366,6 @@ module.exports.getOneSampleUsers = async (req, res) => {
                 };
             }
 
-            // Gender filter
-            if (sample.gender) {
-                whereClause.gender = {
-                    [Op.in]: sample.gender === 'Male' ? ["Male", 'male', 'पुरुष'] : sample.gender === 'Female' ? ["Female", "महिला", 'female'] : ["Others", 'others', "अन्य"]
-                };
-            }
 
             let allCities = []
             if (sample.stateIds && sample.stateIds.length > 0) {
@@ -366,8 +435,16 @@ module.exports.getOneSampleUsers = async (req, res) => {
                     [Op.in]: allCities
                 };
             }
+
+            whereClause = {
+                [Op.and]: [
+                    whereClause,
+                    genderClause
+                ]
+            };
+
             BasicProfile.belongsTo(Users, {foreignKey: 'userId'});
-            console.log('whereClause--->', whereClause)
+            console.log('Where---->', whereClause)
             user = await BasicProfile.findAll({
                 include: [
                     {
