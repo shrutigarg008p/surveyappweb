@@ -94,27 +94,33 @@ const triggerSurveyEmail = async (id) => {
                     let genderWhereClosure = []
                     sample.genders.length > 0 && sample.genders.forEach(range => {
                         const { gender, fromAge, toAge } = range;
-                        const birthDateFrom = calculateBirthDate(toAge);
-                        const birthDateTo = calculateBirthDate(fromAge);
+                        if(gender && fromAge && toAge) {
+                            const birthDateFrom = calculateBirthDate(toAge);
+                            const birthDateTo = calculateBirthDate(fromAge);
 
-                        const mappedGender = gender.flatMap(g => mapGender(g.label));
+                            const mappedGender = gender?.flatMap(g => mapGender(g.label));
 
-                        const condition = {
-                            [Op.and]: [
-                                {
-                                    dateOfBirth: {
-                                        [Op.between]: [birthDateFrom, birthDateTo]
-                                    }
-                                },
-                                Sequelize.literal(`ARRAY[${mappedGender.map(g => `'${g}'`).join(',')}]::text[] @> ARRAY["basic_profile"."gender"]::text[]`)
-                            ]
-                        };
-                        genderWhereClosure.push(condition);
+                            const condition = {
+                                [Op.and]: [
+                                    {
+                                        dateOfBirth: {
+                                            [Op.between]: [birthDateFrom, birthDateTo]
+                                        }
+                                    },
+                                    Sequelize.literal(`ARRAY[${mappedGender.map(g => `'${g}'`).join(',')}]::text[] @> ARRAY["basic_profile"."gender"]::text[]`)
+                                ]
+                            };
+                            genderWhereClosure.push(condition);
+                        }
                     });
 
-                    const genderClause = {
-                        [Op.or]: genderWhereClosure
-                    };
+
+                    let genderClause = {}
+                    if (genderWhereClosure.length > 0) {
+                        genderClause = {
+                            [Op.or]: genderWhereClosure
+                        };
+                    }
 
 
                     // Registration date filter
