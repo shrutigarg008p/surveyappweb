@@ -1,5 +1,5 @@
 const db = require('../models');
-const {Op, DataTypes} = require("sequelize");
+const {Op, DataTypes, Sequelize} = require("sequelize");
 const { URL } = require('url');
 const axios = require('axios');
 const {surveyInvite} = require("../Config/Mails");
@@ -23,6 +23,13 @@ function calculateBirthDate(age) {
     const today = new Date();
     const birthYear = today.getFullYear() - age;
     return new Date(birthYear, today.getMonth(), today.getDate());
+}
+
+
+function mapGender(gender) {
+    return gender === 'Male' ? ["Male", 'male', 'पुरुष'] :
+        gender === 'Female' ? ["Female", "महिला", 'female'] :
+            ["Other", 'other', "अन्य"];
 }
 
 function replaceVariables(html, variables) {
@@ -50,7 +57,7 @@ const triggerSurveyEmail = async (id) => {
                 id: id,
                 deletedAt: null,
                 scheduleStatus: 'Pending'
-        }})
+            }})
         if (scheduleEmail) {
             const survey = await Surveys.findOne({
                 where: {
@@ -64,17 +71,51 @@ const triggerSurveyEmail = async (id) => {
                     }
                 }
             })
-            const sample = await Samples.findOne({where: {id: scheduleEmail.sampleId, deletedAt: null}})
-            if (survey && sample) {
+            const sample = await Samples.findOne({ where: { id: scheduleEmail.sampleId, deletedAt: null }})
+            if(survey && sample) {
                 const sampleQuestions = await SampleQuestions.findAll({where: {sampleId: sample.id, deletedAt: null}})
-                if (sample) {
+                if(sample) {
                     let whereClause = {};
                     // Age filter
-                    if (sample.fromAge || sample.toAge) {
-                        whereClause.dateOfBirth = {
-                            [Op.between]: [calculateBirthDate(sample.toAge), calculateBirthDate(sample.fromAge)]
+                    // if (sample.fromAge || sample.toAge) {
+                    //     whereClause.dateOfBirth = {
+                    //         [Op.between]: [calculateBirthDate(sample.toAge), calculateBirthDate(sample.fromAge)]
+                    //     };
+                    // }
+                    //
+                    // // Gender filter
+                    // if (sample.gender) {
+                    //     whereClause.gender = {
+                    //         [Op.in]: sample.gender === 'Male' ? ["Male", 'male', 'पुरुष'] : sample.gender === 'Female' ? ["Female", "महिला", 'female'] : ["Others", 'others', "अन्य"]
+                    //     };
+                    // }
+
+
+                    let genderWhereClosure = []
+                    sample.genders.length > 0 && sample.genders.forEach(range => {
+                        const { gender, fromAge, toAge } = range;
+                        const birthDateFrom = calculateBirthDate(toAge);
+                        const birthDateTo = calculateBirthDate(fromAge);
+
+                        const mappedGender = gender.flatMap(g => mapGender(g.label));
+
+                        const condition = {
+                            [Op.and]: [
+                                {
+                                    dateOfBirth: {
+                                        [Op.between]: [birthDateFrom, birthDateTo]
+                                    }
+                                },
+                                Sequelize.literal(`ARRAY[${mappedGender.map(g => `'${g}'`).join(',')}]::text[] @> ARRAY["basic_profile"."gender"]::text[]`)
+                            ]
                         };
-                    }
+                        genderWhereClosure.push(condition);
+                    });
+
+                    const genderClause = {
+                        [Op.or]: genderWhereClosure
+                    };
+
 
                     // Registration date filter
                     if (sample.fromRegistrationDate && sample.toRegistrationDate) {
@@ -83,91 +124,78 @@ const triggerSurveyEmail = async (id) => {
                         };
                     }
 
-                    // Gender filter
-                    if (sample.gender) {
-                        whereClause.gender = {
-                            [Op.in]: sample.gender === 'Male' ? ["Male", 'male', 'पुरुष'] : sample.gender === 'Female' ? ["Female", "महिला", 'female'] : ["Others", 'others', "अन्य"]
-                        };
-                    }
-
-
                     //--Temp
                     let allCities = []
                     if (sample.stateIds && sample.stateIds.length > 0) {
                         const states = sample.stateIds.map((item => item.value))
-                        const statesInfo = await Cities.findAll({
-                            where: {stateId: {[Op.in]: states}},
-                            attributes: ['name', 'hindi'],
-                            raw: true
-                        })
+                        const statesInfo = await Cities.findAll({ where: {stateId: { [Op.in]: states } }, attributes: ['name', 'hindi', 'zipCode'], raw: true })
+                        const zipcodes = statesInfo.map(item => item.zipCode);
                         const names = statesInfo.map(item => item.name);
                         const hindiNames = statesInfo.map(item => item.hindi);
                         const stringArray = names.concat(hindiNames);
-                        allCities.push(...stringArray);
+                        allCities.push(...zipcodes);
                     }
 
                     // Cities filter
                     if (sample.cityIds && sample.cityIds.length > 0) {
-                        const city = sample.cityIds.map((item => item.value))
-                        const statesInfo = await Cities.findAll({
-                            where: {id: {[Op.in]: city}},
-                            attributes: ['name', 'hindi'],
-                            raw: true
-                        })
+                        const city = sample.cityIds.map((item => item.label))
+                        const statesInfo = await Cities.findAll({ where: {name: { [Op.in]: city } }, attributes: ['name', 'hindi', 'zipCode'], raw: true })
+                        const zipcodes = statesInfo.map(item => item.zipCode);
                         const names = statesInfo.map(item => item.name);
                         const hindiNames = statesInfo.map(item => item.hindi);
                         const stringArray = names.concat(hindiNames);
-                        allCities.push(...stringArray);
+                        allCities.push(...zipcodes);
 
                     }
 
                     //Segments
-                    if (sample.segments && sample.segments.length > 0) {
+                    if(sample.segments && sample.segments.length > 0) {
                         let obj = {}
                         const segments = sample.segments.map((item => item.label))
                         obj.segment = {
                             [Op.in]: segments
                         };
-                        const segmentsCities = await Cities.findAll({
-                            where: obj,
-                            attributes: ['name', 'hindi'],
-                            raw: true
-                        })
-                        if (segmentsCities.length > 0) {
+                        const segmentsCities = await Cities.findAll({ where: obj, attributes: ['name', 'hindi', 'zipCode'], raw: true })
+                        if(segmentsCities.length > 0) {
+                            const zipcodes = segmentsCities.map(item => item.zipCode);
                             const names = segmentsCities.map(item => item.name);
                             const hindiNames = segmentsCities.map(item => item.hindi);
                             const stringArray = names.concat(hindiNames);
-                            allCities.push(...stringArray);
+                            allCities.push(...zipcodes);
                         }
                     }
 
                     //Regions
-                    if (sample.regions && sample.regions.length > 0) {
+                    if(sample.regions && sample.regions.length > 0) {
                         let obj = {}
                         const regions = sample.regions.map((item => item.label))
                         obj.region = {
                             [Op.in]: regions
                         };
-                        const regionsCities = await Cities.findAll({
-                            where: obj,
-                            attributes: ['name', 'region'],
-                            raw: true
-                        })
-                        if (regionsCities.length > 0) {
+                        const regionsCities = await Cities.findAll({ where: obj, attributes: ['name', 'region', 'zipCode'], raw: true })
+                        if(regionsCities.length > 0) {
+                            const zipcodes = regionsCities.map(item => item.zipCode);
                             const names = regionsCities.map(item => item.name);
                             const hindiNames = regionsCities.map(item => item.hindi);
                             const stringArray = names.concat(hindiNames);
-                            allCities.push(...stringArray);
+                            allCities.push(...zipcodes);
                         }
                     }
 
-                    if (allCities.length > 0) {
-                        whereClause.city = {
+                    if(allCities.length > 0) {
+                        whereClause.pinCode = {
                             [Op.in]: allCities
                         };
                     }
 
-                    BasicProfile.belongsTo(Users, {foreignKey: 'userId'});
+                    whereClause = {
+                        [Op.and]: [
+                            whereClause,
+                            genderClause
+                        ]
+                    };
+
+                    BasicProfile.belongsTo(Users, { foreignKey: 'userId' });
                     console.log('whereClause--->', whereClause)
                     let usersQuery = await BasicProfile.findAll({
                         where: whereClause,
@@ -180,7 +208,7 @@ const triggerSurveyEmail = async (id) => {
                         ],
                     });
 
-                    if (sampleQuestions.length > 0) {
+                    if(sampleQuestions.length > 0) {
                         let usersResponseList = await filterUserResponses(sampleQuestions);
                         const userIdArray = usersResponseList.map(userResponse => userResponse.get('userId'));
                         let usersQuestionCriteria = await BasicProfile.findAll({
@@ -205,7 +233,7 @@ const triggerSurveyEmail = async (id) => {
 
                     let users = usersQuery.filter(item => item.user ? item.user.role === 'panelist' : '')
                     console.log('result---->', users.length, scheduleEmail.surveyTemplateId)
-                    if (users.length > 0) {
+                    if(users.length > 0) {
                         const emailTemplate = await SurveyTemplates.findOne({
                             where: {
                                 id: scheduleEmail.surveyTemplateId,
@@ -213,78 +241,110 @@ const triggerSurveyEmail = async (id) => {
                             }
                         })
 
-
+                        //New one----
                         if (emailTemplate) {
-                            let sixDigitRandomNumber = Math.floor(100000 + Math.random() * 900000);
-                            let assignedSurvey = []
-                            let notificationsArray = []
-                            let emailsArray = []
-                            let smsArray = []
+                            const totalUsers = users.length;
+                            const batchSize = Math.min(totalUsers, users.length); // Define maximum batch size
 
-                            const info = await SurveyEmailSchedules.update({
-                                scheduleStatus: 'Sent',
-                                emailsCreatedAt: new Date().valueOf()
-                            }, {where: {id: scheduleEmail.id}})
-                            console.log('info----->', info)
-
-                            for (let i = 0; i < users.length; i++) {
-                                let link = ''
-                                if (survey.useUniqueLinks === true) {
-                                    sixDigitRandomNumber = Math.floor(100000 + Math.random() * 900000);
-                                    link = `https://indiapolls.com:9000/surveys/${survey.uniqueid}/${users[i].userId}`
-                                } else {
-                                    link = `https://indiapolls.com:9000/surveys/${survey.uniqueid}/${users[i].userId}`
-                                }
-                                const data = {
-                                    firstName: users[i].firstName,
-                                    lastName: users[i].lastName,
-                                    surveyName: survey.name,
-                                    surveyDescription: survey.description,
-                                    surveyLink: link
-                                };
-                                const processedHtml = replaceVariables(emailTemplate.body, data);
-                                const originalSurveyLink = appendParamsToUrl(survey.url, users[i].userId, survey.uniqueid)
-                                let insertRecord = {
-                                    surveyId: survey.id,
-                                    userId: users[i].userId,
-                                    isStarted: false,
-                                    isCompleted: false,
-                                    isDisqualified: false,
-                                    isOverQuota: false,
-                                    isClosedSurvey: false,
-                                    isOutlier: false,
-                                    isRejected: false,
-                                    status: 'pending',
-                                    pointsRewarded: 0,
-                                    temporarySurveyLink: link,
-                                    originalSurveyLink: originalSurveyLink,
-                                    temporarySurveyLinkId: survey.uniqueid,
-                                    expiryDate: survey.expiryDate,
-                                    createdAt: new Date().valueOf(),
-                                    updatedAt: new Date().valueOf()
-                                }
-                                assignedSurvey.push(insertRecord)
-                                surveyInvite(emailTemplate.subject, users[i].user.email, processedHtml)
-                                sendSurveyMessage(`${users[i].firstName} ${users[i].lastName}`, link, users[i].mobile, survey.name)
-                                if (users[i].user.devicetoken && assignedSurvey.length > 0) {
-                                    Notifications(users[i].user.devicetoken, emailTemplate.subject, 'New survey has been assigned to you')
-                                    let notificationInfo = {
-                                        userId: users[i].userId,
-                                        message: `You have assigned ${survey.name} survey`,
-                                        type: 'survey',
-                                        id: survey.id
-                                    }
-                                    notificationCreate(notificationInfo)
-                                }
+                            const batchedUsers = [];
+                            for (let i = 0; i < totalUsers; i += batchSize) {
+                                batchedUsers.push(users.slice(i, i + batchSize));
                             }
-                            await AssignSurveys.bulkCreate(assignedSurvey)
-                            console.log('calling----->', scheduleEmail.id)
 
+                            const processBatch = async (batch) => {
+                                const assignedSurvey = [];
+                                const notificationsArray = [];
+                                const emailsArray = [];
+                                const smsArray = [];
+
+                                // Process each user in the batch
+                                for (let i = 0; i < batch.length; i++) {
+                                    const user = batch[i];
+                                    let link = '';
+
+                                    if (survey.useUniqueLinks === true) {
+                                        link = `https://indiapolls.com:9000/surveys/${survey.uniqueid}/${user.userId}`;
+                                    } else {
+                                        link = `https://indiapolls.com:9000/surveys/${survey.uniqueid}/${user.userId}`;
+                                    }
+
+                                    const data = {
+                                        firstName: user.firstName,
+                                        lastName: user.lastName,
+                                        surveyName: survey.name,
+                                        surveyDescription: survey.description,
+                                        surveyLink: link
+                                    };
+
+                                    // Replace variables in email body
+                                    const processedHtml = replaceVariables(emailTemplate.body, data);
+
+                                    // Prepare record for bulk insert
+                                    const insertRecord = {
+                                        surveyId: survey.id,
+                                        userId: user.userId,
+                                        isStarted: false,
+                                        isCompleted: false,
+                                        isDisqualified: false,
+                                        isOverQuota: false,
+                                        isClosedSurvey: false,
+                                        isOutlier: false,
+                                        isRejected: false,
+                                        status: 'pending',
+                                        pointsRewarded: 0,
+                                        temporarySurveyLink: link,
+                                        originalSurveyLink: appendParamsToUrl(survey.url, user.userId, survey.uniqueid),
+                                        temporarySurveyLinkId: survey.uniqueid,
+                                        expiryDate: survey.expiryDate,
+                                        createdAt: new Date(),
+                                        updatedAt: new Date()
+                                    };
+                                    assignedSurvey.push(insertRecord);
+
+
+                                    // Send email to user
+                                    emailsArray.push(surveyInvite(emailTemplate.subject, users[i].user.email, processedHtml));
+
+                                    // Send SMS to user
+                                    smsArray.push(sendSurveyMessage(`${users[i].firstName} ${users[i].lastName}`, link, users[i].mobile, survey.name));
+
+                                    if (user.user.devicetoken) {
+                                        notificationsArray.push(Notifications(users[i].user.devicetoken, emailTemplate.subject, 'New survey has been assigned to you'));
+                                        const notificationInfo = {
+                                            userId: user.userId,
+                                            message: `You have assigned ${survey.name} survey`,
+                                            type: 'survey',
+                                            id: survey.id
+                                        };
+                                        notificationsArray.push(notificationCreate(notificationInfo));
+                                    }
+                                }
+
+                                console.log('assignedSurvey--->', assignedSurvey.length)
+                                // Execute bulk operations
+                                await Promise.all([
+                                    AssignSurveys.bulkCreate(assignedSurvey),
+                                    SurveyEmailSchedules.update({
+                                        scheduleStatus: 'Sent',
+                                        emailsCreatedAt: new Date()
+                                    }, {where: {id: scheduleEmail.id}}),
+                                    ...emailsArray,
+                                    ...smsArray,
+                                    ...notificationsArray
+                                ]);
+                            };
+
+                            // Process each batch of users asynchronously
+                            for (const batch of batchedUsers) {
+                                await processBatch(batch);
+                            }
                         }
                     }
                 }
+
             }
         }
+
     } catch (err) {
         console.log('error---->', err)
     }
