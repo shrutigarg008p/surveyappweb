@@ -1,5 +1,5 @@
 const db = require('../models');
-const {Op, DataTypes} = require("sequelize");
+const {Op, DataTypes, Sequelize} = require("sequelize");
 const { URL } = require('url');
 const axios = require('axios');
 const {surveyInvite} = require("../Config/Mails");
@@ -23,6 +23,13 @@ function calculateBirthDate(age) {
     const today = new Date();
     const birthYear = today.getFullYear() - age;
     return new Date(birthYear, today.getMonth(), today.getDate());
+}
+
+
+function mapGender(gender) {
+    return gender === 'Male' ? ["Male", 'male', 'पुरुष'] :
+        gender === 'Female' ? ["Female", "महिला", 'female'] :
+            ["Other", 'other', "अन्य"];
 }
 
 function replaceVariables(html, variables) {
@@ -70,11 +77,45 @@ const triggerSurveyEmail = async (id) => {
                 if(sample) {
                     let whereClause = {};
                     // Age filter
-                    if (sample.fromAge || sample.toAge) {
-                        whereClause.dateOfBirth = {
-                            [Op.between]: [calculateBirthDate(sample.toAge), calculateBirthDate(sample.fromAge)]
+                    // if (sample.fromAge || sample.toAge) {
+                    //     whereClause.dateOfBirth = {
+                    //         [Op.between]: [calculateBirthDate(sample.toAge), calculateBirthDate(sample.fromAge)]
+                    //     };
+                    // }
+                    //
+                    // // Gender filter
+                    // if (sample.gender) {
+                    //     whereClause.gender = {
+                    //         [Op.in]: sample.gender === 'Male' ? ["Male", 'male', 'पुरुष'] : sample.gender === 'Female' ? ["Female", "महिला", 'female'] : ["Others", 'others', "अन्य"]
+                    //     };
+                    // }
+
+
+                    let genderWhereClosure = []
+                    sample.genders.length > 0 && sample.genders.forEach(range => {
+                        const { gender, fromAge, toAge } = range;
+                        const birthDateFrom = calculateBirthDate(toAge);
+                        const birthDateTo = calculateBirthDate(fromAge);
+
+                        const mappedGender = gender.flatMap(g => mapGender(g.label));
+
+                        const condition = {
+                            [Op.and]: [
+                                {
+                                    dateOfBirth: {
+                                        [Op.between]: [birthDateFrom, birthDateTo]
+                                    }
+                                },
+                                Sequelize.literal(`ARRAY[${mappedGender.map(g => `'${g}'`).join(',')}]::text[] @> ARRAY["basic_profile"."gender"]::text[]`)
+                            ]
                         };
-                    }
+                        genderWhereClosure.push(condition);
+                    });
+
+                    const genderClause = {
+                        [Op.or]: genderWhereClosure
+                    };
+
 
                     // Registration date filter
                     if (sample.fromRegistrationDate && sample.toRegistrationDate) {
@@ -82,14 +123,6 @@ const triggerSurveyEmail = async (id) => {
                             [Op.between]: [new Date(sample.fromRegistrationDate), new Date(sample.toRegistrationDate)]
                         };
                     }
-
-                    // Gender filter
-                    if (sample.gender) {
-                        whereClause.gender = {
-                            [Op.in]: sample.gender === 'Male' ? ["Male", 'male', 'पुरुष'] : sample.gender === 'Female' ? ["Female", "महिला", 'female'] : ["Others", 'others', "अन्य"]
-                        };
-                    }
-
 
                     //--Temp
                     let allCities = []
@@ -154,6 +187,13 @@ const triggerSurveyEmail = async (id) => {
                             [Op.in]: allCities
                         };
                     }
+
+                    whereClause = {
+                        [Op.and]: [
+                            whereClause,
+                            genderClause
+                        ]
+                    };
 
                     BasicProfile.belongsTo(Users, { foreignKey: 'userId' });
                     console.log('whereClause--->', whereClause)
