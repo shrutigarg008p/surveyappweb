@@ -93,12 +93,13 @@ const triggerSurveyEmail = async (id) => {
 
                     let genderWhereClosure = []
                     sample.genders.length > 0 && sample.genders.forEach(range => {
-                        const { gender, fromAge, toAge } = range;
+                    const { gender, fromAge, toAge } = range;
+                    if(gender && fromAge && toAge) {
                         const birthDateFrom = calculateBirthDate(toAge);
                         const birthDateTo = calculateBirthDate(fromAge);
-
-                        const mappedGender = gender.flatMap(g => mapGender(g.label));
-
+    
+                        const mappedGender = gender?.flatMap(g => mapGender(g.label));
+    
                         const condition = {
                             [Op.and]: [
                                 {
@@ -110,12 +111,16 @@ const triggerSurveyEmail = async (id) => {
                             ]
                         };
                         genderWhereClosure.push(condition);
-                    });
-
-                    const genderClause = {
+                    }
+                });
+    
+    
+                let genderClause = {}
+                if (genderWhereClosure.length > 0) {
+                    genderClause = {
                         [Op.or]: genderWhereClosure
                     };
-
+                }
 
                     // Registration date filter
                     if (sample.fromRegistrationDate && sample.toRegistrationDate) {
