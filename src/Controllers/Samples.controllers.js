@@ -117,43 +117,45 @@ module.exports.getOne = async (req, res) => {
             let whereClause = {};
 
             // // Age filter
-            // if (sample.fromAge || sample.toAge) {
-            //     whereClause.dateOfBirth = {
-            //         [Op.between]: [calculateBirthDate(sample.toAge), calculateBirthDate(sample.fromAge)]
-            //     };
-            // }
-            //
-            // // Gender filter
-            // if (sample.gender) {
-            //     whereClause.gender = {
-            //         [Op.in]: sample.gender === 'Male' ? ["Male", 'male', 'पुरुष'] : sample.gender === 'Female' ? ["Female", "महिला", 'female'] : ["Others", 'others', "अन्य"]
-            //     };
-            // }
+            if (sample.fromAge || sample.toAge) {
+                whereClause.dateOfBirth = {
+                    [Op.between]: [calculateBirthDate(sample.toAge), calculateBirthDate(sample.fromAge)]
+                };
+            }
+
+            // Gender filter
+            if (sample.gender) {
+                whereClause.gender = {
+                    [Op.in]: sample.gender === 'Male' ? ["Male", 'male', 'पुरुष'] : sample.gender === 'Female' ? ["Female", "महिला", 'female'] : ["Others", 'others', "अन्य"]
+                };
+            }
 
 
             let genderWhereClosure = []
 
-            sample.genders.length > 0 && sample.genders.forEach(range => {
-                const { gender, fromAge, toAge } = range;
-                if(gender && fromAge && toAge) {
-                    const birthDateFrom = calculateBirthDate(toAge);
-                    const birthDateTo = calculateBirthDate(fromAge);
+            if(sample.genders && sample.genders.length > 0) {
+                sample.genders.length > 0 && sample.genders.forEach(range => {
+                    const {gender, fromAge, toAge} = range;
+                    if (gender && fromAge && toAge) {
+                        const birthDateFrom = calculateBirthDate(toAge);
+                        const birthDateTo = calculateBirthDate(fromAge);
 
-                    const mappedGender = gender?.flatMap(g => mapGender(g.label));
+                        const mappedGender = gender?.flatMap(g => mapGender(g.label));
 
-                    const condition = {
-                        [Op.and]: [
-                            {
-                                dateOfBirth: {
-                                    [Op.between]: [birthDateFrom, birthDateTo]
-                                }
-                            },
-                            Sequelize.literal(`ARRAY[${mappedGender.map(g => `'${g}'`).join(',')}]::text[] @> ARRAY["basic_profile"."gender"]::text[]`)
-                        ]
-                    };
-                    genderWhereClosure.push(condition);
-                }
-            });
+                        const condition = {
+                            [Op.and]: [
+                                {
+                                    dateOfBirth: {
+                                        [Op.between]: [birthDateFrom, birthDateTo]
+                                    }
+                                },
+                                Sequelize.literal(`ARRAY[${mappedGender.map(g => `'${g}'`).join(',')}]::text[] @> ARRAY["basic_profile"."gender"]::text[]`)
+                            ]
+                        };
+                        genderWhereClosure.push(condition);
+                    }
+                });
+            }
 
 
             let genderClause = {}
@@ -328,41 +330,43 @@ module.exports.getOneSampleUsers = async (req, res) => {
             let whereClause = {};
 
             // // Age filter
-            // if (sample.fromAge || sample.toAge) {
-            //     whereClause.dateOfBirth = {
-            //         [Op.between]: [calculateBirthDate(sample.toAge), calculateBirthDate(sample.fromAge)]
-            //     };
-            // }
-            //
-            // // Gender filter
-            // if (sample.gender) {
-            //     whereClause.gender = {
-            //         [Op.in]: sample.gender === 'Male' ? ["Male", 'male', 'पुरुष'] : sample.gender === 'Female' ? ["Female", "महिला", 'female'] : ["Others", 'others', "अन्य"]
-            //     };
-            // }
+            if (sample.fromAge || sample.toAge) {
+                whereClause.dateOfBirth = {
+                    [Op.between]: [calculateBirthDate(sample.toAge), calculateBirthDate(sample.fromAge)]
+                };
+            }
+
+            // Gender filter
+            if (sample.gender) {
+                whereClause.gender = {
+                    [Op.in]: sample.gender === 'Male' ? ["Male", 'male', 'पुरुष'] : sample.gender === 'Female' ? ["Female", "महिला", 'female'] : ["Others", 'others', "अन्य"]
+                };
+            }
 
             let genderWhereClosure = []
-            sample.genders.length > 0 && sample.genders.forEach(range => {
-                const { gender, fromAge, toAge } = range;
-                if(gender && fromAge && toAge) {
-                    const birthDateFrom = calculateBirthDate(toAge);
-                    const birthDateTo = calculateBirthDate(fromAge);
+            if(sample.genders && sample.genders.length > 0) {
+                sample.genders.length > 0 && sample.genders.forEach(range => {
+                    const {gender, fromAge, toAge} = range;
+                    if (gender && fromAge && toAge) {
+                        const birthDateFrom = calculateBirthDate(toAge);
+                        const birthDateTo = calculateBirthDate(fromAge);
 
-                    const mappedGender = gender.flatMap(g => mapGender(g.label));
+                        const mappedGender = gender.flatMap(g => mapGender(g.label));
 
-                    const condition = {
-                        [Op.and]: [
-                            {
-                                dateOfBirth: {
-                                    [Op.between]: [birthDateFrom, birthDateTo]
-                                }
-                            },
-                            Sequelize.literal(`ARRAY[${mappedGender.map(g => `'${g}'`).join(',')}]::text[] @> ARRAY["basic_profile"."gender"]::text[]`)
-                        ]
-                    };
-                    genderWhereClosure.push(condition);
-                }
-            });
+                        const condition = {
+                            [Op.and]: [
+                                {
+                                    dateOfBirth: {
+                                        [Op.between]: [birthDateFrom, birthDateTo]
+                                    }
+                                },
+                                Sequelize.literal(`ARRAY[${mappedGender.map(g => `'${g}'`).join(',')}]::text[] @> ARRAY["basic_profile"."gender"]::text[]`)
+                            ]
+                        };
+                        genderWhereClosure.push(condition);
+                    }
+                });
+            }
 
             let genderClause = {}
             if (genderWhereClosure.length > 0) {
