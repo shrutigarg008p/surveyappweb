@@ -52,7 +52,7 @@ module.exports.getAll = async (req, res) => {
                 {
                     model: Users,
                     required: false,
-                    attributes: ['email']
+                    attributes: ['email', "phoneNumber"]
                 },
             ],
             limit: limit,

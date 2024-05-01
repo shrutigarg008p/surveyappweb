@@ -9,7 +9,11 @@ const {referralMail, referralMailHindi} = require("../Config/Mails");
 module.exports.createReferrals = async (req, res) => {
     try {
         const language = req.headers['language'] || req.query.language || 'en';
-        const isExisting = await Referrals.findOne({ where: { userId: req.body.userId, email: req.body.email } })
+        const isAlreadyRegistered = await Users.findOne({ where: { email: req.body.email }})
+        if(isAlreadyRegistered) {
+            return apiResponses.validationErrorWithData(res, 'This email is already registered', null)
+        }
+        const isExisting = await Referrals.findOne({ where: { userId: req.body.userId, email: req.body.email }})
         if(!isExisting) {
             const user = await BasicProfile.findOne({where: {userId: req.body.userId}})
             if (user) {
