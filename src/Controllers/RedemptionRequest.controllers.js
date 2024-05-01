@@ -18,6 +18,31 @@ module.exports.createRedemptionRequest = async (req, res) => {
         for (let i = 100; i <= 9500; i += 50) {
             allowedPoints.push(i);
         }
+
+        const allowPoints = {
+            'Croma': [10000, 9999, 9500, 9000, 8500, 8000, 7500, 7000, 6500, 6000, 5500, 5000, 4500, 4000, 3500, 3000, 2500, 2000, 1500, 1000, 500],
+            "Google Play Gift Code": [50000, 30000, 10000, 5000],
+            "PhonePe eGift voucher": [10000, 5000, 4000, 3000, 2000, 1500, 1000, 700, 500, 400, 200, 100],
+            "Flipkart INR": [10000, 9000, 8000, 7500, 7000, 6000, 5700, 5000, 4000, 3500, 1700, 1650, 1600, 1100, 1000, 950, 750, 700, 600, 500, 400, 350, 325, 300, 259, 250, 200, 125, 100, 75, 25],
+            "AJIO E-Gift Card": [5000, 3000, 2000, 1000, 750, 500, 100]
+        };
+
+        function isPointAllowed(redemptionType, point) {
+            const points = allowPoints[redemptionType];
+            if (!points) {
+                return false;
+            }
+            return points.includes(point);
+        }
+
+        if (!isPointAllowed(req.body.redemptionModeTitle, req.body.pointsRequested)) {
+            console.log("Point is not allowed for redemption type:", req.body.redemptionModeTitle);
+            return apiResponses.validationErrorWithData(
+                res,
+                `Point is not allowed for redemption type: ${req.body.redemptionModeTitle}, allowed points is only ${allowPoints[req.body.redemptionModeTitle]}`
+            );
+        }
+
         const totalLeftPoints = await getRedemptionSummary(req.body.userId)
         console.log('BODY-------->', req.body, '========>', totalLeftPoints.totalLeft)
         if(totalLeftPoints.totalLeft >= 100 && req.body.pointsRequested <= totalLeftPoints.totalLeft) {
