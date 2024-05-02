@@ -135,20 +135,20 @@ module.exports.getOne = async (req, res) => {
 
             if(sample.genders && sample.genders.length > 0) {
                 sample.genders.length > 0 && sample.genders.forEach(range => {
-                    const {gender, fromAge, toAge} = range;
-                    if (gender && fromAge && toAge) {
-                        const birthDateFrom = calculateBirthDate(toAge);
-                        const birthDateTo = calculateBirthDate(fromAge);
+                    const { gender, fromAge, toAge } = range;
+                    if (gender !== undefined && fromAge !== undefined && toAge !== undefined) {
+                        const today = new Date();
+                        const birthDateFrom = new Date(today.getFullYear() - toAge, today.getMonth(), today.getDate());
+                        const birthDateTo = new Date(today.getFullYear() - fromAge, today.getMonth(), today.getDate());
 
-                        const mappedGender = gender?.flatMap(g => mapGender(g.label));
+                        const formattedBirthDateFrom = `to_date('${birthDateFrom.toISOString().split('T')[0]}', 'YYYY-MM-DD')`;
+                        const formattedBirthDateTo = `to_date('${birthDateTo.toISOString().split('T')[0]}', 'YYYY-MM-DD')`;
+
+                        const mappedGender = gender.flatMap(g => mapGender(g.label));
 
                         const condition = {
                             [Op.and]: [
-                                {
-                                    dateOfBirth: {
-                                        [Op.between]: [birthDateFrom, birthDateTo]
-                                    }
-                                },
+                                Sequelize.literal(`to_date("basic_profile"."dateOfBirth", 'YYYY-MM-DD') BETWEEN ${formattedBirthDateFrom} AND ${formattedBirthDateTo}`),
                                 Sequelize.literal(`ARRAY[${mappedGender.map(g => `'${g}'`).join(',')}]::text[] @> ARRAY["basic_profile"."gender"]::text[]`)
                             ]
                         };
@@ -346,20 +346,20 @@ module.exports.getOneSampleUsers = async (req, res) => {
             let genderWhereClosure = []
             if(sample.genders && sample.genders.length > 0) {
                 sample.genders.length > 0 && sample.genders.forEach(range => {
-                    const {gender, fromAge, toAge} = range;
-                    if (gender && fromAge && toAge) {
-                        const birthDateFrom = calculateBirthDate(toAge);
-                        const birthDateTo = calculateBirthDate(fromAge);
+                    const { gender, fromAge, toAge } = range;
+                    if (gender !== undefined && fromAge !== undefined && toAge !== undefined) {
+                        const today = new Date();
+                        const birthDateFrom = new Date(today.getFullYear() - toAge, today.getMonth(), today.getDate());
+                        const birthDateTo = new Date(today.getFullYear() - fromAge, today.getMonth(), today.getDate());
+
+                        const formattedBirthDateFrom = `to_date('${birthDateFrom.toISOString().split('T')[0]}', 'YYYY-MM-DD')`;
+                        const formattedBirthDateTo = `to_date('${birthDateTo.toISOString().split('T')[0]}', 'YYYY-MM-DD')`;
 
                         const mappedGender = gender.flatMap(g => mapGender(g.label));
 
                         const condition = {
                             [Op.and]: [
-                                {
-                                    dateOfBirth: {
-                                        [Op.between]: [birthDateFrom, birthDateTo]
-                                    }
-                                },
+                                Sequelize.literal(`to_date("basic_profile"."dateOfBirth", 'YYYY-MM-DD') BETWEEN ${formattedBirthDateFrom} AND ${formattedBirthDateTo}`),
                                 Sequelize.literal(`ARRAY[${mappedGender.map(g => `'${g}'`).join(',')}]::text[] @> ARRAY["basic_profile"."gender"]::text[]`)
                             ]
                         };
