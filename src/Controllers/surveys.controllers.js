@@ -267,6 +267,12 @@ module.exports.getOneDetails = async (req, res) => {
                         }
                     })
                     if (sample) {
+                        let limit = 1000000;
+                        if (sample.profileCount > 0) {
+                            limit = sample.profileCount;
+                        }
+
+
                         let whereClause = {};
 
                         // // Age filter
@@ -408,6 +414,7 @@ module.exports.getOneDetails = async (req, res) => {
                                     attributes: ['email', 'role']
                                 },
                             ],
+                            limit: limit
                         });
 
                         if (sampleQuestions.length > 0) {
