@@ -75,6 +75,11 @@ const triggerSurveyEmail = async (id) => {
             if(survey && sample) {
                 const sampleQuestions = await SampleQuestions.findAll({where: {sampleId: sample.id, deletedAt: null}})
                 if(sample) {
+                    let limit = 1000000;
+                    if (sample.profileCount > 0) {
+                        limit = sample.profileCount;
+                    }
+                    
                     let whereClause = {};
                     // Age filter
                     if (sample.fromAge || sample.toAge) {
@@ -212,6 +217,7 @@ const triggerSurveyEmail = async (id) => {
                                 attributes: ['email', 'role', 'devicetoken']
                             },
                         ],
+                        limit: limit
                     });
 
                     if(sampleQuestions.length > 0) {
@@ -249,7 +255,14 @@ const triggerSurveyEmail = async (id) => {
 
                         //New one----
                         if (emailTemplate) {
-                            const totalUsers = users.length;
+                            //const totalUsers = users.length;
+                        let totalUsers = 0
+                            if(scheduleEmail.count > 0) {
+                                totalUsers = scheduleEmail.count
+                            } else {
+                                totalUsers = users.length;
+                            }
+                            console.log('totalUsers--Email--Count-->', totalUsers)
                             const batchSize = Math.min(totalUsers, users.length); // Define maximum batch size
 
                             const batchedUsers = [];
