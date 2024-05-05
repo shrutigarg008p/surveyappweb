@@ -686,7 +686,7 @@ module.exports.userUpdate = async (req, res) => {
 
 			const isMobileVerified = await User.findOne({ where: { id: req.params.userId } })
 			const userNotExist = `${language === 'hi' ? 'उपभोगकर्ता मौजूद नहीं।' : 'User does not exist.'}`;
-			const userNotVerified = `${language === 'hi' ? 'कृपया पहले मोबाइल ओटीपी सत्यापित करें ।' : 'Please verified mobile otp first.'}`;
+			const userNotVerified = `${language === 'hi' ? 'कृपया पहले मोबाइल ओटीपी सत्यापित करें ।' : 'Please verify mobile OTP first.'}`;
 
 			if(!isMobileVerified) {
 				return apiResponses.validationErrorWithData(res, userNotExist, null);

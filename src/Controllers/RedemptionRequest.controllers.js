@@ -36,10 +36,10 @@ module.exports.createRedemptionRequest = async (req, res) => {
         }
 
         if (!isPointAllowed(req.body.redemptionModeTitle, req.body.pointsRequested)) {
-            console.log("Point is not allowed for redemption type:", req.body.redemptionModeTitle);
+            console.log("Points are not allowed for redemption type:", req.body.redemptionModeTitle);
             return apiResponses.validationErrorWithData(
                 res,
-                `Point is not allowed for redemption type: ${req.body.redemptionModeTitle}, allowed points is only ${allowPoints[req.body.redemptionModeTitle]}`
+                `Points are not allowed for redemption type: ${req.body.redemptionModeTitle}, allowed points is only ${allowPoints[req.body.redemptionModeTitle]}`
             );
         }
 
@@ -398,10 +398,10 @@ module.exports.ApproveRequest = async (req, res) => {
                 }
 
                 if (!isPointAllowed(requestData.redemptionModeTitle, requestData.pointsRequested)) {
-                    console.log("Point is not allowed for redemption type:", requestData.redemptionModeTitle);
+                    console.log("Points are not allowed for redemption type:", requestData.redemptionModeTitle);
                     return apiResponses.validationErrorWithData(
                         res,
-                        `Point is not allowed for redemption type: ${requestData.redemptionModeTitle}`
+                        `Points are not allowed for redemption type: ${requestData.redemptionModeTitle}`
                     );
                 }
 

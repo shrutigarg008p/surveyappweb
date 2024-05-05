@@ -109,11 +109,23 @@ module.exports.getOne = async (req, res) => {
     try {
         const currentPage = req.query.page || 1; // Current page number
         const pageSize = req.query.limit || 100;
+
+        let limit = null;
+        let offset = null;
+
         const sample = await Samples.findOne({where: {id: req.params.id, deletedAt: null}})
         let user = []
         const sampleQuestions = await SamplesQuestions.findAll({where: {sampleId: sample.id, deletedAt: null}})
         let totalCount = 0
         if(sample) {
+            if (sample.profileCount > 0) {
+                const maxUsersToFetch = Math.min(sample.profileCount, pageSize);
+                offset = (currentPage - 1) * pageSize;
+                offset = Math.min(offset, sample.profileCount);
+                limit = maxUsersToFetch - offset;
+            }
+
+            console.log('limit---->', limit)
             let whereClause = {};
 
             // // Age filter
@@ -133,9 +145,9 @@ module.exports.getOne = async (req, res) => {
 
             let genderWhereClosure = []
 
-            if(sample.genders && sample.genders.length > 0) {
+            if (sample.genders && sample.genders.length > 0) {
                 sample.genders.length > 0 && sample.genders.forEach(range => {
-                    const { gender, fromAge, toAge } = range;
+                    const {gender, fromAge, toAge} = range;
                     if (gender !== undefined && fromAge !== undefined && toAge !== undefined) {
                         const today = new Date();
                         const birthDateFrom = new Date(today.getFullYear() - toAge, today.getMonth(), today.getDate());
@@ -175,7 +187,11 @@ module.exports.getOne = async (req, res) => {
             let allCities = []
             if (sample.stateIds && sample.stateIds.length > 0) {
                 const states = sample.stateIds.map((item => item.value))
-                const statesInfo = await Cities.findAll({ where: {stateId: { [Op.in]: states } }, attributes: ['name', 'hindi', 'zipCode'], raw: true })
+                const statesInfo = await Cities.findAll({
+                    where: {stateId: {[Op.in]: states}},
+                    attributes: ['name', 'hindi', 'zipCode'],
+                    raw: true
+                })
                 const zipcodes = statesInfo.map(item => item.zipCode);
                 const names = statesInfo.map(item => item.name);
                 const hindiNames = statesInfo.map(item => item.hindi);
@@ -186,7 +202,11 @@ module.exports.getOne = async (req, res) => {
             // Cities filter
             if (sample.cityIds && sample.cityIds.length > 0) {
                 const city = sample.cityIds.map((item => item.label))
-                const statesInfo = await Cities.findAll({ where: {name: { [Op.in]: city } }, attributes: ['name', 'hindi', 'zipCode'], raw: true })
+                const statesInfo = await Cities.findAll({
+                    where: {name: {[Op.in]: city}},
+                    attributes: ['name', 'hindi', 'zipCode'],
+                    raw: true
+                })
                 const zipcodes = statesInfo.map(item => item.zipCode);
                 const names = statesInfo.map(item => item.name);
                 const hindiNames = statesInfo.map(item => item.hindi);
@@ -196,14 +216,18 @@ module.exports.getOne = async (req, res) => {
             }
 
             //Segments
-            if(sample.segments && sample.segments.length > 0) {
+            if (sample.segments && sample.segments.length > 0) {
                 let obj = {}
                 const segments = sample.segments.map((item => item.label))
                 obj.segment = {
                     [Op.in]: segments
                 };
-                const segmentsCities = await Cities.findAll({ where: obj, attributes: ['name', 'hindi', 'zipCode'], raw: true })
-                if(segmentsCities.length > 0) {
+                const segmentsCities = await Cities.findAll({
+                    where: obj,
+                    attributes: ['name', 'hindi', 'zipCode'],
+                    raw: true
+                })
+                if (segmentsCities.length > 0) {
                     const zipcodes = segmentsCities.map(item => item.zipCode);
                     const names = segmentsCities.map(item => item.name);
                     const hindiNames = segmentsCities.map(item => item.hindi);
@@ -216,14 +240,18 @@ module.exports.getOne = async (req, res) => {
             }
 
             //Regions
-            if(sample.regions && sample.regions.length > 0) {
+            if (sample.regions && sample.regions.length > 0) {
                 let obj = {}
                 const regions = sample.regions.map((item => item.label))
                 obj.region = {
                     [Op.in]: regions
                 };
-                const regionsCities = await Cities.findAll({ where: obj, attributes: ['name', 'region', 'hindi', 'zipCode'], raw: true })
-                if(regionsCities.length > 0) {
+                const regionsCities = await Cities.findAll({
+                    where: obj,
+                    attributes: ['name', 'region', 'hindi', 'zipCode'],
+                    raw: true
+                })
+                if (regionsCities.length > 0) {
                     const zipcodes = regionsCities.map(item => item.zipCode);
                     const names = regionsCities.map(item => item.name);
                     // const hindiNames = regionsCities.map(item => item.hindi);
@@ -235,7 +263,7 @@ module.exports.getOne = async (req, res) => {
                 }
             }
 
-            if(allCities.length > 0) {
+            if (allCities.length > 0) {
                 whereClause.pinCode = {
                     [Op.in]: allCities
                 };
@@ -249,31 +277,35 @@ module.exports.getOne = async (req, res) => {
             };
 
             BasicProfile.belongsTo(Users, {foreignKey: 'userId'});
-            console.log('whereClause--->', whereClause)
+            console.log('whereClause--->', whereClause, limit, offset)
             user = await BasicProfile.findAll({
                 include: [
                     {
                         model: Users,
                         required: true,
                         attributes: ['email', 'role'],
-                        where: { role: 'panelist' }
+                        where: {role: 'panelist'}
                     },
                 ],
                 where: whereClause,
-                limit: pageSize,
-                offset: (currentPage - 1) * pageSize,
+                limit: limit,
+                offset: offset,
             });
-            totalCount = await BasicProfile.count({
-                include: [
-                    {
-                        model: Users,
-                        required: true,
-                        attributes: ['email', 'role'],
-                        where: { role: 'panelist' }
-                    },
-                ],
-                where: whereClause,
-            });
+            if (sample.profileCount === 0) {
+                totalCount = await BasicProfile.count({
+                    include: [
+                        {
+                            model: Users,
+                            required: true,
+                            attributes: ['email', 'role'],
+                            where: {role: 'panelist'}
+                        },
+                    ],
+                    where: whereClause
+                });
+            } else {
+                totalCount = sample.profileCount;
+            }
         }
         if(sampleQuestions.length > 0) {
             let usersResponseList = await filterUserResponses(sampleQuestions);
@@ -291,6 +323,8 @@ module.exports.getOne = async (req, res) => {
                         attributes: ['email', 'role']
                     },
                 ],
+                // limit: limit,
+                // offset: offset,
             })
             const filterCommonUsers = (arrA, arrB) => {
                 return arrA.filter(userA => arrB.some(userB => userB.userId === userA.userId));
@@ -322,11 +356,21 @@ module.exports.getOneSampleUsers = async (req, res) => {
     try {
         const currentPage = req.query.page || 1; // Current page number
         const pageSize = req.query.limit || 100;
+        let limit = null;
+        let offset = null;
         const sample = await Samples.findOne({where: {id: req.params.id, deletedAt: null}})
         const sampleQuestions = await SamplesQuestions.findAll({where: {sampleId: sample.id, deletedAt: null}})
         let user = []
         let totalCount = 0
         if(sample) {
+            if (sample.profileCount > 0) {
+                const maxUsersToFetch = Math.min(sample.profileCount, pageSize);
+                offset = (currentPage - 1) * pageSize;
+                offset = Math.min(offset, sample.profileCount);
+                const remainingProfiles = sample.profileCount - offset;
+                limit = Math.min(remainingProfiles, pageSize);
+            }
+
             let whereClause = {};
 
             // // Age filter
@@ -471,8 +515,8 @@ module.exports.getOneSampleUsers = async (req, res) => {
                     },
                 ],
                 where: whereClause,
-                limit: pageSize,
-                offset: (currentPage - 1) * pageSize,
+                limit: limit,
+                offset: offset,
             });
             // totalCount = await BasicProfile.count({
             //     include: [
@@ -502,6 +546,8 @@ module.exports.getOneSampleUsers = async (req, res) => {
                         attributes: ['email', 'role']
                     },
                 ],
+                // limit: limit,
+                // offset: offset,
             })
             const filterCommonUsers = (arrA, arrB) => {
                 return arrA.filter(userA => arrB.some(userB => userB.userId === userA.userId));
