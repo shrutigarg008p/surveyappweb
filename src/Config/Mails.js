@@ -323,6 +323,25 @@ module.exports = {
 		});
 	},
 
+	newsLetterSampleMail: (body, emails, subject) => {
+		console.log('logIn_Mail====>' + emails);
+		const details = {
+			from: 'kumar@indiapolls.com',
+			to: emails, // Receiver's email id
+			subject: subject,
+			html: body
+		};
+		transporter.sendMail(details, function(error, data) {
+			if (error) {
+				console.log('error=========>>>' + error);
+				return true;
+			} else {
+				console.log('data=========>>>' + JSON.stringify(data));
+				return true;
+			}
+		});
+	},
+
 	manualApproveEmail: (email, coupon, pin, validity) => {
 		console.log('logIn_Mail====>' + email);
 		const details = {
