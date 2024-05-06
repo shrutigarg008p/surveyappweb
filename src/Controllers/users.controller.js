@@ -1598,7 +1598,7 @@ module.exports.respondentProfileOverview = async (req, res) => {
 		if(appType === 'mobile') {
 			result = resultIn.map(profile => ({
 				...profile,
-				name: language === 'hi' ? `${profile.hindi} ${profile.attemptedPercentage}%` : `${profile.name} ${profile.attemptedPercentage}%`,
+				name: language === 'hi' ? `${profile.hindi} - ${profile.attemptedPercentage}%` : `${profile.name} - ${profile.attemptedPercentage}%`,
 			}))
 		} else {
 			result = resultIn.map(profile => ({
