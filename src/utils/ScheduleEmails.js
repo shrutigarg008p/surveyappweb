@@ -329,7 +329,7 @@ const triggerSurveyEmail = async (id) => {
                                     smsArray.push(sendSurveyMessage(`${user.firstName} ${user.lastName}`, link, user.mobile, survey.name));
 
                                     if (user.user.devicetoken) {
-                                        notificationsArray.push(Notifications(users[i].user.devicetoken, emailTemplate.subject, 'New survey has been assigned to you'));
+                                        notificationsArray.push(Notifications(user.user.devicetoken, emailTemplate.subject, 'New survey has been assigned to you'));
                                         const notificationInfo = {
                                             userId: user.userId,
                                             message: `You have assigned ${survey.name} survey`,
