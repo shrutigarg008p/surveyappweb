@@ -961,12 +961,12 @@ module.exports.getUser = async (req, res) => {
 		if(overallAttemptedPercentage < 100) {
 			if(language === 'hi'){
 				dashboardMessage = {
-					messages: 'आपकी प्रोफ़ाइल लंबित है, कृपया 50 i-प्वाइंट प्राप्त करने के लिए इसे पूरा करें। प्रोफ़ाइल भरना शुरू करने के लिए यहाँ क्लिक करें',
+					messages: 'आपकी प्रोफ़ाइल लंबित है, कृपया 50 i-प्वाइंट प्राप्त करने के लिए इसे पूरा करें। प्रोफ़ाइल भरना शुरू करने के लिए यहाँ क्लिक करें, प्रोफ़ाइल प्रश्नों पर नेविगेट करने के लिए कृपया बाएँ और दाएँ स्वाइप करें।',
 					colourCode: '#FF0000'
 				}
 			} else {
 				dashboardMessage = {
-					messages: 'Your profile is pending, please complete it to get 50 i-Points. Click Here to start filling profile',
+					messages: 'Your profile is pending, please complete it to get 50 i-Points. Click Here to start filling profile, Please do left and right swipe to navigate through profile questions.',
 					colourCode: '#FF0000'
 				}
 			}
