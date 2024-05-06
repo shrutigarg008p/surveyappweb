@@ -1526,6 +1526,7 @@ const Sequelize = db.Sequelize;
 module.exports.respondentProfileOverview = async (req, res) => {
 	try {
 		const language = req.headers['language'] || req.query.language || 'en';
+		const appType = req.headers['app_type'] || 'web';
 		db.profiles.hasMany(db.questions, { foreignKey: 'profileId' });
 		db.questions.belongsTo(db.profiles, { foreignKey: 'profileId' });
 		db.profiles.hasMany(ProfileUserResponse, { foreignKey: 'profileId' });
@@ -1593,10 +1594,18 @@ module.exports.respondentProfileOverview = async (req, res) => {
 			}
 		}
 
-		const result = resultIn.map(profile => ({
-			...profile,
-			name: language === 'hi' ? profile.hindi : profile.name,
-		}))
+		let result = []
+		if(appType === 'mobile') {
+			result = resultIn.map(profile => ({
+				...profile,
+				name: language === 'hi' ? `${profile.hindi} ${profile.attemptedPercentage}%` : `${profile.name} ${profile.attemptedPercentage}%`,
+			}))
+		} else {
+			result = resultIn.map(profile => ({
+				...profile,
+				name: language === 'hi' ? profile.hindi : profile.name,
+			}))
+		}
 		return apiResponses.successResponseWithData(res, 'success!', {result, overallAttemptedPercentage, basicProfile, users});
 	} catch (err) {
 		console.log(err)

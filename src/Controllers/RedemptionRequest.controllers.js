@@ -24,7 +24,7 @@ module.exports.createRedemptionRequest = async (req, res) => {
             "Google Play Gift Code": [50000, 30000, 10000, 5000],
             "PhonePe eGift voucher": [10000, 5000, 4000, 3000, 2000, 1500, 1000, 700, 500, 400, 200, 100],
             "Flipkart INR": [10000, 9000, 8000, 7500, 7000, 6000, 5700, 5000, 4000, 3500, 1700, 1650, 1600, 1100, 1000, 950, 750, 700, 600, 500, 400, 350, 325, 300, 259, 250, 200, 125, 100, 75, 25],
-            "AJIO E-Gift Card": [5000, 3000, 2000, 1000, 750, 500, 100]
+            "AJIO E-Gift Card": [5000, 3000, 2000, 1000, 750, 500, 100],
         };
 
         function isPointAllowed(redemptionType, point) {
@@ -35,7 +35,7 @@ module.exports.createRedemptionRequest = async (req, res) => {
             return points.includes(point);
         }
 
-        if (!isPointAllowed(req.body.redemptionModeTitle, req.body.pointsRequested)) {
+        if (!isPointAllowed(req.body.redemptionModeTitle, req.body.pointsRequested) && req.body.redemptionModeTitle !== "Amazon e-Gift Card") {
             console.log("Points are not allowed for redemption type:", req.body.redemptionModeTitle);
             return apiResponses.validationErrorWithData(
                 res,
