@@ -2,6 +2,7 @@ const db = require('../models');
 const SurveyEmailSchedule = db.surveyEmailSchedule;
 const apiResponses = require('../Components/apiresponse');
 const {triggerSurveyEmail} = require("../utils/ScheduleEmails");
+const {sampleTotalUserCount} = require("../utils/SampleUserCount");
 
 
 module.exports.create = async (req, res) => {
@@ -61,8 +62,16 @@ module.exports.update = async (req, res) => {
 module.exports.getAll = async (req, res) => {
     try {
         const limit = req.params.limit;
-        const data = await SurveyEmailSchedule.findAll({ where: { surveyId: req.params.surveyId, deletedAt: null }, limit: limit, order: [['createdAt', 'DESC']]})
-        return apiResponses.successResponseWithData(res, 'success!', data);
+        const data = await SurveyEmailSchedule.findAll({ where: { surveyId: req.params.surveyId, deletedAt: null }, raw: true, limit: limit, order: [['createdAt', 'DESC']]})
+
+        const modifiedDataPromises = data.map(async item => {
+            const info = await sampleTotalUserCount(item.sampleId);
+            return {...item, totalUserCount: info.totalCount, sampleName: info.sample?.name};
+        });
+
+        const modifiedData = await Promise.all(modifiedDataPromises);
+
+        return apiResponses.successResponseWithData(res, 'success!', modifiedData);
     } catch (err) {
         return apiResponses.errorResponse(res, err);
     }

@@ -5,6 +5,8 @@ const Questions = db.questions;
 const Options = db.options;
 const BasicProfile = db.basicProfile;
 const ProfileUserResponses = db.profileUserResponse;
+const SurveyUniqueLinks = db.surveyUniqueLinks;
+const SurveyEmailSchedule = db.surveyEmailSchedule;
 const Users = db.user;
 const Cities = db.city;
 const States = db.states;
@@ -331,7 +333,7 @@ module.exports.getOne = async (req, res) => {
             };
             const commonUsers = filterCommonUsers(usersQuestionCriteria, user);
             let filteredUsers = commonUsers.filter(item => item.user ? item.user.role === 'panelist' : '')
-            totalCount = totalCount + filteredUsers .length
+            totalCount = totalCount + filteredUsers.length
             let obj = {
                 sample,
                 user: filteredUsers ? filteredUsers : [],
@@ -573,6 +575,235 @@ module.exports.getOneSampleUsers = async (req, res) => {
         return apiResponses.errorResponse(res, err);
     }
 };
+
+
+module.exports.getOneSampleAllUsers = async (req, res) => {
+    try {
+        console.log('sample id--->', req.params.id);
+        const sample = await Samples.findOne({where: {id: req.params.id, deletedAt: null}})
+        const sampleQuestions = await SamplesQuestions.findAll({where: {sampleId: sample.id, deletedAt: null}})
+        let user = []
+        let totalCount = 0
+        if(sample) {
+            let limit = 1000000;
+            if (sample.profileCount > 0) {
+                limit = sample.profileCount;
+            }
+
+            let whereClause = {};
+
+            // // Age filter
+            if (sample.fromAge || sample.toAge) {
+                whereClause.dateOfBirth = {
+                    [Op.between]: [calculateBirthDate(sample.toAge), calculateBirthDate(sample.fromAge)]
+                };
+            }
+
+            // Gender filter
+            if (sample.gender) {
+                whereClause.gender = {
+                    [Op.in]: sample.gender === 'Male' ? ["Male", 'male', 'पुरुष'] : sample.gender === 'Female' ? ["Female", "महिला", 'female'] : ["Others", 'others', "अन्य"]
+                };
+            }
+
+            let genderWhereClosure = []
+            if(sample.genders && sample.genders.length > 0) {
+                sample.genders.length > 0 && sample.genders.forEach(range => {
+                    const { gender, fromAge, toAge } = range;
+                    if (gender !== undefined && fromAge !== undefined && toAge !== undefined) {
+                        const today = new Date();
+                        const birthDateFrom = new Date(today.getFullYear() - toAge, today.getMonth(), today.getDate());
+                        const birthDateTo = new Date(today.getFullYear() - fromAge, today.getMonth(), today.getDate());
+
+                        const formattedBirthDateFrom = `to_date('${birthDateFrom.toISOString().split('T')[0]}', 'YYYY-MM-DD')`;
+                        const formattedBirthDateTo = `to_date('${birthDateTo.toISOString().split('T')[0]}', 'YYYY-MM-DD')`;
+
+                        const mappedGender = gender.flatMap(g => mapGender(g.label));
+
+                        const condition = {
+                            [Op.and]: [
+                                Sequelize.literal(`to_date("basic_profile"."dateOfBirth", 'YYYY-MM-DD') BETWEEN ${formattedBirthDateFrom} AND ${formattedBirthDateTo}`),
+                                Sequelize.literal(`ARRAY[${mappedGender.map(g => `'${g}'`).join(',')}]::text[] @> ARRAY["basic_profile"."gender"]::text[]`)
+                            ]
+                        };
+                        genderWhereClosure.push(condition);
+                    }
+                });
+            }
+
+            let genderClause = {}
+            if (genderWhereClosure.length > 0) {
+                genderClause = {
+                    [Op.or]: genderWhereClosure
+                };
+            }
+
+            // Registration date filter
+            if (sample.fromRegistrationDate && sample.toRegistrationDate) {
+                whereClause.createdAt = {
+                    [Op.between]: [new Date(sample.fromRegistrationDate), new Date(sample.toRegistrationDate)]
+                };
+            }
+
+
+            let allCities = []
+            if (sample.stateIds && sample.stateIds.length > 0) {
+                const states = sample.stateIds.map((item => item.value))
+                const statesInfo = await Cities.findAll({ where: {stateId: { [Op.in]: states } }, attributes: ['name', 'hindi', 'zipCode'], raw: true })
+                const zipcodes = statesInfo.map(item => item.zipCode);
+                const names = statesInfo.map(item => item.name);
+                const hindiNames = statesInfo.map(item => item.hindi);
+                const stringArray = names.concat(hindiNames);
+                allCities.push(...zipcodes);
+            }
+
+            // Cities filter
+            if (sample.cityIds && sample.cityIds.length > 0) {
+                const city = sample.cityIds.map((item => item.label))
+                const statesInfo = await Cities.findAll({ where: {name: { [Op.in]: city } }, attributes: ['name', 'hindi', 'zipCode'], raw: true })
+                const zipcodes = statesInfo.map(item => item.zipCode);
+                const names = statesInfo.map(item => item.name);
+                const hindiNames = statesInfo.map(item => item.hindi);
+                const stringArray = names.concat(hindiNames);
+                allCities.push(...zipcodes);
+
+            }
+
+            //Segments
+            if(sample.segments && sample.segments.length > 0) {
+                let obj = {}
+                const segments = sample.segments.map((item => item.label))
+                obj.segment = {
+                    [Op.in]: segments
+                };
+                const segmentsCities = await Cities.findAll({ where: obj, attributes: ['name', 'hindi', 'zipCode'], raw: true })
+                if(segmentsCities.length > 0) {
+                    const zipcodes = segmentsCities.map(item => item.zipCode);
+                    const names = segmentsCities.map(item => item.name);
+                    const hindiNames = segmentsCities.map(item => item.hindi);
+                    const stringArray = names.concat(hindiNames);
+                    allCities.push(...zipcodes);
+                    // whereClause.city = {
+                    //     [Op.in]: city
+                    // };
+                }
+            }
+
+            //Regions
+            if(sample.regions && sample.regions.length > 0) {
+                let obj = {}
+                const regions = sample.regions.map((item => item.label))
+                obj.region = {
+                    [Op.in]: regions
+                };
+                const regionsCities = await Cities.findAll({ where: obj, attributes: ['name', 'region', 'hindi', 'zipCode'], raw: true })
+                if(regionsCities.length > 0) {
+                    const zipcodes = regionsCities.map(item => item.zipCode);
+                    const names = regionsCities.map(item => item.name);
+                    // const hindiNames = regionsCities.map(item => item.hindi);
+                    const stringArray = names.concat([]);
+                    allCities.push(...zipcodes);
+                    // whereClause.city = {
+                    //     [Op.in]: city
+                    // };
+                }
+            }
+
+            if(allCities.length > 0) {
+                whereClause.pinCode = {
+                    [Op.in]: allCities
+                };
+            }
+
+            whereClause = {
+                [Op.and]: [
+                    whereClause,
+                    genderClause
+                ]
+            };
+
+            BasicProfile.belongsTo(Users, {foreignKey: 'userId'});
+            console.log('Where---->', whereClause)
+            user = await BasicProfile.findAll({
+                include: [
+                    {
+                        model: Users,
+                        required: true,
+                        attributes: ['email', 'role'],
+                        where: { role: 'panelist' }
+                    },
+                ],
+                where: whereClause,
+                limit: limit,
+            });
+        }
+        if(sampleQuestions.length > 0) {
+            let usersResponseList = await filterUserResponses(sampleQuestions);
+            const userIdArray = usersResponseList.map(userResponse => userResponse.get('userId'));
+            let usersQuestionCriteria = await BasicProfile.findAll({
+                where: {
+                    userId: {
+                        [Op.in]: userIdArray,
+                    },
+                },
+                include: [
+                    {
+                        model: Users,
+                        required: false,
+                        attributes: ['email', 'role']
+                    },
+                ],
+            })
+            const filterCommonUsers = (arrA, arrB) => {
+                return arrA.filter(userA => arrB.some(userB => userB.userId === userA.userId));
+            };
+            const commonUsers = filterCommonUsers(usersQuestionCriteria, user);
+            let filteredUsers = commonUsers.filter(item => item.user ? item.user.role === 'panelist' : '')
+            // totalCount = totalCount + filteredUsers .length
+            let obj = {
+                user: filteredUsers ? filteredUsers : []
+            }
+            return apiResponses.successResponseWithData(res, 'success!', obj);
+        }
+        // let filteredUsers = user.filter(item => item.user ? item.user.role === 'panelist' : '')
+        let obj = {
+            user: user ||  [],
+        }
+        return apiResponses.successResponseWithData(res, 'success!', obj);
+    } catch (err) {
+        console.log('err---->', err)
+        return apiResponses.errorResponse(res, err);
+    }
+};
+
+//uploadUniqueLinks
+
+module.exports.uploadUniqueLinks = async (req, res) => {
+    try {
+        const newArray = req.body.bulkImportData.map(item => {
+            return {
+                ...item,
+                createdAt: new Date().valueOf(),
+                updatedAt: new Date().valueOf(),
+            };
+        });
+        const assign = await SurveyUniqueLinks.bulkCreate(newArray)
+        await SurveyEmailSchedule.update({
+                isuniqueuploaded: true,
+            },
+            { where: { id : req.query.id },
+            })
+        return apiResponses.successResponseWithData(
+            res,
+            'Success!',
+            assign
+        );
+    } catch (err) {
+        console.log('err----->', err)
+        return apiResponses.errorResponse(res, err);
+    }
+};
+
 
 const filterUserResponses = async (sampleQuestions) => {
     const allUserResponses = await ProfileUserResponses.findAll({

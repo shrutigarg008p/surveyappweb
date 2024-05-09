@@ -27,6 +27,11 @@ module.exports = (sequelize, Sequelize) => {
             type: DataTypes.BOOLEAN,
             allowNull: false,
         },
+        isuniqueuploaded: {
+            type: DataTypes.BOOLEAN,
+            allowNull: true,
+            defaultValue: false,
+        },
         scheduleDate: {
             type: DataTypes.DATE,
             allowNull: false,
