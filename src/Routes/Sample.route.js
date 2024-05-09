@@ -37,6 +37,16 @@ module.exports= function(app) {
     );
 
 
+    app.get(
+        '/api/v1/samples/getOneSampleAllUsers/:id',
+        samplesControllers.getOneSampleAllUsers,
+    );
+
+    app.post(
+        '/api/v1/samples/uploadUniqueLinks',
+        samplesControllers.uploadUniqueLinks,
+    );
+
     app.delete(
         '/api/v1/samples/delete/:id',
         samplesControllers.delete,
