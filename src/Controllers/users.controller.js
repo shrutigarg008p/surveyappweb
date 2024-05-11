@@ -1276,7 +1276,7 @@ module.exports.allPanelists = async (req, res) => {
 		User.hasOne(BasicProfile, {
 			foreignKey: 'userId',
 		});
-		const limit = 50000;
+		const limit = 100000;
 		let whereClauseProfile = {};
 		let whereClauseUser = {};
 		let filteredProfilePanelists = []
@@ -1399,8 +1399,8 @@ module.exports.allPanelists = async (req, res) => {
 			// 		}
 			// 	});
 			// }
-		const filteredPanelists = filteredUserPanelists.filter(panelist => panelist.phoneNumber || panelist.email);
-		return apiResponses.successResponseWithData(res, 'success!',  filteredPanelists);
+		// const filteredPanelists = filteredUserPanelists.filter(panelist => panelist.phoneNumber || panelist.email);
+		return apiResponses.successResponseWithData(res, 'success!',  filteredUserPanelists);
 	} catch (err) {
 		console.log(err)
 		return apiResponses.errorResponse(res, err);

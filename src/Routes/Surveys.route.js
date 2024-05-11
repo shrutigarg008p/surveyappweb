@@ -122,4 +122,9 @@ module.exports= function(app) {
         '/api/v1/surveys/uploadBulkRewards',
         surveyControllers.uploadBulkRewards,
     );
+
+    app.post(
+        '/api/v1/surveys/surveyOverviewStatus',
+        surveyControllers.surveyOverviewStatus,
+    );
 };

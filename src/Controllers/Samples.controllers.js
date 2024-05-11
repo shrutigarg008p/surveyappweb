@@ -517,8 +517,10 @@ module.exports.getOneSampleUsers = async (req, res) => {
                     },
                 ],
                 where: whereClause,
+                order: [['gender', 'ASC']],
                 limit: limit,
                 offset: offset,
+
             });
             // totalCount = await BasicProfile.count({
             //     include: [

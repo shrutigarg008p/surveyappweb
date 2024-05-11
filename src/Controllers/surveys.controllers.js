@@ -1341,3 +1341,77 @@ module.exports.uploadBulkRewards = async (req, res) => {
         return apiResponses.errorResponse(res, err);
     }
 };
+
+
+
+module.exports.surveyOverviewStatus = async (req, res) => {
+    try {
+        Surveys.hasMany(SurveyAssigned, { foreignKey: 'surveyId' });
+        let assignUsers =[]
+        const data = await Surveys.findOne({where: {id: req.body.surveyId, deletedAt: null},
+            include: [
+                {
+                    model: SurveyAssigned,
+                }
+            ],
+        })
+        const assigned = data.assignedSurveys;
+
+        const filteredOverQuotaUsers = assigned.filter(user => user.status === 'Over Quota');
+        const totalOverQuota = filteredOverQuotaUsers.length;
+
+        const filteredTerminatedUsers = assigned.filter(user => user.status === 'Terminated');
+        const totalTerminated = filteredTerminatedUsers.length;
+
+        const filteredQualityUsers = assigned.filter(user => user.status === 'Quality Terminated');
+        const totalQualityTerminated = filteredQualityUsers.length;
+
+        const filteredCompletedUsers = assigned.filter(user => user.status === 'Completed');
+        const totalCompleted = filteredCompletedUsers.length;
+
+        const overQuotaPoints = data.overquota ? data.overquota : 0
+        const terminatedPoints = data.terminate ? data.terminate : 0
+        const qualityTerminatedPoints = data.qualityterminate ? data.qualityterminate : 0
+
+       let obj = [
+           {
+               status: "Completed",
+               points: data.ceggPoints,
+               members: totalCompleted,
+               pointAllocation: parseInt(data.ceggPoints, 10) * parseInt(totalCompleted, 10)
+           },
+           {
+               status: "Over Quota",
+               points: overQuotaPoints,
+               members: totalOverQuota,
+               pointAllocation: parseInt(overQuotaPoints, 10) * parseInt(totalOverQuota, 10)
+           },
+           {
+               status: "Terminated",
+               points: terminatedPoints,
+               members: totalTerminated,
+               pointAllocation: parseInt(terminatedPoints, 10) * parseInt(totalTerminated, 10)
+           },
+           {
+               status: "Quality Terminated",
+               points: qualityTerminatedPoints,
+               members: totalQualityTerminated,
+               pointAllocation: parseInt(qualityTerminatedPoints, 10) * parseInt(totalQualityTerminated, 10)
+           },
+           {
+               status: "",
+               points: "",
+               members: "Total Points Allocation",
+               pointAllocation: parseInt(qualityTerminatedPoints, 10) * parseInt(totalQualityTerminated, 10)
+               + parseInt(data.ceggPoints, 10) * parseInt(totalCompleted, 10)
+               + parseInt(overQuotaPoints, 10) * parseInt(totalOverQuota, 10)
+               + parseInt(terminatedPoints, 10) * parseInt(totalTerminated, 10)
+           }
+       ]
+
+        return apiResponses.successResponseWithData(res, 'success!', obj);
+    } catch (err) {
+        console.log('error--->', err)
+        return apiResponses.errorResponse(res, err);
+    }
+};
