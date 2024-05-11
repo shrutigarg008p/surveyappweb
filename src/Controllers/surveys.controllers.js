@@ -414,7 +414,8 @@ module.exports.getOneDetails = async (req, res) => {
                                     attributes: ['email', 'role']
                                 },
                             ],
-                            limit: limit
+                            limit: limit,
+                            order: [['gender', 'ASC']],
                         });
 
                         if (sampleQuestions.length > 0) {
@@ -433,6 +434,7 @@ module.exports.getOneDetails = async (req, res) => {
                                         attributes: ['email', 'role']
                                     },
                                 ],
+                                order: [['gender', 'ASC']],
                             })
                             const filterCommonUsers = (arrA, arrB) => {
                                 return arrA.filter(userA => arrB.some(userB => userB.userId === userA.userId));

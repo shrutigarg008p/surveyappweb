@@ -550,6 +550,7 @@ module.exports.getOneSampleUsers = async (req, res) => {
                         attributes: ['email', 'role']
                     },
                 ],
+                order: [['gender', 'ASC']],
                 // limit: limit,
                 // offset: offset,
             })

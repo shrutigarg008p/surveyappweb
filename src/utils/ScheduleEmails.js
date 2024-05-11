@@ -242,7 +242,8 @@ const triggerSurveyEmail = async (id) => {
                                     attributes: ['email', 'role', 'devicetoken']
                                 },
                             ],
-                            limit: limit
+                            limit: limit,
+                            order: [['gender', 'ASC']],
                         });
 
                         if (sampleQuestions.length > 0) {
@@ -261,6 +262,7 @@ const triggerSurveyEmail = async (id) => {
                                         attributes: ['email', 'role', 'devicetoken', 'phoneNumber']
                                     },
                                 ],
+                                order: [['gender', 'ASC']],
                             })
                             const filterCommonUsers = (arrA, arrB) => {
                                 return arrA.filter(userA => arrB.some(userB => userB.userId === userA.userId));
