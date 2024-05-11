@@ -4,6 +4,9 @@ const BasicProfile = db.basicProfile;
 const Questions = db.questions;
 const Profiles = db.profiles;
 const Referrals = db.referrals;
+const City = db.city;
+const Sequelize = db.Sequelize;
+const States = db.states;
 const Rewards = db.rewards;
 const AsssignSurveys = db.asssignSurveys;
 const RedemptionRequest = db.redemptionRequest;
@@ -23,6 +26,7 @@ const axios = require("axios");
 const {sendVerificationMessage, generateOTP, sendVerificationMessageHindi} = require("../Config/Sms");
 const {respondentSummary, getRewardsSummary, getRedemptionSummary, getReferralSummary, userAssignedSurveys} = require("../utils/RespondentSummary");
 const {validateDob} = require("../utils/dateValidations");
+const {updateUsersWithCityNames} = require("../utils/UsersCityNameReplaceWithEng");
 const Op = db.Sequelize.Op;
 
 
@@ -1354,6 +1358,7 @@ module.exports.allPanelists = async (req, res) => {
 			console.log('whereClause--->', whereClauseUser, whereClauseProfile)
 		    filteredUserPanelists = await User.findAll({
 				where: whereClauseUser,
+				// where: { id: '76d7735c-dac2-44b4-8708-e0e8a265383f' },
 				attributes: ['phoneNumber', 'id', 'email', 'createdAt', 'deleteRequestDate', 'activeStatus'],
 				include: [
 					{
@@ -1362,9 +1367,11 @@ module.exports.allPanelists = async (req, res) => {
 						required: false
 					},
 				],
-				// limit: limit,
+				// limit: 10,
 				order: [['createdAt', 'DESC']]
 			});
+
+
 
 			let mergedArray = []
 			// if(filteredProfilePanelists.length > filteredUserPanelists.length) {
@@ -1400,7 +1407,8 @@ module.exports.allPanelists = async (req, res) => {
 			// 	});
 			// }
 		// const filteredPanelists = filteredUserPanelists.filter(panelist => panelist.phoneNumber || panelist.email);
-		return apiResponses.successResponseWithData(res, 'success!',  filteredUserPanelists);
+		const users = await updateUsersWithCityNames(filteredUserPanelists)
+		return apiResponses.successResponseWithData(res, 'success!',  users);
 	} catch (err) {
 		console.log(err)
 		return apiResponses.errorResponse(res, err);
@@ -1522,7 +1530,7 @@ module.exports.panelistProfile = async (req, res) => {
 };
 
 
-const Sequelize = db.Sequelize;
+
 module.exports.respondentProfileOverview = async (req, res) => {
 	try {
 		const language = req.headers['language'] || req.query.language || 'en';
