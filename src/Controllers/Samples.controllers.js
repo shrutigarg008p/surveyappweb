@@ -371,7 +371,12 @@ module.exports.getOneSampleUsers = async (req, res) => {
                 offset = Math.min(offset, sample.profileCount);
                 const remainingProfiles = sample.profileCount - offset;
                 limit = Math.min(remainingProfiles, pageSize);
+            } else {
+                    limit = pageSize;
+                    offset = (currentPage - 1) * pageSize;
             }
+
+            console.log('limit---->', limit, offset)
 
             let whereClause = {};
 
@@ -784,11 +789,13 @@ module.exports.getOneSampleAllUsers = async (req, res) => {
 module.exports.uploadUniqueLinks = async (req, res) => {
     try {
         const newArray = req.body.bulkImportData.map(item => {
-            return {
-                ...item,
-                createdAt: new Date().valueOf(),
-                updatedAt: new Date().valueOf(),
-            };
+            if(item.userId && item.userId !== '' || item.sampleId && item.sampleId !== '' || item.surveyId && item.surveyId !== '' || item.schedulerId && item.schedulerId !== '') {
+                return {
+                    ...item,
+                    createdAt: new Date().valueOf(),
+                    updatedAt: new Date().valueOf(),
+                };
+            }
         });
         const assign = await SurveyUniqueLinks.bulkCreate(newArray)
         await SurveyEmailSchedule.update({
@@ -971,3 +978,8 @@ module.exports.removeQuestion = async (req, res) => {
         return apiResponses.errorResponse(res, err);
     }
 };
+
+
+
+//In export schduler survey, sample users and other place should be in english
+// Gender should be in english in export

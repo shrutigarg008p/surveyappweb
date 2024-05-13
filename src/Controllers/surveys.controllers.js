@@ -794,7 +794,7 @@ module.exports.userRespondentDashboard = async (req, res) => {
                     points: incompleteSurveys || 0
                 },
                 {
-                    name: "पूरा सर्वेक्षण",
+                    name: "पूर्ण सर्वेक्षण",
                     points: completeSurveys || 0
                 },
                 {
@@ -806,23 +806,23 @@ module.exports.userRespondentDashboard = async (req, res) => {
                     points: 100 - overallAttemptedPercentage || 0
                 },
                 {
-                    name: "पुरस्कार अंक",
+                    name: "पुरस्कार पाइंट",
                     points: totalRewardPoints || 0
                 },
                 {
-                    name: "संदर्भ अंक",
+                    name: "रेफ़रल पाइंट",
                     points: totalReferralsPoints || 0
                 },
                 {
-                    name: "संदर्भ आंकड़ा",
+                    name: "रेफरल सांख्यिकी",
                     points: 0
                 },
                 {
-                    name: "कुल बचे हुए अंक",
+                    name: "कुल बचे हुए पाइंट",
                     points: totalLeft || 0
                 },
                 {
-                    name: "कुल स्वीकृत संदर्भ",
+                    name: "कुल मंजूर किए गए रेफरल",
                     points: totalReferralsApproved || 0
                 }
             ]
@@ -916,11 +916,11 @@ module.exports.userRespondentDashboardWeb = async (req, res) => {
                     points: 100 - overallAttemptedPercentage || 0
                 },
                 totalRewardPoints: {
-                    name: "पुरस्कार अंक",
+                    name: "पुरस्कार पाइंट",
                     points: totalRewardPoints || 0
                 },
                 totalReferralsPoints: {
-                    name: "रेफरल अंक",
+                    name: "रेफरल पाइंट",
                     points: totalReferralsPoints || 0
                 },
                 totalReferralsStatistics: {

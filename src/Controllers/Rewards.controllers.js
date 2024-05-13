@@ -157,7 +157,7 @@ module.exports.getAllByUserId = async (req, res) => {
                         value: surveyPoints
                     },
                     {
-                        name: "कुल अंक",
+                        name: "कुल पाइंट",
                         value: totalPoints
                     },
                     {
@@ -165,7 +165,7 @@ module.exports.getAllByUserId = async (req, res) => {
                         value: totalRedeemed
                     },
                     {
-                        name: "बचे हुए अंक",
+                        name: "बचे हुए पाइंट",
                         value: leftPoints
                     }
                 ];
@@ -267,7 +267,7 @@ module.exports.getAllByUserId = async (req, res) => {
                         value: surveyPoints
                     },
                     {
-                        name: "कुल अंक",
+                        name: "कुल पाइंट",
                         value: totalPoints
                     },
                     {
@@ -275,7 +275,7 @@ module.exports.getAllByUserId = async (req, res) => {
                         value: totalRedeemed
                     },
                     {
-                        name: "बचे हुए अंक",
+                        name: "बचे हुए पाइंट",
                         value: leftPoints
                     }
                 ];

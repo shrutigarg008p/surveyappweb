@@ -1263,7 +1263,8 @@ module.exports.basicProfileOnly = async (req, res) => {
 						order: [['createdAt', 'DESC']]
 					})
 				}
-				return apiResponses.successResponseWithData(res, 'success!', data);
+				const users = await updateUsersWithCityNames(data)
+				return apiResponses.successResponseWithData(res, 'success!', users);
 			},
 		);
 	} catch (err) {
