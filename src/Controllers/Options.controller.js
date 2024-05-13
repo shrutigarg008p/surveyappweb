@@ -90,3 +90,15 @@ module.exports.delete = async (req, res) => {
         return apiResponses.errorResponse(res, err);
     }
 };
+
+
+module.exports.getAllMA = async (req, res) => {
+    try {
+        const limit = req.params.limit;
+        const data = await Options.findAll({ where: { hint: "MA" }, attributes: ['id']})
+        const idsArray = data.map(option => option.id);
+        return apiResponses.successResponseWithData(res, 'success!', idsArray);
+    } catch (err) {
+        return apiResponses.errorResponse(res, err);
+    }
+};

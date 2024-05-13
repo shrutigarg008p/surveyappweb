@@ -31,6 +31,15 @@ async function updateUsersWithCityNames(users) {
                     user.basic_profile.state = stateMap.get(stateNameInHindi);
                 }
             }
+
+            // let male =  ["Male", 'male', 'पुरुष']
+            // let female = ["Female", "महिला", 'female']
+            // if (user.basic_profile && user.basic_profile.gender) {
+            //     const stateNameInHindi = user.basic_profile.state;
+            //     if (stateMap.has(stateNameInHindi)) {
+            //         user.basic_profile.state = stateMap.get(stateNameInHindi);
+            //     }
+            // }
         }
 
         return users;

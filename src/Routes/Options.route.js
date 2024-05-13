@@ -30,6 +30,11 @@ module.exports= function(app) {
         optionsControllers.getOne,
     );
 
+    app.get(
+        '/api/v1/options/getMaOptions',
+        optionsControllers.getAllMA,
+    );
+
     app.delete(
         '/api/v1/options/delete/:id',
         optionsControllers.delete,
