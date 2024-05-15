@@ -19,7 +19,7 @@ module.exports = {
 	userRegistration: (email, token) => {
 		console.log('logIn_Mail====>' + email);
 		const mailOptions = {
-			from: 'panel@indiapolls.com',
+			from: 'Indiapolls<panel@indiapolls.com>',
 			to: email,
 			subject: 'IndiaPolls-Your Registration is Pending Approval',
 			text: 'IndiaPolls-Your Registration is Pending Approval',
@@ -42,7 +42,7 @@ module.exports = {
 	userRegistrationHindi: (email, token) => {
 		console.log('logIn_Mail====>' + email);
 		const mailOptions = {
-			from: 'panel@indiapolls.com',
+			from: 'Indiapolls<panel@indiapolls.com>',
 			to: email,
 			subject: 'इंडियापोल्स-आपका पंजीकरण अनुमोदन के लिए लंबित है',
 			text: 'इंडियापोल्स-आपका पंजीकरण अनुमोदन के लिए लंबित है',
@@ -64,7 +64,7 @@ module.exports = {
 	userEmailChanged: (email, token) => {
 		console.log('logIn_Mail====>' + email);
 		const mailOptions = {
-			from: 'panel@indiapolls.com',
+			from: 'Indiapolls<panel@indiapolls.com>',
 			to: email,
 			subject: 'IndiaPolls-Your Email Change Confirmation Pending',
 			text: 'IndiaPolls-Your Email Change Confirmation Pending',
@@ -86,7 +86,7 @@ module.exports = {
 	userEmailChangedHindi: (email, token) => {
 		console.log('logIn_Mail====>' + email);
 		const mailOptions = {
-			from: 'panel@indiapolls.com',
+			from: 'Indiapolls<panel@indiapolls.com>',
 			to: email,
 			subject: 'इंडियापोल्स-आपका ईमेल परिवर्तन पुष्टिकरण लंबित है',
 			text: 'इंडियापोल्स-आपका ईमेल परिवर्तन पुष्टिकरण लंबित है',
@@ -108,7 +108,7 @@ module.exports = {
 	surveyInvite: (subject, email, template) => {
 		console.log('logIn_Mail====>' + email);
 		const mailOptions = {
-			from: 'panel@indiapolls.com',
+			from: 'Indiapolls<panel@indiapolls.com>',
 			to: email,
 			subject: subject,
 			html: template
@@ -129,7 +129,7 @@ module.exports = {
 	userPasswordReset: (email, token) => {
 		console.log('logIn_Mail====>' + email);
 		const details = {
-			from: 'panel@indiapolls.com', // sender address same as above
+			from: 'Indiapolls<panel@indiapolls.com>', // sender address same as above
 			to: email, // Receiver's email id
 			subject: 'Regarding Password reset on INDIA-POLLS!', // Subject of the mail.
 			html:
@@ -150,7 +150,7 @@ module.exports = {
 	userPasswordResetHindi: (email, token) => {
 		console.log('logIn_Mail====>' + email);
 		const details = {
-			from: 'panel@indiapolls.com', // sender address same as above
+			from: 'Indiapolls<panel@indiapolls.com>', // sender address same as above
 			to: email, // Receiver's email id
 			subject: 'इंडियापोल्स पर पासवर्ड रीसेट के संबंध में!', // Subject of the mail.
 			html:
@@ -173,7 +173,7 @@ module.exports = {
 		console.log('logIn_Mail====>' + email);
 		const url = `https://panel.indiapolls.com/referrals/view/${userId}`
 		const details = {
-			from: 'panel@indiapolls.com', // sender address same as above
+			from: 'Indiapolls<panel@indiapolls.com>', // sender address same as above
 			to: email, // Receiver's email id
 			subject: subject, // Subject of the mail.
 			html: `<div id=":tc" class="a3s aiL "><div class="adM">
@@ -211,7 +211,7 @@ module.exports = {
 		console.log('logIn_Mail====>' + email);
 		const url = `https://panel.indiapolls.com/referrals/view/${userId}`
 		const details = {
-			from: 'panel@indiapolls.com',
+			from: 'Indiapolls<panel@indiapolls.com>',
 			to: email,
 			subject: subject,
 			html: `<div id=":tc" class="a3s aiL "><div class="adM">
@@ -249,7 +249,7 @@ module.exports = {
 	manualRedemptionRequest: (name, email) => {
 		console.log('logIn_Mail====>' + email);
 		const details = {
-			from: 'panel@indiapolls.com',
+			from: 'Indiapolls<panel@indiapolls.com>',
 			to: email, // Receiver's email id
 			subject: 'Amazon Gift Card Voucher Redemption Request',
 			html:
@@ -272,7 +272,7 @@ module.exports = {
 	manualRedemptionRequestHindi: (name, email) => {
 		console.log('logIn_Mail====>' + email);
 		const details = {
-			from: 'panel@indiapolls.com',
+			from: 'Indiapolls<panel@indiapolls.com>',
 			to: email, // Receiver's email id
 			subject: 'अमेज़न उपहार कार्ड वाउचर मोचन अनुरोध',
 			html:
@@ -333,7 +333,7 @@ module.exports = {
 	manualApproveEmail: (email, coupon, pin, validity) => {
 		console.log('logIn_Mail====>' + email);
 		const details = {
-			from: 'panel@indiapolls.com',
+			from: 'Indiapolls<panel@indiapolls.com>',
 			to: email,
 			subject: 'Your IndiaPolls Redemption request closure !',
 			html: `<p>Dear User<user></p>
@@ -358,7 +358,7 @@ module.exports = {
 	manualApproveEmailHindi: (email, coupon, pin, validity) => {
 		console.log('logIn_Mail====>' + email);
 		const details = {
-			from: 'panel@indiapolls.com',
+			from: 'Indiapolls<panel@indiapolls.com>',
 			to: email,
 			subject: 'आपकी इंडियापोल्स रिडेम्प्शन अनुरोध समाप्ति!',
 			html: `<p>प्रिय उपयोगकर्ता,</p>

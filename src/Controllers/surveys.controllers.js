@@ -22,6 +22,7 @@ const {DataTypes, Op, Sequelize} = require("sequelize");
 const {respondentSummary} = require("../utils/RespondentSummary");
 const {URL} = require("url");
 const axios = require("axios");
+const {userRegistration} = require("../Config/Mails");
 
 
 

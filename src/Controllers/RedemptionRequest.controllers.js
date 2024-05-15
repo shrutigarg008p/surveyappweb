@@ -37,10 +37,17 @@ module.exports.createRedemptionRequest = async (req, res) => {
 
         if (!isPointAllowed(req.body.redemptionModeTitle, req.body.pointsRequested) && req.body.redemptionModeTitle !== "Amazon e-Gift Card") {
             console.log("Points are not allowed for redemption type:", req.body.redemptionModeTitle);
-            return apiResponses.validationErrorWithData(
-                res,
-                `Points are not allowed for redemption type: ${req.body.redemptionModeTitle}, allowed points is only ${allowPoints[req.body.redemptionModeTitle]}`
-            );
+            if(language === 'hi') {
+                return apiResponses.validationErrorWithData(
+                    res,
+                    `रिडेम्प्शन प्रकार के लिए पोइंट्स अनुमत नहीं हैं: ${req.body.redemptionModeTitle}, केवल अनुमत पोइंट्स हैं ${allowPoints[req.body.redemptionModeTitle]}`
+                );
+            } else {
+                return apiResponses.validationErrorWithData(
+                    res,
+                    `Points are not allowed for redemption type: ${req.body.redemptionModeTitle}, allowed points is only ${allowPoints[req.body.redemptionModeTitle]}`
+                );
+            }
         }
 
         const totalLeftPoints = await getRedemptionSummary(req.body.userId)
