@@ -416,7 +416,10 @@ module.exports.getOneDetails = async (req, res) => {
                                 },
                             ],
                             limit: limit,
-                            order: [['gender', 'ASC']],
+                            order: [
+                                [Sequelize.fn('RANDOM')],
+                                ['gender']
+                            ],
                         });
 
                         if (sampleQuestions.length > 0) {
@@ -435,7 +438,10 @@ module.exports.getOneDetails = async (req, res) => {
                                         attributes: ['email', 'role']
                                     },
                                 ],
-                                order: [['gender', 'ASC']],
+                                order: [
+                                    [Sequelize.fn('RANDOM')],
+                                    ['gender']
+                                ],
                             })
                             const filterCommonUsers = (arrA, arrB) => {
                                 return arrA.filter(userA => arrB.some(userB => userB.userId === userA.userId));

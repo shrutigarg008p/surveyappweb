@@ -243,7 +243,10 @@ const triggerSurveyEmail = async (id) => {
                                 },
                             ],
                             limit: limit,
-                            order: [['gender', 'ASC']],
+                            order: [
+                                [Sequelize.fn('RANDOM')],
+                                ['gender']
+                            ],
                         });
 
                         if (sampleQuestions.length > 0) {

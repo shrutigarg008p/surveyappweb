@@ -11,7 +11,7 @@ const Users = db.user;
 const Cities = db.city;
 const States = db.states;
 const apiResponses = require('../Components/apiresponse');
-const {DataTypes, Op} = require("sequelize");
+const {DataTypes, Op, sequelize} = require("sequelize");
 const Sequelize = require("sequelize");
 
 function calculateBirthDate(age) {
@@ -522,7 +522,10 @@ module.exports.getOneSampleUsers = async (req, res) => {
                     },
                 ],
                 where: whereClause,
-                order: [['gender', 'ASC']],
+                order: [
+                    [Sequelize.fn('RANDOM')],
+                    ['gender']
+                ],
                 limit: limit,
                 offset: offset,
 
@@ -743,6 +746,10 @@ module.exports.getOneSampleAllUsers = async (req, res) => {
                 ],
                 where: whereClause,
                 limit: limit,
+                order: [
+                    [Sequelize.fn('RANDOM')],
+                    ['gender']
+                ],
             });
         }
         if(sampleQuestions.length > 0) {
