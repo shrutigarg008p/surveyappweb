@@ -295,7 +295,7 @@ module.exports = {
 	newsLetterMail: (body, emails, subject) => {
 		console.log('logIn_Mail====>' + emails);
 		const details = {
-			from: 'kumar@indiapolls.com',
+			from: 'Indiapolls <kumar@indiapolls.com>',
 			to: emails, // Receiver's email id
 			subject: subject,
 			html: body
@@ -314,7 +314,7 @@ module.exports = {
 	newsLetterSampleMail: (body, emails, subject) => {
 		console.log('logIn_Mail====>' + emails);
 		const details = {
-			from: 'kumar@indiapolls.com',
+			from: 'Indiapolls <kumar@indiapolls.com>',
 			to: emails, // Receiver's email id
 			subject: subject,
 			html: body
