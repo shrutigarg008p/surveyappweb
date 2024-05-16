@@ -13,6 +13,8 @@ const { getRedemptionSummary } = require("../utils/RespondentSummary");
 
 module.exports.createRedemptionRequest = async (req, res) => {
     try {
+        req.body.pointsRequested = parseInt(req.body.pointsRequested, 10)
+        req.body.pointsRedeemed = parseInt(req.body.pointsRedeemed, 10)
         console.log('REDEEM REQUEST BODY-------->', req.body)
         const language = req.headers['language'] || req.body.language || 'en';
         const allowedPoints = [100];
