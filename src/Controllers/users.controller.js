@@ -8,7 +8,7 @@ const City = db.city;
 const Sequelize = db.Sequelize;
 const States = db.states;
 const Rewards = db.rewards;
-const AsssignSurveys = db.asssignSurveys;
+const AssignSurveys = db.asssignSurveys;
 const RedemptionRequest = db.redemptionRequest;
 const NotificationsDb = db.notifications;
 const ProfileUserResponse = db.profileUserResponse;
@@ -1139,6 +1139,22 @@ module.exports.permanentlyDelete = async (req, res) => {
 				const user = await User.update(
 					obj, {where: {id: req.params.userId}}
 				)
+
+				await RedemptionRequest.destroy({
+					where: { userId: req.params.userId }
+				});
+
+				await Rewards.destroy({
+					where: { userId: req.params.userId }
+				});
+
+				await ProfileUserResponse.destroy({
+					where: { userId: req.params.userId }
+				});
+
+				await AssignSurveys.destroy({
+					where: { userId: req.params.userId }
+				});
 			} else {
 				let obj = {
 					deleteRequestDate: new Date().valueOf(),
