@@ -1172,11 +1172,11 @@ module.exports.deleteActions = async (req, res) => {
 				)
 
 				await User.destroy(
-					obj, {where: {id: req.params.userId}}
+					{where: {id: req.params.userId}}
 				)
 
 				await BasicProfile.destroy(
-					obj, {where: {userId: req.params.userId}}
+					{where: {userId: req.params.userId}}
 				)
 
 				await RedemptionRequest.destroy({
@@ -1209,6 +1209,7 @@ module.exports.deleteActions = async (req, res) => {
 			return apiResponses.validationErrorWithData(res, 'User not found', null);
 		}
 	} catch (err) {
+		console.log('error---->', err)
 		return apiResponses.errorResponse(res, err);
 	}
 };
@@ -1254,6 +1255,7 @@ module.exports.basicProfileOnly = async (req, res) => {
 							deleteRequestDate: {
 								[Sequelize.Op.ne]: null,
 							},
+							deleteConfirmDate: null
 						},
 						attributes: ['phoneNumber', 'id', 'email', 'createdAt', 'deleteRequestDate', 'deleteConfirmDate'],
 						include: [{
@@ -1308,7 +1310,7 @@ module.exports.allPanelists = async (req, res) => {
 		});
 		const limit = 100000;
 		let whereClauseProfile = {};
-		let whereClauseUser = {};
+		let whereClauseUser = {deleteConfirmDate: null };
 		let filteredProfilePanelists = []
 		let filteredUserPanelists = []
 		const request = req.body
