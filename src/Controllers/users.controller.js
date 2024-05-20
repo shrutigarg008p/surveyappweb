@@ -1133,7 +1133,7 @@ module.exports.permanentlyDelete = async (req, res) => {
 			if(req.params.type === 'admin') {
 				let obj = {
 					deleteRequestDate: new Date().valueOf(),
-					deleteConfirmDate: new Date().valueOf(),
+					// deleteConfirmDate: new Date().valueOf(),
 					updatedAt: new Date().valueOf()
 				}
 				const user = await User.update(
