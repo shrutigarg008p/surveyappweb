@@ -9,6 +9,7 @@ const Sequelize = db.Sequelize;
 const States = db.states;
 const Rewards = db.rewards;
 const AssignSurveys = db.asssignSurveys;
+const Messages = db.messages;
 const RedemptionRequest = db.redemptionRequest;
 const NotificationsDb = db.notifications;
 const ProfileUserResponse = db.profileUserResponse;
@@ -1192,6 +1193,9 @@ module.exports.deleteActions = async (req, res) => {
 				});
 
 				await AssignSurveys.destroy({
+					where: { userId: req.params.userId }
+				});
+				await Messages.destroy({
 					where: { userId: req.params.userId }
 				});
 
