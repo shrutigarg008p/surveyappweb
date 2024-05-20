@@ -1139,22 +1139,6 @@ module.exports.permanentlyDelete = async (req, res) => {
 				const user = await User.update(
 					obj, {where: {id: req.params.userId}}
 				)
-
-				await RedemptionRequest.destroy({
-					where: { userId: req.params.userId }
-				});
-
-				await Rewards.destroy({
-					where: { userId: req.params.userId }
-				});
-
-				await ProfileUserResponse.destroy({
-					where: { userId: req.params.userId }
-				});
-
-				await AssignSurveys.destroy({
-					where: { userId: req.params.userId }
-				});
 			} else {
 				let obj = {
 					deleteRequestDate: new Date().valueOf(),
@@ -1186,6 +1170,31 @@ module.exports.deleteActions = async (req, res) => {
 				const user = await User.update(
 					obj, {where: {id: req.params.userId}}
 				)
+
+				await User.destroy(
+					obj, {where: {id: req.params.userId}}
+				)
+
+				await BasicProfile.destroy(
+					obj, {where: {userId: req.params.userId}}
+				)
+
+				await RedemptionRequest.destroy({
+					where: { userId: req.params.userId }
+				});
+
+				await Rewards.destroy({
+					where: { userId: req.params.userId }
+				});
+
+				await ProfileUserResponse.destroy({
+					where: { userId: req.params.userId }
+				});
+
+				await AssignSurveys.destroy({
+					where: { userId: req.params.userId }
+				});
+
 			} else {
 				let obj = {
 					deleteRequestDate: null,
