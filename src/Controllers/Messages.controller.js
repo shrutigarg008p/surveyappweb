@@ -1,11 +1,20 @@
 const db = require('../models');
 const Messages = db.messages;
 const Users = db.user;
+const BasicProfile = db.basicProfile;
 const apiResponses = require('../Components/apiresponse');
 
 module.exports.create = async (req, res) => {
     try {
-        const Survey = await Messages.create({
+
+const user = await Users.findOne({where: {id: req.body.userId}});
+console.log("msg user not exist===>>",user);
+
+if (!user) 
+{
+   return apiResponses.validationErrorWithData(res, 'User does not exist');
+}
+	  const Survey = await Messages.create({
             userId: req.body.userId,
             queryType: req.body.queryType,
             subject: req.body.subject,
