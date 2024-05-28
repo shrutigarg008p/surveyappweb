@@ -1,5 +1,5 @@
 const usersController = require('../Controllers/users.controller');
-const {checkDuplicateEmail, checkDuplicatePhone} = require('../Middlewares/userVarified');
+const {checkDuplicateEmail, checkDuplicatePhone, phoneNumberValidationMiddleware, mobileValidationMiddleware} = require('../Middlewares/userVarified');
 const UserAuth = require('../Validators/User.validator');
 const multer = require('multer');
 const path = require('path');
@@ -27,12 +27,13 @@ module.exports= function(app) {
 
 	app.post(
 		'/api/v1/auth/user/signup',
-		[UserAuth.signUpValidator, checkDuplicateEmail, checkDuplicatePhone],
+		[UserAuth.signUpValidator, checkDuplicateEmail, phoneNumberValidationMiddleware, checkDuplicatePhone],
 		usersController.registration,
 	);
 
 	app.post(
 		'/api/v1/auth/user/continueWithMobile',
+		[phoneNumberValidationMiddleware, checkDuplicatePhone],
 		usersController.continueWithMobile,
 	);
 
@@ -44,7 +45,7 @@ module.exports= function(app) {
 
 	app.put(
 		'/api/v1/auth/user/update-basic-profile/:userId',
-		[UserAuth.updateValidator],
+		[UserAuth.updateValidator, mobileValidationMiddleware],
 		usersController.userUpdate,
 	);
 
