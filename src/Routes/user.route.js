@@ -33,7 +33,7 @@ module.exports= function(app) {
 
 	app.post(
 		'/api/v1/auth/user/continueWithMobile',
-		[phoneNumberValidationMiddleware, checkDuplicatePhone],
+		[phoneNumberValidationMiddleware],
 		usersController.continueWithMobile,
 	);
 
