@@ -4,6 +4,7 @@ const RedemptionRequests = db.redemptionRequest;
 const Users = db.user;
 const BasicProfile = db.basicProfile;
 const Surveys = db.surveys;
+const XoxoTokens = db.xoxoTokens;
 const Rewards = db.rewards;
 const RedemptionRequestTransactions = db.redemptionRequestTransactions;
 const apiResponses = require('../Components/apiresponse');
@@ -436,6 +437,7 @@ module.exports.ApproveRequest = async (req, res) => {
                     productId = 56170
                 }
 
+                const info = await XoxoTokens.findOne()
                 const user = await Users.findOne({where: {id: requestData.userId}})
                 let data = JSON.stringify({
                     "query": "plumProAPI.mutation.placeOrder",
@@ -460,7 +462,7 @@ module.exports.ApproveRequest = async (req, res) => {
                     // url: 'https://stagingaccount.xoxoday.com/chef/v1/oauth/api',
                     url: 'https://accounts.xoxoday.com/chef/v1/oauth/api',
                     headers: {
-                        'Authorization': 'Bearer eyJ0b2tlbkNvbnRlbnQiOnsiaXNzdWVkRm9yIjoidGVzdCIsInNjb3BlIjoiIiwiaXNzdWVkQXQiOjE3MTU1ODI5OTcxNzUsImV4cGlyZXNBdCI6MTcxNjg3ODk5NzE3NSwidG9rZW5fdHlwZSI6IlVTRVIifSwiYV90IjoiZXlKbGJtTWlPaUpCTVRJNFEwSkRMVWhUTWpVMklpd2lZV3huSWpvaVJVTkVTQzFGVXlJc0ltdHBaQ0k2SW1WdVl5SXNJbVZ3YXlJNmV5SnJkSGtpT2lKRlF5SXNJbU55ZGlJNklsQXRNalUySWl3aWVDSTZJbkJFVTNaclYyaHVWRWRFYWs5ZlJtOU5NV3RqYzNGNVVHZFJjR1kwVkdrd1NrUmZVMjAzUmxaNGVFMGlMQ0o1SWpvaVRYUkxWSFpETm05VlRIZzNTMFZhYkY4MWJsaGpaSEZ1V205WWIwZHNZMlYwTjJOelozQjZjVVl5Y3lKOWZRLi51SHNZeDJnM3lxQnVpdEZwd0ZWdm53LlZRYkRYR2dYTzlpU0Q4ZWhYNHRFVXRnNXJtUHZiX1ZhSG9uZEdjR2gyakZKTVl3eGxJOHpmeDNJb3JxRG55dDQ3dk4wcnVMX3BCdWpPZWs4YXVvd1dqZm5CMzNYQmhVeWQzeUN5NVhacjVRM21jamtOUE5uTjJ4S2FkcWt1a01Ma19qLVJXZkpRYnF0ZW9BM3VMYjg2ckY0Z1JhYm9pYzlURW1KQ1Zka25nVVY1RHBTc1o4NmtvbXlvS0pnZTh0UlN1TDczUHd2M0U4VVpHSGNHTnZBV1R2enRKTVBKeTlaZDFuU3dfdDlaandJLXZMR1RxbnBhN1ItaTdTUlBSTGExa3BXLWtUamtWOFU3RXAyN2ZlVWw2LUh6VGpoZnFsSVRWLWJOS1FBVTFnVUxxSGhqdTBfLXdVQVJHdXBaZ3pFMk5VWHA5bFpTb1E1bzdkbWs0WmpBWWFJYzRkUHBvSlJheWM0YW5GTGs4UUlwd3JlWTdfdkFBRktXb0RuV2FnTmtCQ29yNDJZQVF2cjN5UldqME5KbUs5V3B5dUU4dkMwNEl0MHVtNG8yekUwRTllT3lDdy1FMHZkWFdGS3FjcDVTV1NUWks5TF9Say1UdXhfOEFBcDU1M0Z2WU5kUmp0M2lUQnQwdGdvQTNhNkVxWThlbUxCcEtNbFU3bUtQVkdvSDF4VkdoQ19FWmNsSVlWZkU2MnV3cU9ncEVpaHhrR05WOWZNcW1QZ2gyS3JCbGREaXFsODNkQnRfSVpQamZMSkQ1a1MxZS1VUGhNajByMEZWN1ZXbUdrUGNXbThseUNaOVFFdzNMY1hGOHNVZEFtWkJBSFR4VGZHSmNBTDZWZy1QcUhtVG5fbEVBU3hFYS1yOXg2SFp2V2xsVG1ZR2hMLUF6WVVFOXVORUNRaHl1Z3ladHZ0bkwwb3R5VUlqbVR1QVdrNnlHa2VTdE9Ra0pBelpDSmZHY3ZyQmtNTlhHRFhHRUNGckZTYlFhMXpnRXN5ZHJiWjFSLVMtWUZySnRkNFhLV1VVY3JrVWVxZEY3Tk9ldjVLNzk0cHVZNjlfeHdJMUxEX0NSN1BKRjVzUjVRbTVOdDY3Z1ZMd1lSREk5bUxWYzNkc0djcW04dm5vaW8tcDRsbXZOcXV5Z2RtYkpwVDhfd2x1RTVZRU53LjJyem5oZ0c2bG5NN0w1V2JIRGZWUkEifQ==',
+                        'Authorization': `Bearer ${info.access_token}`,
                         'Content-Type': 'application/json',
                         'Cookie': '__cf_bm=HUVN4tkMTW8KtIHKqzFTz3fROutLhihBCbEdox5iC8g-1706087320-1-AZ2QBFOh5IbAmku1wdIbWaWkJnAbRNpN6CKTwSTlAcy4RZggXunq4Qe8UTAmkPTqdpj1CviE1siSg+lRKNGNaOg=; _cfuvid=fS5l5NEZIWVwugVKZ5qbR.IsipPPJXgrVLSLrBeUdhg-1706084905801-0-604800000'
                     },
@@ -717,6 +719,7 @@ module.exports.xoxoBulkApprove = async (req, res) => {
                             productId = 56170
                         }
 
+                        const info = await XoxoTokens.findOne()
                         const user = await Users.findOne({where: {id: requestData.userId}})
                         let dataInfo = JSON.stringify({
                             "query": "plumProAPI.mutation.placeOrder",
@@ -740,7 +743,7 @@ module.exports.xoxoBulkApprove = async (req, res) => {
                             maxBodyLength: Infinity,
                             url: 'https://accounts.xoxoday.com/chef/v1/oauth/api',
                             headers: {
-                                'Authorization': 'Bearer eyJ0b2tlbkNvbnRlbnQiOnsiaXNzdWVkRm9yIjoidGVzdCIsInNjb3BlIjoiIiwiaXNzdWVkQXQiOjE3MTU1ODI5OTcxNzUsImV4cGlyZXNBdCI6MTcxNjg3ODk5NzE3NSwidG9rZW5fdHlwZSI6IlVTRVIifSwiYV90IjoiZXlKbGJtTWlPaUpCTVRJNFEwSkRMVWhUTWpVMklpd2lZV3huSWpvaVJVTkVTQzFGVXlJc0ltdHBaQ0k2SW1WdVl5SXNJbVZ3YXlJNmV5SnJkSGtpT2lKRlF5SXNJbU55ZGlJNklsQXRNalUySWl3aWVDSTZJbkJFVTNaclYyaHVWRWRFYWs5ZlJtOU5NV3RqYzNGNVVHZFJjR1kwVkdrd1NrUmZVMjAzUmxaNGVFMGlMQ0o1SWpvaVRYUkxWSFpETm05VlRIZzNTMFZhYkY4MWJsaGpaSEZ1V205WWIwZHNZMlYwTjJOelozQjZjVVl5Y3lKOWZRLi51SHNZeDJnM3lxQnVpdEZwd0ZWdm53LlZRYkRYR2dYTzlpU0Q4ZWhYNHRFVXRnNXJtUHZiX1ZhSG9uZEdjR2gyakZKTVl3eGxJOHpmeDNJb3JxRG55dDQ3dk4wcnVMX3BCdWpPZWs4YXVvd1dqZm5CMzNYQmhVeWQzeUN5NVhacjVRM21jamtOUE5uTjJ4S2FkcWt1a01Ma19qLVJXZkpRYnF0ZW9BM3VMYjg2ckY0Z1JhYm9pYzlURW1KQ1Zka25nVVY1RHBTc1o4NmtvbXlvS0pnZTh0UlN1TDczUHd2M0U4VVpHSGNHTnZBV1R2enRKTVBKeTlaZDFuU3dfdDlaandJLXZMR1RxbnBhN1ItaTdTUlBSTGExa3BXLWtUamtWOFU3RXAyN2ZlVWw2LUh6VGpoZnFsSVRWLWJOS1FBVTFnVUxxSGhqdTBfLXdVQVJHdXBaZ3pFMk5VWHA5bFpTb1E1bzdkbWs0WmpBWWFJYzRkUHBvSlJheWM0YW5GTGs4UUlwd3JlWTdfdkFBRktXb0RuV2FnTmtCQ29yNDJZQVF2cjN5UldqME5KbUs5V3B5dUU4dkMwNEl0MHVtNG8yekUwRTllT3lDdy1FMHZkWFdGS3FjcDVTV1NUWks5TF9Say1UdXhfOEFBcDU1M0Z2WU5kUmp0M2lUQnQwdGdvQTNhNkVxWThlbUxCcEtNbFU3bUtQVkdvSDF4VkdoQ19FWmNsSVlWZkU2MnV3cU9ncEVpaHhrR05WOWZNcW1QZ2gyS3JCbGREaXFsODNkQnRfSVpQamZMSkQ1a1MxZS1VUGhNajByMEZWN1ZXbUdrUGNXbThseUNaOVFFdzNMY1hGOHNVZEFtWkJBSFR4VGZHSmNBTDZWZy1QcUhtVG5fbEVBU3hFYS1yOXg2SFp2V2xsVG1ZR2hMLUF6WVVFOXVORUNRaHl1Z3ladHZ0bkwwb3R5VUlqbVR1QVdrNnlHa2VTdE9Ra0pBelpDSmZHY3ZyQmtNTlhHRFhHRUNGckZTYlFhMXpnRXN5ZHJiWjFSLVMtWUZySnRkNFhLV1VVY3JrVWVxZEY3Tk9ldjVLNzk0cHVZNjlfeHdJMUxEX0NSN1BKRjVzUjVRbTVOdDY3Z1ZMd1lSREk5bUxWYzNkc0djcW04dm5vaW8tcDRsbXZOcXV5Z2RtYkpwVDhfd2x1RTVZRU53LjJyem5oZ0c2bG5NN0w1V2JIRGZWUkEifQ==',
+                                'Authorization': `Bearer ${info.access_token}`,
                                 'Content-Type': 'application/json',
                                 'Cookie': '__cf_bm=HUVN4tkMTW8KtIHKqzFTz3fROutLhihBCbEdox5iC8g-1706087320-1-AZ2QBFOh5IbAmku1wdIbWaWkJnAbRNpN6CKTwSTlAcy4RZggXunq4Qe8UTAmkPTqdpj1CviE1siSg+lRKNGNaOg=; _cfuvid=fS5l5NEZIWVwugVKZ5qbR.IsipPPJXgrVLSLrBeUdhg-1706084905801-0-604800000'
                             },
