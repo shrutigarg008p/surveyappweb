@@ -180,7 +180,7 @@ module.exports.getOne = async (req, res) => {
             }
 
             // Registration date filter
-            if (sample.fromRegistrationDate && sample.toRegistrationDate) {
+            if (sample.fromRegistrationDate || sample.toRegistrationDate) {
                 whereClause.createdAt = {
                     [Op.between]: [new Date(sample.fromRegistrationDate), new Date(sample.toRegistrationDate)]
                 };
@@ -427,7 +427,7 @@ module.exports.getOneSampleUsers = async (req, res) => {
             }
 
             // Registration date filter
-            if (sample.fromRegistrationDate && sample.toRegistrationDate) {
+            if (sample.fromRegistrationDate || sample.toRegistrationDate) {
                 whereClause.createdAt = {
                     [Op.between]: [new Date(sample.fromRegistrationDate), new Date(sample.toRegistrationDate)]
                 };
@@ -650,7 +650,7 @@ module.exports.getOneSampleAllUsers = async (req, res) => {
             }
 
             // Registration date filter
-            if (sample.fromRegistrationDate && sample.toRegistrationDate) {
+            if (sample.fromRegistrationDate || sample.toRegistrationDate) {
                 whereClause.createdAt = {
                     [Op.between]: [new Date(sample.fromRegistrationDate), new Date(sample.toRegistrationDate)]
                 };
