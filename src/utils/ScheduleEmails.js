@@ -138,7 +138,7 @@ const triggerSurveyEmail = async (id) => {
 
 
                         // Registration date filter
-                        if (sample.fromRegistrationDate && sample.toRegistrationDate) {
+                        if (sample.fromRegistrationDate || sample.toRegistrationDate) {
                             whereClause.createdAt = {
                                 [Op.between]: [new Date(sample.fromRegistrationDate), new Date(sample.toRegistrationDate)]
                             };
