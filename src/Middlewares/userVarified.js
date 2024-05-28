@@ -57,4 +57,26 @@ module.exports = {
 			next();
 		});
 	},
+
+	phoneNumberValidationMiddleware: (req, res, next) => {
+		const { phoneNumber } = req.body;
+		if (phoneNumber && !/^[0-9]+$/.test(phoneNumber)) {
+			return apiResponses.validationErrorWithData(
+				res, 'Invalid phone number. Only digits are allowed.',
+				null,
+			);
+		}
+		next();
+	},
+
+	mobileValidationMiddleware: (req, res, next) => {
+		const { mobile } = req.body;
+		if (mobile && !/^[0-9]+$/.test(mobile)) {
+			return apiResponses.validationErrorWithData(
+				res, 'Invalid phone number. Only digits are allowed.',
+				null,
+			);
+		}
+		next();
+	}
 };
