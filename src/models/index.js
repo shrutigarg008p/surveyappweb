@@ -52,6 +52,8 @@ db.notifications = require('./Notifications.model')(sequelize, Sequelize);
 db.redemptionRequestTransactions = require('./RedemptionRequestTransactions.model')(sequelize, Sequelize);
 db.partnerUsers = require('./partnerUsers.model')(sequelize, Sequelize);
 db.surveyUniqueLinks = require('./surveyUniqueLinks.model')(sequelize, Sequelize);
+db.xoxoTokens = require('./xoxoToken.model')(sequelize, Sequelize);
+
 
 
 

@@ -296,7 +296,7 @@ module.exports = {
 		console.log('logIn_Mail====>' + emails);
 		const details = {
 			from: 'IndiaPolls <kumar@indiapolls.com>',
-			to: emails, // Receiver's email id
+			bcc: emails, // Receiver's email id
 			subject: subject,
 			html: body
 		};
@@ -315,7 +315,7 @@ module.exports = {
 		console.log('logIn_Mail====>' + emails);
 		const details = {
 			from: 'IndiaPolls <kumar@indiapolls.com>',
-			to: emails, // Receiver's email id
+			bcc: emails, // Receiver's email id
 			subject: subject,
 			html: body
 		};
