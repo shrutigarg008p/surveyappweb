@@ -20,7 +20,7 @@ const sendSurveyMessage = async (fullName, surveyUrl, mobile, surveyName) => {
         });
 
         console.log('Response:', response.data);
-        sendSurveyWhatsappMessage(fullName, surveyUrl, mobile, surveyName)
+        // sendSurveyWhatsappMessage(fullName, surveyUrl, mobile, surveyName)
         return true
     } catch (error) {
         console.error('Error sending message:', error.message);
@@ -45,7 +45,7 @@ const sendSurveyMessageHindi = async (fullName, surveyUrl, mobile, surveyName) =
         });
 
         console.log('Response:', response.data);
-        sendSurveyWhatsappMessageHindi(fullName, surveyUrl, mobile, surveyName)
+        // sendSurveyWhatsappMessageHindi(fullName, surveyUrl, mobile, surveyName)
         return true
     } catch (error) {
         console.error('Error sending message:', error.message);
