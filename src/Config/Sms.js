@@ -5,19 +5,19 @@ const {sendSurveyWhatsappMessage, sendMobileVerificationWhatsappMessage, sendMob
 
 const sendSurveyMessage = async (fullName, surveyUrl, mobile, surveyName) => {
     try {
-        // const response = await axios.get('https://enterprise.smsgupshup.com/GatewayAPI/rest', {
-        //     params: {
-        //         method: 'SendMessage',
-        //         send_to: `91${mobile}`,
-        //         msg: `Dear ${fullName}, Here is our latest Indiapolls survey on Survey ${surveyName}, especially for you. Please click here ${surveyUrl} to start your survey. Thank you!`,
-        //         msg_type: 'TEXT',
-        //         userid: '2000237056',
-        //         auth_scheme: 'plain',
-        //         password: 'AK9m4gQH',
-        //         v: '1.1',
-        //         format: 'text',
-        //     },
-        // });
+        const response = await axios.get('https://enterprise.smsgupshup.com/GatewayAPI/rest', {
+            params: {
+                method: 'SendMessage',
+                send_to: `91${mobile}`,
+                msg: `Dear ${fullName}, Here is our latest Indiapolls survey on Survey ${surveyName}, especially for you. Please click here ${surveyUrl} to start your survey. Thank you!`,
+                msg_type: 'TEXT',
+                userid: '2000237056',
+                auth_scheme: 'plain',
+                password: 'AK9m4gQH',
+                v: '1.1',
+                format: 'text',
+            },
+        });
 
         console.log('SMS SENT:', fullName, mobile, surveyName);
         // sendSurveyWhatsappMessage(fullName, surveyUrl, mobile, surveyName)
