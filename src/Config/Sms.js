@@ -19,7 +19,7 @@ const sendSurveyMessage = async (fullName, surveyUrl, mobile, surveyName) => {
         //     },
         // });
 
-        console.log('SMS SENT:', fullName, surveyUrl, mobile, surveyName);
+        console.log('SMS SENT:', fullName, mobile, surveyName);
         // sendSurveyWhatsappMessage(fullName, surveyUrl, mobile, surveyName)
         return true
     } catch (error) {
