@@ -10,7 +10,7 @@ const sendSurveyWhatsappMessage = async (fullName, surveyUrl, mobile, surveyName
             'source': '919971007221',
             'destination': `91${mobile}`,
             'template': JSON.stringify({
-                id: "30a088f2-01d2-4d25-969d-0654d3916c4a",
+                id: "4fe570af-fe25-43cf-9f68-3e3afa4ff734",
                 params: [fullName, surveyName, surveyUrl]
             })
         });

@@ -352,7 +352,7 @@ const triggerSurveyEmail = async (id) => {
 
 
                                             // Send email to user
-                                            // emailsArray.push(surveyInvite(emailTemplate.subject, user.user.email, processedHtml));
+                                             emailsArray.push(surveyInvite(emailTemplate.subject, user.user.email, processedHtml));
 
                                             // Send SMS to user
                                             smsArray.push(sendSurveyMessage(`${user.firstName} ${user.lastName}`, link, user.mobile, survey.name));
@@ -499,7 +499,7 @@ const triggerSurveyEmail = async (id) => {
 
 
                                     // Send email to user
-                                    // emailsArray.push(surveyInvite(emailTemplate.subject, user.user.email, processedHtml));
+                                     emailsArray.push(surveyInvite(emailTemplate.subject, user.user.email, processedHtml));
 
                                     // Send SMS to user
                                     smsArray.push(sendSurveyMessage(`${user.user.basic_profile.firstName} ${user.user.basic_profile.lastName}`, link, user.user.basic_profile.mobile, survey.name));

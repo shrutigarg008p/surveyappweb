@@ -9,7 +9,7 @@ const sendSurveyMessage = async (fullName, surveyUrl, mobile, surveyName) => {
             params: {
                 method: 'SendMessage',
                 send_to: `91${mobile}`,
-                msg: `Dear ${fullName}, Here is our latest Indiapolls survey on Survey ${surveyName}, especially for you. Please click here ${surveyUrl} to start your survey. Thank you!`,
+                msg: `Dear ${fullName}, Here is our latest Indiapolls survey on ${surveyName}, especially for you. Please click here ${surveyUrl} to start your survey. Thank you!`,
                 msg_type: 'TEXT',
                 userid: '2000237056',
                 auth_scheme: 'plain',
@@ -20,7 +20,7 @@ const sendSurveyMessage = async (fullName, surveyUrl, mobile, surveyName) => {
         });
 
         console.log('Response:', response.data);
-        // sendSurveyWhatsappMessage(fullName, surveyUrl, mobile, surveyName)
+         sendSurveyWhatsappMessage(fullName, surveyUrl, mobile, surveyName)
         return true
     } catch (error) {
         console.error('Error sending message:', error.message);
@@ -45,7 +45,7 @@ const sendSurveyMessageHindi = async (fullName, surveyUrl, mobile, surveyName) =
         });
 
         console.log('Response:', response.data);
-        // sendSurveyWhatsappMessageHindi(fullName, surveyUrl, mobile, surveyName)
+         sendSurveyWhatsappMessageHindi(fullName, surveyUrl, mobile, surveyName)
         return true
     } catch (error) {
         console.error('Error sending message:', error.message);
