@@ -74,6 +74,12 @@ const triggerSurveyEmail = async (id) => {
             })
             if (survey) {
                 if (survey.useUniqueLinks === false) {
+
+                    SurveyEmailSchedules.update({
+                        scheduleStatus: 'Sent',
+                        emailsCreatedAt: new Date()
+                    }, {where: {id: scheduleEmail.id}})
+
                     const sample = await Samples.findOne({where: {id: scheduleEmail.sampleId, deletedAt: null}})
                     if (survey && sample) {
                         const sampleQuestions = await SampleQuestions.findAll({
@@ -358,14 +364,14 @@ const triggerSurveyEmail = async (id) => {
                                             smsArray.push(sendSurveyMessage(`${user.firstName} ${user.lastName}`, link, user.mobile, survey.name));
 
                                             if (user.user.devicetoken) {
-                                                notificationsArray.push(Notifications(user.user.devicetoken, emailTemplate.subject, 'New survey has been assigned to you'));
+                                                // notificationsArray.push(Notifications(user.user.devicetoken, emailTemplate.subject, 'New survey has been assigned to you'));
                                                 const notificationInfo = {
                                                     userId: user.userId,
                                                     message: `You have assigned ${survey.name} survey`,
                                                     type: 'survey',
                                                     id: survey.id
                                                 };
-                                                notificationsArray.push(notificationCreate(notificationInfo));
+                                                // notificationsArray.push(notificationCreate(notificationInfo));
                                             }
                                         }
 
