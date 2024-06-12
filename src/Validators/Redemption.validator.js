@@ -17,7 +17,7 @@ const createRedemption = [
         .trim().withMessage('usePhone must be specified.'),
     body('useAddress').isLength({min: 1})
         .trim().withMessage('useAddress must be specified.'),
-    sanitizeBody('name').escape(),
+    body('name').trim().escape(),
     (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {

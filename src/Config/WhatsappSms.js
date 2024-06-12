@@ -10,7 +10,7 @@ const sendSurveyWhatsappMessage = async (fullName, surveyUrl, mobile, surveyName
             'source': '919971007221',
             'destination': `91${mobile}`,
             'template': JSON.stringify({
-                id: "30a088f2-01d2-4d25-969d-0654d3916c4a",
+                id: "7c7fef2c-e251-49c5-88e2-4fd600db18d6",
                 params: [fullName, surveyName, surveyUrl]
             })
         });
@@ -47,7 +47,7 @@ const sendSurveyWhatsappMessageHindi = async (fullName, surveyUrl, mobile, surve
             'source': '919971007221',
             'destination': `91${mobile}`,
             'template': JSON.stringify({
-                id: "4627b4f2-ba3b-49c5-8c65-1a934edab1d3",
+                id: "06ca9091-a577-4002-8cc6-1b5a26c012be",
                 params: [fullName, surveyName, surveyUrl]
             })
         });

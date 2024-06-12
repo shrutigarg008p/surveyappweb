@@ -60,6 +60,14 @@ const triggerSurveyEmail = async (id) => {
                 scheduleStatus: 'Pending'
         }})
         if (scheduleEmail) {
+            const updatesurveystatus = await SurveyEmailSchedules.update(
+                {
+                    scheduleStatus: 'IP',
+                },
+                {
+                    where: { id: id }
+                }
+            )
             const survey = await Surveys.findOne({
                 where: {
                     id: scheduleEmail.surveyId,

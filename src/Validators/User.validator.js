@@ -14,7 +14,7 @@ const signUpValidator = [
 		.withMessage('Email must be specified.'),
 	body('password').isLength({min: 1})
 		.trim().withMessage('password must be specified.'),
-	    sanitizeBody('email').escape(),
+	body('email').trim().escape(),
 	(req, res, next) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) {
@@ -56,8 +56,8 @@ const updateValidator = [
 		.trim().withMessage('city must be specified.'),
 	body('city').isLength({min: 1})
 		.trim().withMessage('city must be specified.'),
-	sanitizeBody('firstname').escape(),
-	sanitizeBody('email').escape(),
+	body('firstname').trim().escape(),
+	body('email').trim().escape(),
 	(req, res, next) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) {
@@ -77,7 +77,7 @@ const logInValidator = [
 	// 	.trim().withMessage('Password must be specified.'),
 	body('registerType').isLength({min: 1})
 		.trim().withMessage('registerType must be specified.'),
-	sanitizeBody('registerType').escape(),
+	body('registerType').trim().escape(),
 	(req, res, next) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) {
@@ -94,7 +94,7 @@ const emailValidator = [
 		.trim().withMessage('email must be specified.')
 		.isEmail().withMessage('Email must be a valid email address.'),
 
-	sanitizeBody('email').escape(),
+	body('email').trim().escape(),
 	(req, res, next) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) {
@@ -110,7 +110,7 @@ const emailValidator = [
 		body('email').isLength({min: 1})
 			.trim()
 			.withMessage('email must be specified.'),
-		sanitizeBody('email').escape(),
+		body('email').trim().escape(),
 		(req, res, next) => {
 			const errors = validationResult(req);
 			if (!errors.isEmpty()) {
