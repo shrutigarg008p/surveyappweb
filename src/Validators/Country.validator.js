@@ -7,7 +7,7 @@ const Country = db.countries;
 const create = [
     body('name').isLength({min: 1})
         .trim().withMessage('name must be specified.').custom,
-    sanitizeBody('name').escape(),
+    body('name').trim().escape(),
     (req, res, next) => {
         console.log('calling--,mm--')
         const errors = validationResult(req);
